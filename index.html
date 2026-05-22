@@ -1330,6 +1330,7 @@ select.form-input { cursor:pointer; }
     fd.append('_subject', `[만능맨 파트너스 사전등록] ${name} (${phone})`);
     fd.append('_template', 'table');
     fd.append('_captcha', 'false');
+    fd.append('_replyto', email);
     fd.append('신청일시', submitTime);
     fd.append('이름', name);
     fd.append('연락처', phone);
