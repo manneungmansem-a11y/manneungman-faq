@@ -386,6 +386,42 @@ nav a:hover { color:var(--dark); }
 .cta-btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 36px rgba(0,0,0,0.25); }
 .cta-notice { font-size:12px; color:rgba(255,255,255,0.35); margin-top:20px; line-height:1.8; }
 
+/* COOLDOWN MODAL */
+#cooldown-modal {
+  position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center; padding:16px;
+  opacity:0; visibility:hidden; transition:opacity 0.3s var(--ease), visibility 0.3s;
+}
+#cooldown-modal.show { opacity:1; visibility:visible; }
+.cooldown-box {
+  background:var(--white); border-radius:20px; padding:36px 32px; max-width:380px; width:100%;
+  text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.25);
+  transform:scale(0.92) translateY(16px); transition:transform 0.3s var(--ease);
+}
+#cooldown-modal.show .cooldown-box { transform:scale(1) translateY(0); }
+.cooldown-icon { font-size:40px; margin-bottom:16px; display:block; }
+.cooldown-title { font-size:17px; font-weight:900; color:var(--dark); margin-bottom:10px; line-height:1.4; }
+.cooldown-desc { font-size:14px; color:var(--gray); line-height:1.75; margin-bottom:24px; }
+.cooldown-timer-wrap {
+  display:flex; align-items:center; justify-content:center;
+  background:var(--blue-dim); border:1.5px solid rgba(48,161,210,0.3);
+  border-radius:14px; padding:14px 20px; margin-bottom:24px; gap:10px;
+}
+.cooldown-timer-label { font-size:13px; font-weight:600; color:var(--blue); }
+.cooldown-timer-count {
+  font-size:28px; font-weight:900; color:var(--blue);
+  font-variant-numeric:tabular-nums; letter-spacing:1px; min-width:48px; text-align:center;
+  transition:opacity 0.2s;
+}
+.cooldown-timer-sec { font-size:13px; font-weight:600; color:var(--blue); }
+.cooldown-close-btn {
+  display:block; width:100%; padding:13px; background:var(--dark); color:#fff;
+  border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer;
+  font-family:inherit; transition:background 0.2s;
+}
+.cooldown-close-btn:hover { background:#111; }
+
 /* FOOTER */
 footer { background:var(--dark); border-top:1px solid rgba(255,255,255,0.06); padding:52px 24px 32px; color:rgba(255,255,255,0.35); }
 .footer-inner { max-width:1100px; margin:0 auto; }
@@ -933,6 +969,21 @@ select.form-input { cursor:pointer; }
   </div>
 </footer>
 
+<!-- 중복 제출 방지 쿨다운 팝업 -->
+<div id="cooldown-modal">
+  <div class="cooldown-box">
+    <span class="cooldown-icon">🛡️</span>
+    <div class="cooldown-title">중복 등록 방지</div>
+    <div class="cooldown-desc">중복 등록 방지를 위해<br>1분 후 다시 시도해 주세요.</div>
+    <div class="cooldown-timer-wrap">
+      <span class="cooldown-timer-label">남은 시간</span>
+      <span class="cooldown-timer-count" id="cooldown-count">60</span>
+      <span class="cooldown-timer-sec">초</span>
+    </div>
+    <button class="cooldown-close-btn" onclick="closeCooldown()">확인</button>
+  </div>
+</div>
+
 <!-- 파트너스 사전등록 신청 모달 -->
 <div id="apply-modal" onclick="modalOverlayClick(event)">
   <div class="modal-box">
@@ -1295,6 +1346,31 @@ select.form-input { cursor:pointer; }
     return str.replace(/[<>"'`]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;','`':'&#x60;'}[c]));
   }
 
+  /* 쿨다운 팝업 */
+  let _cdTimer = null;
+  function openCooldown(seconds) {
+    const modal = document.getElementById('cooldown-modal');
+    const countEl = document.getElementById('cooldown-count');
+    let remaining = seconds > 0 ? seconds : 1;
+    countEl.textContent = remaining;
+    modal.classList.add('show');
+    clearInterval(_cdTimer);
+    _cdTimer = setInterval(function() {
+      remaining--;
+      countEl.textContent = remaining;
+      if(remaining <= 0) {
+        clearInterval(_cdTimer);
+        _cdTimer = null;
+        modal.classList.remove('show');
+      }
+    }, 1000);
+  }
+  function closeCooldown() {
+    document.getElementById('cooldown-modal').classList.remove('show');
+    clearInterval(_cdTimer);
+    _cdTimer = null;
+  }
+
   /* 폼 제출 */
   async function submitForm() {
     if(!validateStep(3)) return;
@@ -1302,12 +1378,13 @@ select.form-input { cursor:pointer; }
     /* 봇 honeypot 확인 */
     if(document.getElementById('f-honey').value !== '') return;
 
-    /* Rate limiting: 120초 이내 중복 제출 방지 (localStorage + sessionStorage 이중 체크) */
+    /* Rate limiting: 60초 이내 중복 제출 방지 (localStorage + sessionStorage 이중 체크) */
     const lastLS = localStorage.getItem('mnm_last_submit');
     const lastSS = sessionStorage.getItem('mnm_last_submit');
     const lastSubmit = lastLS || lastSS;
-    if(lastSubmit && Date.now() - parseInt(lastSubmit) < 120000) {
-      alert('잠시 후 다시 시도해 주세요. (2분 제한)');
+    if(lastSubmit && Date.now() - parseInt(lastSubmit) < 60000) {
+      const remaining = Math.ceil((60000 - (Date.now() - parseInt(lastSubmit))) / 1000);
+      openCooldown(remaining);
       return;
     }
 
@@ -1350,13 +1427,29 @@ select.form-input { cursor:pointer; }
 
     try {
       const _ep = (function(){ const p=['sy.kim','samyangvalve.com']; return 'https://formsubmit.co/ajax/' + p[0] + '@' + p[1]; })();
-      const res = await fetch(_ep, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: fd
-      });
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+      let res;
+      try {
+        res = await fetch(_ep, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: fd
+        });
+      } catch(networkErr) {
+        console.error('[만능맨] 네트워크 오류:', networkErr);
+        throw new Error('NETWORK');
+      }
+
+      let data;
+      const rawText = await res.text();
+      console.log('[만능맨] HTTP 상태:', res.status, '응답:', rawText);
+
+      try { data = JSON.parse(rawText); } catch(e) { data = {}; }
+
+      if(res.status === 403 || (rawText && rawText.toLowerCase().includes('activat'))) {
+        throw new Error('NOT_ACTIVATED');
+      }
+      if(!res.ok) throw new Error('HTTP_' + res.status);
+
       if(data.success === 'true' || data.success === true) {
         const ts = Date.now().toString();
         localStorage.setItem('mnm_last_submit', ts);
@@ -1366,11 +1459,18 @@ select.form-input { cursor:pointer; }
         document.getElementById('form-success').classList.add('active');
         document.querySelectorAll('.modal-step').forEach(d => d.classList.add('done'));
       } else {
-        throw new Error('submit_failed');
+        console.error('[만능맨] 서버 응답 실패:', data);
+        throw new Error('SUBMIT_FAILED');
       }
     } catch(err) {
-      console.warn('[만능맨] 제출 오류 발생');
-      alert('제출 중 오류가 발생했습니다.\n\n직접 문의: 1899-8827\n(평일 09:00~18:00)');
+      console.error('[만능맨] 제출 오류:', err.message);
+      let msg = '제출 중 오류가 발생했습니다.\n\n직접 문의: 1899-8827\n(평일 09:00~18:00)';
+      if(err.message === 'NETWORK') {
+        msg = '인터넷 연결을 확인하고 다시 시도해 주세요.\n\n직접 문의: 1899-8827';
+      } else if(err.message === 'NOT_ACTIVATED') {
+        msg = '메일 발송 서비스 설정이 필요합니다.\n관리자가 FormSubmit 인증 이메일을 확인해야 합니다.\n\n직접 문의: 1899-8827';
+      }
+      alert(msg);
       submitBtn.disabled = false;
       submitBtn.textContent = '신청서 제출하기';
     }
