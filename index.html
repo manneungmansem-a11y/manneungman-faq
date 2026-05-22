@@ -964,6 +964,9 @@ select.form-input { cursor:pointer; }
         <div class="modal-step" id="step-ind-3"><div class="step-num">3</div><span>경력 &amp; 동의</span></div>
       </div>
 
+      <!-- 봇 방지 honeypot (절대 보이지 않음) -->
+      <input type="text" name="_honey" id="f-honey" style="display:none;position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
       <!-- 1단계 -->
       <div class="form-page active" id="form-page-1">
         <div class="form-row-2">
@@ -973,7 +976,7 @@ select.form-input { cursor:pointer; }
           </div>
           <div>
             <label class="form-label">휴대폰 번호<span class="req">*</span></label>
-            <input class="form-input" id="f-phone" type="tel" placeholder="010-0000-0000">
+            <input class="form-input" id="f-phone" type="tel" placeholder="숫자만 입력하세요" maxlength="13" inputmode="numeric">
           </div>
         </div>
         <div class="form-row">
@@ -1260,6 +1263,7 @@ select.form-input { cursor:pointer; }
       const region = document.getElementById('f-region').value.trim();
       if(!name) { alert('이름을 입력해 주세요.'); document.getElementById('f-name').focus(); return false; }
       if(!phone) { alert('연락처를 입력해 주세요.'); document.getElementById('f-phone').focus(); return false; }
+      if(!/^01[0-9]-\d{3,4}-\d{4}$/.test(phone)) { alert('올바른 휴대폰 번호를 입력해 주세요.\n예) 010-1234-5678'); document.getElementById('f-phone').focus(); return false; }
       if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('올바른 이메일을 입력해 주세요.'); document.getElementById('f-email').focus(); return false; }
       if(!region) { alert('활동 지역을 선택해 주세요.'); return false; }
     }
@@ -1287,44 +1291,92 @@ select.form-input { cursor:pointer; }
     document.getElementById('agree-check').classList.toggle('checked');
   }
 
+  /* 전화번호 자동 하이픈 */
+  document.getElementById('f-phone').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length <= 3) {
+      e.target.value = v;
+    } else if (v.length <= 7) {
+      e.target.value = v.slice(0, 3) + '-' + v.slice(3);
+    } else {
+      e.target.value = v.slice(0, 3) + '-' + v.slice(3, 7) + '-' + v.slice(7);
+    }
+  });
+
+  /* 입력값 XSS 방지 sanitize */
+  function sanitize(str) {
+    return str.replace(/[<>"'`]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;','`':'&#x60;'}[c]));
+  }
+
   /* 폼 제출 */
   async function submitForm() {
     if(!validateStep(3)) return;
-    const name = document.getElementById('f-name').value.trim();
-    const phone = document.getElementById('f-phone').value.trim();
-    const email = document.getElementById('f-email').value.trim();
-    const region = document.getElementById('f-region').value.trim();
+
+    /* 봇 honeypot 확인 */
+    if(document.getElementById('f-honey').value !== '') return;
+
+    /* Rate limiting: 60초 이내 중복 제출 방지 */
+    const lastSubmit = localStorage.getItem('mnm_last_submit');
+    if(lastSubmit && Date.now() - parseInt(lastSubmit) < 60000) {
+      alert('잠시 후 다시 시도해 주세요. (60초 제한)');
+      return;
+    }
+
+    const name    = sanitize(document.getElementById('f-name').value.trim());
+    const phone   = sanitize(document.getElementById('f-phone').value.trim());
+    const email   = sanitize(document.getElementById('f-email').value.trim());
+    const region  = sanitize(document.getElementById('f-region').value.trim());
     const bizType = document.getElementById('rb-personal').classList.contains('selected') ? '개인 기술자' : '사업자 등록';
-    const services = [...document.querySelectorAll('.check-item.selected')].map(c => c.innerText.replace('✓','').trim()).join(', ');
-    const cert = document.getElementById('f-cert').value.trim() || '없음';
+    const services = [...document.querySelectorAll('.check-item.selected')]
+      .map(c => c.innerText.replace('✓','').trim()).join(', ');
+    const cert   = sanitize(document.getElementById('f-cert').value.trim()) || '없음';
     const career = document.getElementById('f-career').value || '미선택';
-    const intro = document.getElementById('f-intro').value.trim() || '없음';
-    const note = document.getElementById('f-note').value.trim() || '없음';
+    const intro  = sanitize(document.getElementById('f-intro').value.trim()) || '없음';
+    const note   = sanitize(document.getElementById('f-note').value.trim()) || '없음';
+
+    const now = new Date();
+    const submitTime = now.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+
     const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
     submitBtn.textContent = '제출 중...';
-    const body = {
-      _subject: `[만능맨 파트너스 사전등록] ${name} (${phone})`,
-      이름: name, 연락처: phone, 이메일: email,
-      활동지역: region, 사업자구분: bizType, 서비스분야: services,
-      보유자격증: cert, 경력연수: career, 자기소개: intro,
-      추가문의: note, _template: 'table'
-    };
+
+    /* FormData 방식 (JSON보다 안정적) */
+    const fd = new FormData();
+    fd.append('_subject', `[만능맨 파트너스 사전등록] ${name} (${phone})`);
+    fd.append('_template', 'table');
+    fd.append('_captcha', 'false');
+    fd.append('신청일시', submitTime);
+    fd.append('이름', name);
+    fd.append('연락처', phone);
+    fd.append('이메일', email);
+    fd.append('활동지역', region);
+    fd.append('사업자구분', bizType);
+    fd.append('서비스분야', services);
+    fd.append('보유자격증', cert);
+    fd.append('경력연수', career);
+    fd.append('자기소개', intro);
+    fd.append('추가문의', note);
+
     try {
       const res = await fetch('https://formsubmit.co/ajax/sy.kim@samyangvalve.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(body)
+        headers: { 'Accept': 'application/json' },
+        body: fd
       });
       const data = await res.json();
       if(data.success === 'true' || data.success === true) {
+        localStorage.setItem('mnm_last_submit', Date.now().toString());
         document.getElementById('success-email-display').textContent = email;
         document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
         document.getElementById('form-success').classList.add('active');
         document.querySelectorAll('.modal-step').forEach(d => d.classList.add('done'));
-      } else { throw new Error('서버 오류'); }
+      } else {
+        throw new Error('서버 응답 오류: ' + JSON.stringify(data));
+      }
     } catch(err) {
-      alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      console.error('[만능맨] 폼 제출 실패:', err);
+      alert('제출 중 오류가 발생했습니다.\n\n직접 문의: 1899-8827\n(평일 09:00~18:00)');
       submitBtn.disabled = false;
       submitBtn.textContent = '신청서 제출하기';
     }
