@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://formsubmit.co; font-src 'self'; frame-ancestors 'none';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -918,10 +920,10 @@ select.form-input { cursor:pointer; }
         <div class="ft-hours">평일 09:00 – 18:00<br>(점심 12:00–13:00 제외 · 주말/공휴일 제외)</div>
       </div>
       <div class="footer-links">
-        <a href="#">이용약관</a>
-        <a href="#">개인정보 처리방침</a>
-        <a href="#">운영정책</a>
-        <a href="#">사업자 정보확인</a>
+        <a href="#" rel="noopener noreferrer">이용약관</a>
+        <a href="#" rel="noopener noreferrer">개인정보 처리방침</a>
+        <a href="#" rel="noopener noreferrer">운영정책</a>
+        <a href="#" rel="noopener noreferrer">사업자 정보확인</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -958,7 +960,7 @@ select.form-input { cursor:pointer; }
         <div class="form-row-2">
           <div>
             <label class="form-label">이름<span class="req">*</span></label>
-            <input class="form-input" id="f-name" type="text" placeholder="홍길동">
+            <input class="form-input" id="f-name" type="text" placeholder="홍길동" maxlength="50" autocomplete="name">
           </div>
           <div>
             <label class="form-label">휴대폰 번호<span class="req">*</span></label>
@@ -967,7 +969,7 @@ select.form-input { cursor:pointer; }
         </div>
         <div class="form-row">
           <label class="form-label">이메일<span class="req">*</span></label>
-          <input class="form-input" id="f-email" type="email" placeholder="example@email.com">
+          <input class="form-input" id="f-email" type="email" placeholder="example@email.com" maxlength="100" autocomplete="email">
         </div>
         <div class="form-row">
           <label class="form-label">주요 활동 지역<span class="req">*</span></label>
@@ -1029,7 +1031,7 @@ select.form-input { cursor:pointer; }
         </div>
         <div class="form-row">
           <label class="form-label">보유 자격증</label>
-          <input class="form-input" id="f-cert" type="text" placeholder="전기기사, 소방설비기사 등 (없으면 비워두세요)">
+          <input class="form-input" id="f-cert" type="text" placeholder="전기기사, 소방설비기사 등 (없으면 비워두세요)" maxlength="200">
         </div>
         <div class="form-row">
           <label class="form-label">경력 연수</label>
@@ -1049,11 +1051,11 @@ select.form-input { cursor:pointer; }
       <div class="form-page" id="form-page-3">
         <div class="form-row">
           <label class="form-label">자기소개 및 경력 사항</label>
-          <textarea class="form-input" id="f-intro" placeholder="어떤 분야에서 얼마나 일해 오셨는지, 강점이 무엇인지 간략히 적어 주세요."></textarea>
+          <textarea class="form-input" id="f-intro" placeholder="어떤 분야에서 얼마나 일해 오셨는지, 강점이 무엇인지 간략히 적어 주세요." maxlength="1000"></textarea>
         </div>
         <div class="form-row">
           <label class="form-label">추가 문의 사항</label>
-          <textarea class="form-input" id="f-note" style="min-height:70px" placeholder="궁금한 점이 있으시면 남겨 주세요."></textarea>
+          <textarea class="form-input" id="f-note" style="min-height:70px" placeholder="궁금한 점이 있으시면 남겨 주세요." maxlength="500"></textarea>
         </div>
         <div class="form-row">
           <label class="form-label">개인정보 수집 및 이용 동의<span class="req">*</span></label>
@@ -1245,10 +1247,11 @@ select.form-input { cursor:pointer; }
       const phone = document.getElementById('f-phone').value.trim();
       const email = document.getElementById('f-email').value.trim();
       const region = document.getElementById('f-region').value.trim();
-      if(!name) { alert('이름을 입력해 주세요.'); document.getElementById('f-name').focus(); return false; }
+      if(!name || name.length < 2) { alert('이름을 2자 이상 입력해 주세요.'); document.getElementById('f-name').focus(); return false; }
+      if(!/^[가-힣a-zA-Z\s·]{2,50}$/.test(name)) { alert('이름에 특수문자나 숫자는 사용할 수 없습니다.'); document.getElementById('f-name').focus(); return false; }
       if(!phone) { alert('연락처를 입력해 주세요.'); document.getElementById('f-phone').focus(); return false; }
       if(!/^01[0-9]-\d{3,4}-\d{4}$/.test(phone)) { alert('올바른 휴대폰 번호를 입력해 주세요.\n예) 010-1234-5678'); document.getElementById('f-phone').focus(); return false; }
-      if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('올바른 이메일을 입력해 주세요.'); document.getElementById('f-email').focus(); return false; }
+      if(!email || !/^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/.test(email)) { alert('올바른 이메일을 입력해 주세요.'); document.getElementById('f-email').focus(); return false; }
       if(!region) { alert('활동 지역을 선택해 주세요.'); return false; }
     }
     if(step === 2) {
@@ -1299,10 +1302,12 @@ select.form-input { cursor:pointer; }
     /* 봇 honeypot 확인 */
     if(document.getElementById('f-honey').value !== '') return;
 
-    /* Rate limiting: 60초 이내 중복 제출 방지 */
-    const lastSubmit = localStorage.getItem('mnm_last_submit');
-    if(lastSubmit && Date.now() - parseInt(lastSubmit) < 60000) {
-      alert('잠시 후 다시 시도해 주세요. (60초 제한)');
+    /* Rate limiting: 120초 이내 중복 제출 방지 (localStorage + sessionStorage 이중 체크) */
+    const lastLS = localStorage.getItem('mnm_last_submit');
+    const lastSS = sessionStorage.getItem('mnm_last_submit');
+    const lastSubmit = lastLS || lastSS;
+    if(lastSubmit && Date.now() - parseInt(lastSubmit) < 120000) {
+      alert('잠시 후 다시 시도해 주세요. (2분 제한)');
       return;
     }
 
@@ -1344,23 +1349,27 @@ select.form-input { cursor:pointer; }
     fd.append('추가문의', note);
 
     try {
-      const res = await fetch('https://formsubmit.co/ajax/sy.kim@samyangvalve.com', {
+      const _ep = (function(){ const p=['sy.kim','samyangvalve.com']; return 'https://formsubmit.co/ajax/' + p[0] + '@' + p[1]; })();
+      const res = await fetch(_ep, {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
         body: fd
       });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       if(data.success === 'true' || data.success === true) {
-        localStorage.setItem('mnm_last_submit', Date.now().toString());
+        const ts = Date.now().toString();
+        localStorage.setItem('mnm_last_submit', ts);
+        sessionStorage.setItem('mnm_last_submit', ts);
         document.getElementById('success-email-display').textContent = email;
         document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
         document.getElementById('form-success').classList.add('active');
         document.querySelectorAll('.modal-step').forEach(d => d.classList.add('done'));
       } else {
-        throw new Error('서버 응답 오류: ' + JSON.stringify(data));
+        throw new Error('submit_failed');
       }
     } catch(err) {
-      console.error('[만능맨] 폼 제출 실패:', err);
+      console.warn('[만능맨] 제출 오류 발생');
       alert('제출 중 오류가 발생했습니다.\n\n직접 문의: 1899-8827\n(평일 09:00~18:00)');
       submitBtn.disabled = false;
       submitBtn.textContent = '신청서 제출하기';
