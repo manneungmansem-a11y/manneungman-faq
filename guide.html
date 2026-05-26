@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; frame-ancestors 'none';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>만능맨 파트너스 — 파트너 전용 운영 가이드</title>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --blue:      #30A1D2;
+  --blue-dark: #1f7fa8;
+  --blue-glow: rgba(48,161,210,0.25);
+  --blue-dim:  rgba(48,161,210,0.08);
+  --blue-mid:  rgba(48,161,210,0.15);
+  --dark:      #231815;
+  --gray:      #666666;
+  --gray-lt:   #999;
+  --off-white: #f5f5f7;
+  --border:    #e8e8e8;
+  --white:     #ffffff;
+  --ease:      cubic-bezier(0.4,0,0.2,1);
+  --green:     #22c55e;
+  --green-dim: rgba(34,197,94,0.08);
+  --orange:    #f97316;
+  --orange-dim:rgba(249,115,22,0.08);
+}
+body {
+  font-family:-apple-system,'Malgun Gothic','맑은 고딕',BlinkMacSystemFont,sans-serif;
+  color:var(--dark); background:var(--white); overflow-x:hidden;
+}
+
+/* INTRO */
+#intro {
+  position:fixed; inset:0; z-index:9999;
+  background:
+    radial-gradient(ellipse at 30% 70%, rgba(48,161,210,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 20%, rgba(13,74,120,0.35) 0%, transparent 50%),
+    linear-gradient(160deg, #071828 0%, #0b2035 45%, #0d2a45 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:0; animation:introBgFadeIn 0.6s ease forwards;
+  transition:opacity 1.1s cubic-bezier(0.4,0,0.2,1), visibility 1.1s;
+  overflow:hidden;
+}
+#intro.hide { opacity:0; visibility:hidden; pointer-events:none; }
+#intro::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 55% 70%, rgba(48,161,210,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 10%, rgba(48,161,210,0.4) 0%, transparent 100%);
+  pointer-events:none;
+}
+@keyframes introBgFadeIn { to { opacity:1; } }
+.intro-center {
+  display:flex; flex-direction:column; align-items:center;
+  gap:0; position:relative; z-index:1; padding:0 24px;
+}
+.intro-brand-label {
+  font-size:clamp(10px,1.8vw,13px); font-weight:600;
+  color:rgba(48,161,210,0.85); letter-spacing:4px; text-transform:uppercase;
+  text-align:center; margin-bottom:32px;
+  opacity:0; transform:translateY(-8px);
+  animation:introFadeDown 0.6s 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+  display:flex; align-items:center; gap:14px;
+}
+.intro-brand-label::before, .intro-brand-label::after {
+  content:''; display:block; width:clamp(30px,6vw,60px); height:1px;
+  background:linear-gradient(to right, transparent, rgba(48,161,210,0.6));
+}
+.intro-brand-label::after { background:linear-gradient(to left, transparent, rgba(48,161,210,0.6)); }
+.intro-char-wrap {
+  position:relative; display:flex; align-items:center; justify-content:center;
+  margin-bottom:40px;
+  opacity:0; transform:scale(0.92) translateY(12px);
+  animation:introCharIn 0.9s 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.intro-char-img {
+  height:clamp(180px,35vw,260px); object-fit:contain; position:relative; z-index:2;
+  filter:drop-shadow(0 0 6px rgba(48,161,210,0.9)) drop-shadow(0 0 18px rgba(48,161,210,0.7)) drop-shadow(0 0 40px rgba(48,161,210,0.4)) drop-shadow(0 0 70px rgba(48,161,210,0.2));
+  animation:neonPulse 3s ease-in-out infinite;
+}
+.intro-char-img.fallback-hidden { display:none; }
+.intro-char-fallback { font-size:100px; line-height:1; filter:drop-shadow(0 0 20px rgba(48,161,210,0.8)); animation:neonPulse 3s ease-in-out infinite; }
+.intro-char-wrap::after {
+  content:''; position:absolute; bottom:-16px; left:50%; transform:translateX(-50%);
+  width:clamp(80px,18vw,140px); height:12px;
+  background:radial-gradient(ellipse, rgba(48,161,210,0.35) 0%, transparent 70%);
+  border-radius:50%; filter:blur(4px); z-index:1;
+}
+@keyframes neonPulse {
+  0%,100% { filter:drop-shadow(0 0 6px rgba(48,161,210,0.9)) drop-shadow(0 0 18px rgba(48,161,210,0.7)) drop-shadow(0 0 40px rgba(48,161,210,0.4)) drop-shadow(0 0 70px rgba(48,161,210,0.2)); }
+  50% { filter:drop-shadow(0 0 10px rgba(94,195,234,1)) drop-shadow(0 0 28px rgba(48,161,210,0.9)) drop-shadow(0 0 55px rgba(48,161,210,0.55)) drop-shadow(0 0 90px rgba(48,161,210,0.3)); }
+}
+.intro-headline {
+  font-size:clamp(30px,5.5vw,56px); font-weight:800;
+  color:#ffffff; letter-spacing:clamp(4px,1.5vw,10px); text-align:center; line-height:1.15;
+  text-shadow:0 0 40px rgba(48,161,210,0.4), 0 2px 20px rgba(0,0,0,0.5);
+  opacity:0; transform:translateY(16px);
+  animation:introFadeUp 0.7s 1.3s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.intro-headline::after {
+  content:''; display:block; width:clamp(40px,8vw,80px); height:2px;
+  background:linear-gradient(to right, transparent, rgba(48,161,210,0.8), transparent);
+  margin:14px auto 0; border-radius:2px;
+}
+.intro-sub {
+  font-size:clamp(12px,2vw,15px); font-weight:400;
+  color:rgba(180,215,235,0.65); text-align:center; line-height:1.85; letter-spacing:0.5px;
+  margin-top:18px; opacity:0; transform:translateY(10px);
+  animation:introFadeUp 0.6s 1.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes introCharIn { to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes introFadeUp { to { opacity:1; transform:translateY(0); } }
+@keyframes introFadeDown { to { opacity:1; transform:translateY(0); } }
+
+/* HEADER */
+header {
+  position:fixed; top:0; left:0; right:0; height:62px;
+  background:rgba(255,255,255,0.88); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border); z-index:500; transition:box-shadow 0.3s;
+}
+header.scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.08); }
+.hd-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:100%; display:flex; align-items:center; gap:36px; }
+.hd-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.hd-logo img { height:30px; object-fit:contain; }
+.hd-logo-text { font-size:17px; font-weight:900; color:var(--dark); letter-spacing:-0.3px; line-height:1; }
+.hd-logo-text em { color:var(--blue); font-style:normal; }
+.hd-logo-sub { font-size:9px; color:var(--gray-lt); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+nav { display:flex; gap:28px; }
+nav a { font-size:13px; font-weight:500; color:var(--gray); text-decoration:none; transition:color 0.2s; white-space:nowrap; }
+nav a:hover { color:var(--dark); }
+.hd-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.guide-badge {
+  font-size:11px; font-weight:700; color:var(--blue); background:var(--blue-dim);
+  border:1px solid rgba(48,161,210,0.3); padding:5px 12px; border-radius:99px;
+  letter-spacing:0.5px; white-space:nowrap;
+}
+.btn-back-home {
+  font-size:13px; font-weight:700; color:var(--gray); background:none; border:1.5px solid var(--border);
+  padding:7px 16px; border-radius:8px; cursor:pointer; font-family:inherit; text-decoration:none;
+  transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
+}
+.btn-back-home:hover { border-color:var(--blue); color:var(--blue); }
+
+/* 공통 */
+.section-inner { max-width:1100px; margin:0 auto; padding:96px 24px; }
+.section-label {
+  display:inline-block; font-size:11px; font-weight:700;
+  letter-spacing:2.5px; text-transform:uppercase; color:var(--blue); margin-bottom:14px;
+}
+.section-title { font-size:clamp(26px,4vw,44px); font-weight:900; line-height:1.2; letter-spacing:-1px; margin-bottom:14px; color:var(--dark); }
+.section-sub { font-size:16px; color:var(--gray); line-height:1.8; max-width:640px; }
+.section-sub.center { margin:0 auto; text-align:center; }
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.65s var(--ease), transform 0.65s var(--ease); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.24s} .d4{transition-delay:.32s} .d5{transition-delay:.40s}
+
+/* HERO */
+.hero { min-height:80vh; background:var(--white); display:flex; align-items:center; padding-top:62px; position:relative; overflow:hidden; }
+.hero-deco { position:absolute; top:-120px; right:-120px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle,rgba(48,161,210,0.07) 0%,transparent 65%); pointer-events:none; }
+.hero-inner { max-width:1100px; margin:0 auto; padding:80px 24px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; width:100%; }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); color:var(--blue); font-size:11px; font-weight:700; padding:6px 14px; border-radius:99px; margin-bottom:24px; letter-spacing:0.5px; }
+.hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); animation:blink 1.8s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.hero h1 { font-size:clamp(32px,4.5vw,58px); font-weight:900; color:var(--dark); line-height:1.18; letter-spacing:-2px; margin-bottom:20px; }
+.hero h1 em { color:var(--blue); font-style:normal; }
+.hero-sub { font-size:16px; color:var(--gray); line-height:1.85; margin-bottom:12px; }
+.hero-sub2 { font-size:14px; color:var(--gray-lt); line-height:1.8; margin-bottom:32px; border-left:2px solid var(--border); padding-left:14px; }
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.hero-chip {
+  display:inline-flex; align-items:center; gap:6px; padding:7px 14px;
+  background:var(--off-white); border:1px solid var(--border); border-radius:8px;
+  font-size:13px; font-weight:600; color:var(--gray); text-decoration:none;
+  transition:all 0.2s;
+}
+.hero-chip:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-dim); }
+.hero-visual { display:flex; align-items:center; justify-content:center; position:relative; }
+.hero-char-area { position:relative; width:400px; height:400px; display:flex; align-items:center; justify-content:center; }
+.hero-char-circle { position:absolute; inset:20px; border-radius:50%; background:radial-gradient(circle,rgba(48,161,210,0.08) 0%,transparent 70%); }
+.hero-char { width:340px; height:340px; object-fit:contain; position:relative; z-index:1; animation:float 4s ease-in-out infinite; filter:drop-shadow(0 16px 40px rgba(35,24,21,0.12)); }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+/* TOC — 목차 */
+.sec-toc { background:var(--off-white); border-bottom:1px solid var(--border); }
+.sec-toc .section-inner { padding:48px 24px; }
+.toc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:32px; }
+@media(max-width:860px){ .toc-grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:480px){ .toc-grid{grid-template-columns:1fr 1fr;} }
+.toc-card {
+  display:flex; flex-direction:column; align-items:flex-start; gap:6px;
+  padding:18px 16px; background:var(--white); border:1.5px solid var(--border);
+  border-radius:12px; text-decoration:none; color:inherit; transition:all 0.2s;
+}
+.toc-card:hover { border-color:var(--blue); box-shadow:0 4px 18px rgba(48,161,210,0.1); transform:translateY(-2px); }
+.toc-icon { font-size:22px; }
+.toc-label { font-size:13px; font-weight:700; color:var(--dark); }
+.toc-sub { font-size:11px; color:var(--gray-lt); line-height:1.5; }
+.toc-arrow { font-size:11px; color:var(--blue); margin-top:auto; }
+
+/* FLOW — 작업 수주 흐름 */
+.sec-flow { background:var(--white); }
+.flow-steps { display:flex; flex-direction:column; gap:0; margin-top:48px; max-width:760px; margin-left:auto; margin-right:auto; }
+.flow-step { display:flex; gap:24px; align-items:flex-start; position:relative; padding-bottom:36px; }
+.flow-step:last-child { padding-bottom:0; }
+.flow-step-left { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.flow-num { width:40px; height:40px; border-radius:50%; background:var(--blue); color:#fff; font-size:14px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.flow-line { width:2px; flex:1; background:var(--border); margin-top:4px; min-height:32px; }
+.flow-step:last-child .flow-line { display:none; }
+.flow-content { padding-top:8px; padding-bottom:4px; flex:1; }
+.flow-title { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+.flow-tag { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--blue); background:var(--blue-dim); padding:2px 8px; border-radius:99px; }
+.flow-tag.partner { color:#22c55e; background:rgba(34,197,94,0.1); }
+.flow-tag.platform { color:var(--orange); background:rgba(249,115,22,0.1); }
+.flow-desc { font-size:14px; color:var(--gray); line-height:1.75; }
+.flow-tip { margin-top:10px; padding:10px 14px; background:var(--blue-dim); border-radius:8px; font-size:13px; color:#1f6f94; line-height:1.65; border-left:3px solid var(--blue); }
+
+/* GUIDE — 고객 응대 가이드 */
+.sec-guide { background:var(--off-white); }
+.guide-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:48px; }
+@media(max-width:760px){ .guide-grid{grid-template-columns:1fr;} }
+.guide-card {
+  background:var(--white); border-radius:16px; padding:28px 24px;
+  border:1.5px solid var(--border); transition:all 0.25s;
+}
+.guide-card:hover { border-color:var(--blue); box-shadow:0 6px 24px rgba(48,161,210,0.1); transform:translateY(-2px); }
+.guide-card-head { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.guide-card-icon { width:44px; height:44px; border-radius:12px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.guide-card-title { font-size:16px; font-weight:800; color:var(--dark); }
+.guide-card-sub { font-size:12px; color:var(--gray-lt); margin-top:2px; }
+.guide-list { display:flex; flex-direction:column; gap:8px; }
+.guide-item { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.65; }
+.guide-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); flex-shrink:0; margin-top:7px; }
+.guide-accent { background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); border-radius:10px; padding:14px 16px; margin-top:14px; font-size:13px; color:#1f6f94; line-height:1.7; }
+
+/* CHECKLIST — 현장 작업 체크리스트 */
+.sec-checklist { background:var(--dark); }
+.sec-checklist .section-label { color:var(--blue); }
+.sec-checklist .section-title { color:#fff; }
+.sec-checklist .section-sub { color:rgba(255,255,255,0.5); }
+.checklist-tabs { display:flex; gap:8px; margin-top:44px; flex-wrap:wrap; }
+.cl-tab { padding:9px 20px; border-radius:8px; border:1.5px solid rgba(255,255,255,0.12); background:transparent; font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.cl-tab:hover { border-color:rgba(48,161,210,0.5); color:var(--blue); }
+.cl-tab.active { background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 2px 12px var(--blue-glow); }
+.checklist-panels { margin-top:24px; }
+.cl-panel { display:none; }
+.cl-panel.active { display:block; }
+.cl-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media(max-width:860px){ .cl-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:520px){ .cl-grid{grid-template-columns:1fr;} }
+.cl-item {
+  display:flex; align-items:flex-start; gap:12px; padding:16px 14px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px; transition:all 0.2s;
+}
+.cl-item:hover { border-color:rgba(48,161,210,0.3); background:rgba(48,161,210,0.06); }
+.cl-check { width:20px; height:20px; border-radius:5px; border:1.5px solid rgba(48,161,210,0.4); background:rgba(48,161,210,0.1); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--blue); flex-shrink:0; margin-top:1px; }
+.cl-text { font-size:14px; color:rgba(255,255,255,0.75); line-height:1.55; }
+.cl-note { margin-top:20px; padding:16px 20px; background:rgba(48,161,210,0.08); border:1px solid rgba(48,161,210,0.2); border-radius:10px; font-size:13px; color:rgba(255,255,255,0.55); line-height:1.7; }
+.cl-note em { color:var(--blue); font-style:normal; }
+
+/* SETTLEMENT — 정산 가이드 */
+.sec-settlement { background:var(--white); }
+.settlement-flow { display:flex; align-items:flex-start; gap:0; margin-top:48px; overflow-x:auto; padding-bottom:8px; }
+.sf-step { display:flex; flex-direction:column; align-items:center; min-width:140px; flex:1; text-align:center; position:relative; }
+.sf-step::after {
+  content:'→'; position:absolute; right:-14px; top:18px;
+  font-size:20px; color:var(--blue); font-weight:700;
+}
+.sf-step:last-child::after { display:none; }
+.sf-num { width:44px; height:44px; border-radius:50%; background:var(--blue); color:#fff; font-size:14px; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+.sf-title { font-size:13px; font-weight:800; color:var(--dark); margin-bottom:4px; }
+.sf-desc { font-size:12px; color:var(--gray); line-height:1.5; padding:0 6px; }
+.settlement-cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:40px; }
+@media(max-width:640px){ .settlement-cards{grid-template-columns:1fr;} }
+.settlement-card {
+  background:var(--off-white); border-radius:16px; padding:28px 24px;
+  border:1.5px solid var(--border);
+}
+.settlement-card.blue { border-color:var(--blue); background:var(--blue-dim); }
+.sc-title { font-size:14px; font-weight:800; color:var(--blue); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:14px; }
+.sc-points { display:flex; flex-direction:column; gap:10px; }
+.sc-pt { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.6; }
+.sc-pt::before { content:'—'; color:var(--blue); flex-shrink:0; font-weight:700; margin-top:1px; }
+.sc-highlight { margin-top:20px; padding:14px 18px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.25); border-radius:10px; text-align:center; }
+.sc-highlight strong { font-size:15px; color:#16a34a; font-weight:800; }
+
+/* AS — A/S 및 분쟁 처리 */
+.sec-as { background:var(--off-white); }
+.as-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:48px; }
+@media(max-width:680px){ .as-grid{grid-template-columns:1fr;} }
+.as-card {
+  background:var(--white); border-radius:16px; padding:28px 24px;
+  border:1.5px solid var(--border); display:flex; flex-direction:column; gap:16px;
+}
+.as-card-head { display:flex; align-items:center; gap:12px; }
+.as-card-icon { font-size:24px; }
+.as-card-title { font-size:16px; font-weight:800; color:var(--dark); }
+.as-steps { display:flex; flex-direction:column; gap:10px; }
+.as-step { display:flex; align-items:flex-start; gap:10px; }
+.as-step-num { width:22px; height:22px; border-radius:50%; background:var(--blue-dim); color:var(--blue); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.as-step-text { font-size:14px; color:var(--gray); line-height:1.65; }
+.as-warn { padding:14px 16px; background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.25); border-radius:10px; font-size:13px; color:#c2410c; line-height:1.7; }
+
+/* COMPLIANCE — 준수사항 */
+.sec-compliance { background:var(--dark); }
+.sec-compliance .section-label { color:var(--blue); }
+.sec-compliance .section-title { color:#fff; }
+.compliance-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:48px; }
+@media(max-width:680px){ .compliance-grid{grid-template-columns:1fr;} }
+.comp-card {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:20px 18px; background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08); border-radius:12px; transition:all 0.2s;
+}
+.comp-card:hover { border-color:rgba(48,161,210,0.3); background:rgba(48,161,210,0.05); }
+.comp-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+.comp-body {}
+.comp-title { font-size:15px; font-weight:800; color:#fff; margin-bottom:6px; }
+.comp-desc { font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; }
+.comp-warn-box { margin-top:28px; padding:20px 22px; background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.25); border-radius:12px; }
+.comp-warn-title { font-size:14px; font-weight:800; color:#f97316; margin-bottom:10px; }
+.comp-warn-list { display:flex; flex-direction:column; gap:7px; }
+.comp-warn-item { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.6; }
+.comp-warn-item::before { content:'!'; color:#f97316; font-weight:800; flex-shrink:0; }
+
+/* FAQ */
+.sec-faq { background:var(--white); }
+.faq-search-wrap { position:relative; max-width:560px; margin:0 auto 32px; margin-top:44px; }
+.faq-search-wrap input { width:100%; padding:15px 50px 15px 20px; background:var(--white); border:1.5px solid var(--border); border-radius:12px; color:var(--dark); font-size:15px; font-family:inherit; outline:none; transition:border-color 0.25s, box-shadow 0.25s; }
+.faq-search-wrap input::placeholder { color:#bbb; }
+.faq-search-wrap input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(48,161,210,0.1); }
+.faq-search-wrap svg { position:absolute; right:16px; top:50%; transform:translateY(-50%); color:#bbb; pointer-events:none; }
+.faq-cat-tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:36px; }
+.cat-btn { padding:8px 18px; border-radius:8px; border:1.5px solid var(--border); background:transparent; font-size:13px; font-weight:600; color:var(--gray); cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.cat-btn:hover { border-color:var(--blue); color:var(--blue); }
+.cat-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 2px 12px var(--blue-glow); }
+.faq-list { max-width:760px; margin:0 auto; }
+#faqNoResult { display:none; text-align:center; padding:56px 20px; color:#bbb; font-size:15px; }
+.faq-group { margin-bottom:24px; }
+.faq-group-title { display:flex; align-items:center; gap:10px; font-size:11px; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; padding:0 2px; }
+.faq-group-icon { width:26px; height:26px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:13px; }
+.faq-group-line { flex:1; height:1px; background:var(--border); }
+.faq-item { background:var(--white); border-radius:12px; margin-bottom:6px; border:1.5px solid var(--border); overflow:hidden; transition:border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
+.faq-item:hover { border-color:rgba(48,161,210,0.4); transform:translateY(-1px); box-shadow:0 4px 16px rgba(48,161,210,0.08); }
+.faq-item.open { border-color:var(--blue); box-shadow:0 4px 20px rgba(48,161,210,0.1); }
+.faq-q { width:100%; background:none; border:none; padding:18px 20px; cursor:pointer; display:flex; align-items:flex-start; gap:14px; font-family:inherit; text-align:left; }
+.q-badge { flex-shrink:0; width:26px; height:26px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.25); color:var(--blue); border-radius:7px; font-size:11px; font-weight:800; font-style:italic; display:flex; align-items:center; justify-content:center; transition:all 0.25s; }
+.faq-item.open .q-badge { background:var(--blue); color:#fff; }
+.q-text { flex:1; font-size:15px; font-weight:600; color:var(--dark); line-height:1.55; }
+.arrow { flex-shrink:0; color:#ccc; font-size:14px; transition:transform 0.3s, color 0.2s; margin-top:4px; }
+.faq-item.open .arrow { transform:rotate(180deg); color:var(--blue); }
+.faq-a { max-height:0; overflow:hidden; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+.faq-item.open .faq-a { max-height:900px; }
+.faq-a-inner { margin:0 20px; padding:14px 0 20px 40px; font-size:14px; color:var(--gray); line-height:1.9; border-top:1px solid var(--border); position:relative; }
+.faq-a-inner::before { content:''; position:absolute; left:0; top:14px; bottom:20px; width:2px; background:linear-gradient(to bottom,var(--blue),transparent); border-radius:2px; }
+.faq-a-inner strong { color:var(--blue); font-weight:700; }
+.faq-a-inner ul { padding-left:18px; margin-top:8px; }
+.faq-a-inner ul li { margin-bottom:6px; }
+.faq-a-inner ul li::marker { color:var(--blue); }
+.faq-a-inner .highlight { background:rgba(48,161,210,0.05); border-left:2px solid var(--blue); padding:10px 14px; border-radius:0 8px 8px 0; margin-top:12px; font-size:13px; color:var(--dark); }
+.faq-item.hidden { display:none; }
+
+/* CTA / 지원 */
+.sec-cta { background:var(--dark); position:relative; overflow:hidden; }
+.sec-cta::before { content:''; position:absolute; top:-150px; right:-150px; width:500px; height:500px; background:radial-gradient(circle,rgba(48,161,210,0.12) 0%,transparent 65%); }
+.sec-cta .section-inner { text-align:center; position:relative; z-index:1; }
+.sec-cta .section-label { color:var(--blue); }
+.sec-cta .section-title { color:#fff; }
+.sec-cta .section-sub { color:rgba(255,255,255,0.6); margin:0 auto; }
+.support-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:48px; }
+@media(max-width:760px){ .support-grid{grid-template-columns:1fr;} }
+.support-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px; padding:28px 22px; text-align:center; transition:all 0.2s;
+}
+.support-card:hover { border-color:rgba(48,161,210,0.4); background:rgba(48,161,210,0.06); }
+.support-icon { font-size:28px; margin-bottom:12px; }
+.support-title { font-size:15px; font-weight:800; color:#fff; margin-bottom:6px; }
+.support-desc { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.7; }
+.support-info { font-size:17px; font-weight:800; color:var(--blue); margin-top:10px; }
+
+/* FOOTER */
+footer { background:var(--dark); border-top:1px solid rgba(255,255,255,0.06); padding:52px 24px 32px; color:rgba(255,255,255,0.35); }
+.footer-inner { max-width:1100px; margin:0 auto; }
+.footer-top { display:grid; grid-template-columns:220px 1fr; gap:48px; padding-bottom:32px; border-bottom:1px solid rgba(255,255,255,0.07); }
+@media(max-width:680px){ .footer-top{grid-template-columns:1fr;gap:24px;} }
+.ft-contact { font-size:20px; font-weight:900; color:var(--blue); margin-bottom:4px; }
+.ft-hours { font-size:12px; line-height:1.9; }
+.footer-links { display:flex; flex-wrap:wrap; gap:20px; padding-top:6px; }
+.footer-links a { color:rgba(255,255,255,0.35); font-size:13px; text-decoration:none; transition:color 0.2s; white-space:nowrap; }
+.footer-links a:hover { color:#fff; }
+.footer-bottom { padding-top:24px; font-size:11px; line-height:2.2; color:rgba(255,255,255,0.2); }
+.footer-bottom strong { color:rgba(255,255,255,0.4); }
+
+/* 반응형 */
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;}
+  .hero-chips{justify-content:center;}
+  .hero-visual{order:-1;}
+  .hero-char-area{width:260px;height:260px;}
+  .hero-char{width:220px;height:220px;}
+  nav{display:none;}
+}
+
+/* ══ 이미지 보호: 드래그·선택·저장 방지 ══ */
+img {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.hero-visual, .about-visual, .intro-char-wrap {
+  -webkit-user-select: none;
+  user-select: none;
+}
+</style>
+</head>
+<body>
+
+<!-- 인트로 -->
+<div id="intro" role="status" aria-label="만능맨 파트너스 가이드">
+  <div class="intro-center">
+    <div class="intro-brand-label">파트너 전용 가이드</div>
+    <div class="intro-char-wrap">
+      <img class="intro-char-img" id="intro-char-img"
+           src="만능맨_final/img_character_home_pc.png"
+           alt="만능맨 캐릭터"
+           onerror="this.classList.add('fallback-hidden'); document.getElementById('intro-char-fallback').style.display='block'">
+      <div class="intro-char-fallback" id="intro-char-fallback" style="display:none">📋</div>
+    </div>
+    <p class="intro-headline">파트너 가이드</p>
+    <p class="intro-sub">현장에서 필요한 모든 것을 한 곳에 모았습니다.</p>
+  </div>
+</div>
+
+<!-- 헤더 -->
+<header id="header">
+  <div class="hd-inner">
+    <a class="hd-logo" href="index.html">
+      <img src="만능맨_final/logo_gnb_pc.png" alt="만능맨" onerror="this.style.display='none'">
+      <div>
+        <div class="hd-logo-text"><em>만능맨</em> 파트너스</div>
+        <div class="hd-logo-sub">Partner Guide</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#flow">수주 흐름</a>
+      <a href="#guide">응대 가이드</a>
+      <a href="#checklist">작업 체크</a>
+      <a href="#settlement">정산</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="hd-right">
+      <span class="guide-badge">파트너 전용</span>
+      <a class="btn-back-home" href="index.html">← 사전등록 페이지</a>
+    </div>
+  </div>
+</header>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        파트너 전용 운영 가이드
+      </div>
+      <h1>현장에서 바로 쓰는<br><em>만능맨 파트너</em><br>운영 가이드</h1>
+      <p class="hero-sub">작업 수주부터 고객 응대, 정산 신청까지 현장에서 필요한 모든 내용을 담았습니다.</p>
+      <p class="hero-sub2">궁금한 내용은 아래 목차를 클릭하거나 스크롤해서 확인해 주세요. 운영 정책은 변경될 수 있으며 업데이트 시 별도 안내드립니다.</p>
+      <div class="hero-chips">
+        <a class="hero-chip" href="#flow">📋 수주 흐름</a>
+        <a class="hero-chip" href="#guide">🤝 고객 응대</a>
+        <a class="hero-chip" href="#checklist">✅ 체크리스트</a>
+        <a class="hero-chip" href="#settlement">💰 정산 안내</a>
+        <a class="hero-chip" href="#as">🛠️ A/S 처리</a>
+        <a class="hero-chip" href="#faq">❓ FAQ</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-char-area">
+        <div class="hero-char-circle"></div>
+        <img class="hero-char" src="만능맨_final/img_character_home_pc.png" alt="만능맨 캐릭터" onerror="this.style.visibility='hidden'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 목차 -->
+<section class="sec-toc">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Contents</span>
+      <h2 class="section-title" style="font-size:clamp(20px,3vw,32px)">가이드 목차</h2>
+    </div>
+    <div class="toc-grid">
+      <a class="toc-card reveal d1" href="#flow">
+        <div class="toc-icon">📋</div>
+        <div class="toc-label">작업 수주 흐름</div>
+        <div class="toc-sub">요청 접수부터 완료 확인까지</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d2" href="#guide">
+        <div class="toc-icon">🤝</div>
+        <div class="toc-label">고객 응대 가이드</div>
+        <div class="toc-sub">첫 통화·현장 방문·견적 안내</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d3" href="#checklist">
+        <div class="toc-icon">✅</div>
+        <div class="toc-label">현장 작업 체크리스트</div>
+        <div class="toc-sub">작업 전·중·후 확인 항목</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d4" href="#settlement">
+        <div class="toc-icon">💰</div>
+        <div class="toc-label">정산 가이드</div>
+        <div class="toc-sub">정산 신청 방법과 타임라인</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d1" href="#as">
+        <div class="toc-icon">🛠️</div>
+        <div class="toc-label">A/S · 분쟁 처리</div>
+        <div class="toc-sub">컴플레인·분쟁 발생 시 대응</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d2" href="#compliance">
+        <div class="toc-icon">📜</div>
+        <div class="toc-label">파트너 준수사항</div>
+        <div class="toc-sub">플랫폼 정책·윤리 기준</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d3" href="#faq">
+        <div class="toc-icon">❓</div>
+        <div class="toc-label">파트너 전용 FAQ</div>
+        <div class="toc-sub">활동 중 자주 묻는 질문</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+      <a class="toc-card reveal d4" href="#support">
+        <div class="toc-icon">📞</div>
+        <div class="toc-label">운영 지원 연락처</div>
+        <div class="toc-sub">문의·긴급상황 대응 채널</div>
+        <div class="toc-arrow">바로가기 →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 1. 작업 수주 흐름 -->
+<section class="sec-flow" id="flow">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 1 · Work Order</span>
+      <h2 class="section-title">작업 수주 흐름</h2>
+      <p class="section-sub center">고객 요청이 접수된 후 파트너가 해야 할 단계별 행동을 안내합니다.</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step reveal d1">
+        <div class="flow-step-left"><div class="flow-num">1</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">고객 요청 접수 <span class="flow-tag platform">플랫폼</span></div>
+          <div class="flow-desc">만능맨 플랫폼이 고객 요청을 접수하고 지역·분야 기준으로 연결 파트너를 검토합니다.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d2">
+        <div class="flow-step-left"><div class="flow-num">2</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">작업 연결 알림 수신 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">파트너에게 문자 또는 앱 알림으로 연결 요청이 발송됩니다. <strong>30분 이내</strong> 확인 및 수락 여부를 회신해 주세요.</div>
+          <div class="flow-tip">💡 빠른 회신은 추가 연결 검토 시 긍정적으로 반영됩니다.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d3">
+        <div class="flow-step-left"><div class="flow-num">3</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">고객 첫 연락 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">수락 후 <strong>1시간 이내</strong> 고객에게 직접 연락해 방문 일정을 협의합니다. 본인 소개와 방문 예정 시간을 명확히 안내하세요.</div>
+          <div class="flow-tip">📞 "안녕하세요, 만능맨 파트너 [업체명]입니다. [날짜·시간] 방문 가능합니다." 형식으로 안내해 주세요.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d1">
+        <div class="flow-step-left"><div class="flow-num">4</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">현장 방문 및 진단 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">약속 시간을 지켜 방문하고, 현장 상황을 파악한 뒤 작업 범위와 예상 비용을 고객에게 안내합니다.</div>
+          <div class="flow-tip">📸 방문 전 현장 상태를 반드시 촬영해 두세요. 분쟁 예방에 도움이 됩니다.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d2">
+        <div class="flow-step-left"><div class="flow-num">5</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">견적 동의 확인 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">구두 또는 문서로 고객의 동의를 받은 후에만 작업을 시작합니다. 동의 없는 작업 진행은 분쟁의 원인이 될 수 있습니다.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d3">
+        <div class="flow-step-left"><div class="flow-num">6</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">작업 진행 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">안전 수칙을 준수하며 작업을 진행합니다. 작업 중 추가 사항이 발생하면 즉시 고객에게 안내하고 동의를 받으세요.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d1">
+        <div class="flow-step-left"><div class="flow-num">7</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">완료 확인 및 사진 전송 <span class="flow-tag partner">파트너</span></div>
+          <div class="flow-desc">작업 후 현장 정리를 하고, 완료 사진을 촬영해 플랫폼에 업로드합니다. 고객에게 완료 결과를 직접 설명해 주세요.</div>
+          <div class="flow-tip">📸 작업 완료 후 사진은 정산 처리의 기준이 됩니다. 반드시 제출해 주세요.</div>
+        </div>
+      </div>
+      <div class="flow-step reveal d2">
+        <div class="flow-step-left"><div class="flow-num">8</div><div class="flow-line"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">정산 처리 <span class="flow-tag platform">플랫폼</span></div>
+          <div class="flow-desc">고객 완료 확인 후 운영 정책에 따라 영업일 기준 3일 이내 정산이 진행됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 고객 응대 가이드 -->
+<section class="sec-guide" id="guide">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 2 · Customer Service</span>
+      <h2 class="section-title">고객 응대 가이드</h2>
+      <p class="section-sub center">좋은 응대가 신뢰를 만들고, 신뢰가 더 많은 연결로 이어집니다.</p>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-card reveal d1">
+        <div class="guide-card-head">
+          <div class="guide-card-icon">📞</div>
+          <div>
+            <div class="guide-card-title">첫 통화 응대</div>
+            <div class="guide-card-sub">수락 후 1시간 이내 연락</div>
+          </div>
+        </div>
+        <div class="guide-list">
+          <div class="guide-item"><div class="guide-dot"></div>업체명과 이름을 먼저 밝히세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>방문 가능한 날짜와 시간을 2~3개 제안하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>고객 요청 내용을 한 번 더 확인해 주세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>통화가 안 되면 문자로 먼저 안내하세요</div>
+        </div>
+        <div class="guide-accent">
+          📌 "현재 많이 바쁘다"는 표현은 고객 불안을 줄 수 있습니다. "가능한 빨리 도와드리겠습니다"라고 안내해 주세요.
+        </div>
+      </div>
+
+      <div class="guide-card reveal d2">
+        <div class="guide-card-head">
+          <div class="guide-card-icon">🏠</div>
+          <div>
+            <div class="guide-card-title">현장 방문 매너</div>
+            <div class="guide-card-sub">첫인상이 신뢰의 시작</div>
+          </div>
+        </div>
+        <div class="guide-list">
+          <div class="guide-item"><div class="guide-dot"></div>약속 시간 10분 전 도착을 목표로 하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>실내에서는 실내화(덧신) 착용을 권장합니다</div>
+          <div class="guide-item"><div class="guide-dot"></div>작업 전 현장 사진을 촬영해 기록을 남기세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>고객 물건은 소중하게 다루고, 이동 시 사전 양해를 구하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>작업 중 발생하는 소음·냄새에 대해 미리 안내하세요</div>
+        </div>
+      </div>
+
+      <div class="guide-card reveal d3">
+        <div class="guide-card-head">
+          <div class="guide-card-icon">📄</div>
+          <div>
+            <div class="guide-card-title">견적 및 비용 안내</div>
+            <div class="guide-card-sub">명확하고 투명하게</div>
+          </div>
+        </div>
+        <div class="guide-list">
+          <div class="guide-item"><div class="guide-dot"></div>작업 범위를 구체적으로 설명한 후 금액을 안내하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>자재·부품비가 추가되는 경우 반드시 사전에 알리고 동의를 받으세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>작업 중 추가 사항 발견 시 즉시 중단하고 고객에게 확인하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>구두 동의도 중요하지만 가능하면 서면(문자)으로 남겨두세요</div>
+        </div>
+        <div class="guide-accent">
+          📌 "해보면 알 것 같다"는 표현보다 "진단 후 정확한 금액을 안내드리겠습니다"라고 안내해 주세요.
+        </div>
+      </div>
+
+      <div class="guide-card reveal d4">
+        <div class="guide-card-head">
+          <div class="guide-card-icon">✅</div>
+          <div>
+            <div class="guide-card-title">작업 완료 안내</div>
+            <div class="guide-card-sub">마무리가 신뢰를 완성합니다</div>
+          </div>
+        </div>
+        <div class="guide-list">
+          <div class="guide-item"><div class="guide-dot"></div>작업 완료 후 현장을 깨끗하게 정리해 주세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>어떤 작업을 했는지 고객에게 직접 설명해 주세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>완료 후 사진을 촬영해 플랫폼에 제출하세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>A/S 기간과 관련 주의사항을 안내해 주세요</div>
+          <div class="guide-item"><div class="guide-dot"></div>고객이 불편함을 표현할 경우 즉시 경청하고 운영팀에 공유하세요</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 현장 작업 체크리스트 -->
+<section class="sec-checklist" id="checklist">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 3 · Checklist</span>
+      <h2 class="section-title">현장 작업 체크리스트</h2>
+      <p class="section-sub center">빠뜨리면 분쟁의 씨앗이 됩니다. 매 작업마다 확인해 주세요.</p>
+    </div>
+    <div class="checklist-tabs reveal">
+      <button class="cl-tab active" onclick="showPanel('before',this)">작업 전</button>
+      <button class="cl-tab" onclick="showPanel('during',this)">작업 중</button>
+      <button class="cl-tab" onclick="showPanel('after',this)">작업 후</button>
+    </div>
+    <div class="checklist-panels">
+      <!-- 작업 전 -->
+      <div class="cl-panel active" id="panel-before">
+        <div class="cl-grid reveal">
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객 요청 내용 재확인 완료</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">필요 공구 및 장비 준비 완료</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">예상 자재·부품 준비 또는 목록 확보</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">방문 전 고객에게 도착 예정 시간 안내</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">실내화(덧신) 또는 발 덮개 지참</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">현장 도착 즉시 사진 촬영 (현장 초기 상태)</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객에게 본인 소개 및 작업 순서 설명</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">자재 추가 발생 가능성 사전 안내</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">안전 보호 장비 착용 확인</div></div>
+        </div>
+        <div class="cl-note reveal">현장 초기 사진은 <em>반드시 작업 시작 전에 촬영</em>해 주세요. 분쟁 발생 시 가장 중요한 증거입니다.</div>
+      </div>
+
+      <!-- 작업 중 -->
+      <div class="cl-panel" id="panel-during">
+        <div class="cl-grid reveal">
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">작업 범위 외 손상 없도록 주의</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">추가 이상 발견 시 즉시 고객 보고</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">추가 작업 발생 시 고객 동의 후 진행</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객 물품 이동 시 사전 양해</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">주변 오염(먼지·물 등) 최소화</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">소음 발생 전 고객에게 미리 안내</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">작업 진행 중간 경과 공유 (30분 이상 소요 시)</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">자재·부품 실물 또는 영수증 보관</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">안전 수칙 준수 (누전 차단, 가스 잠금 등)</div></div>
+        </div>
+        <div class="cl-note reveal">작업 중 예상치 못한 추가 비용이 발생할 경우, <em>반드시 중단하고 고객 동의를 받은 후</em> 진행해 주세요.</div>
+      </div>
+
+      <!-- 작업 후 -->
+      <div class="cl-panel" id="panel-after">
+        <div class="cl-grid reveal">
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">작업 완료 현장 사진 촬영</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">현장 정리 및 쓰레기 수거</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객에게 완료 내용 직접 설명</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">A/S 기간 및 주의사항 안내</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객 만족 여부 확인 (표정·피드백)</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">플랫폼에 완료 사진 제출</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">자재·부품 영수증 플랫폼 제출 (해당 시)</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">원상복구가 필요한 부분 확인 및 처리</div></div>
+          <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text">고객 불만 발생 시 즉시 운영팀 공유</div></div>
+        </div>
+        <div class="cl-note reveal">완료 사진 미제출 시 <em>정산 지연이 발생할 수 있습니다.</em> 작업 직후 바로 제출해 주세요.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 정산 가이드 -->
+<section class="sec-settlement" id="settlement">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 4 · Settlement</span>
+      <h2 class="section-title">정산 가이드</h2>
+      <p class="section-sub center">작업 완료 확인 후 영업일 기준 3일 이내 정산을 진행합니다.</p>
+    </div>
+
+    <div class="settlement-flow reveal">
+      <div class="sf-step">
+        <div class="sf-num">1</div>
+        <div class="sf-title">작업 완료</div>
+        <div class="sf-desc">완료 사진 제출</div>
+      </div>
+      <div class="sf-step">
+        <div class="sf-num">2</div>
+        <div class="sf-title">고객 확인</div>
+        <div class="sf-desc">플랫폼 완료 처리</div>
+      </div>
+      <div class="sf-step">
+        <div class="sf-num">3</div>
+        <div class="sf-title">정산 검토</div>
+        <div class="sf-desc">운영팀 검토</div>
+      </div>
+      <div class="sf-step">
+        <div class="sf-num">4</div>
+        <div class="sf-title">정산 지급</div>
+        <div class="sf-desc">영업일 3일 이내</div>
+      </div>
+    </div>
+
+    <div class="settlement-cards">
+      <div class="settlement-card blue reveal d1">
+        <div class="sc-title">정산 기준</div>
+        <div class="sc-points">
+          <div class="sc-pt">건별 정산 방식 운영</div>
+          <div class="sc-pt">작업 완료 확인 후 영업일 기준 3일 이내 지급</div>
+          <div class="sc-pt">수수료는 합류 후 운영 정책에 따라 별도 안내</div>
+          <div class="sc-pt">자재비는 영수증 제출 시 별도 정산 검토</div>
+        </div>
+        <div class="sc-highlight">
+          <strong>가맹비·입점비·광고비 없음</strong>
+        </div>
+      </div>
+      <div class="settlement-card reveal d2">
+        <div class="sc-title">정산 필요 서류</div>
+        <div class="sc-points">
+          <div class="sc-pt">작업 완료 사진 (필수)</div>
+          <div class="sc-pt">자재·부품 영수증 (해당 시)</div>
+          <div class="sc-pt">고객 동의 내역 (문자·메모 등)</div>
+          <div class="sc-pt">작업 전·후 비교 사진 (권장)</div>
+        </div>
+      </div>
+      <div class="settlement-card reveal d3">
+        <div class="sc-title">정산 지연 사유</div>
+        <div class="sc-points">
+          <div class="sc-pt">완료 사진 미제출</div>
+          <div class="sc-pt">고객 이의 제기 발생 시 처리 후 진행</div>
+          <div class="sc-pt">작업 정보 불일치</div>
+          <div class="sc-pt">A/S 분쟁 진행 중인 경우</div>
+        </div>
+      </div>
+      <div class="settlement-card reveal d4">
+        <div class="sc-title">취소·환불 안내</div>
+        <div class="sc-points">
+          <div class="sc-pt">작업 전 취소: 운영 정책에 따라 처리</div>
+          <div class="sc-pt">작업 중 취소: 진행된 범위 기준 정산 검토</div>
+          <div class="sc-pt">고객 귀책 취소: 별도 안내 예정</div>
+          <div class="sc-pt">세부 기준은 합류 후 운영 정책 참고</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. A/S & 분쟁 처리 -->
+<section class="sec-as" id="as">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 5 · After Service</span>
+      <h2 class="section-title">A/S · 분쟁 처리 가이드</h2>
+      <p class="section-sub center">문제가 생겼을 때 어떻게 대응하느냐가 파트너의 신뢰를 결정합니다.</p>
+    </div>
+    <div class="as-grid">
+      <div class="as-card reveal d1">
+        <div class="as-card-head">
+          <div class="as-card-icon">🔧</div>
+          <div class="as-card-title">A/S 요청 발생 시</div>
+        </div>
+        <div class="as-steps">
+          <div class="as-step"><div class="as-step-num">1</div><div class="as-step-text">고객 A/S 요청 내용을 정확히 청취합니다</div></div>
+          <div class="as-step"><div class="as-step-num">2</div><div class="as-step-text">기존 작업과의 관련성을 파악합니다</div></div>
+          <div class="as-step"><div class="as-step-num">3</div><div class="as-step-text">관련이 있다면 신속히 재방문 일정을 잡습니다</div></div>
+          <div class="as-step"><div class="as-step-num">4</div><div class="as-step-text">처리 결과를 플랫폼에 공유합니다</div></div>
+        </div>
+        <div class="as-warn">
+          ⚠️ A/S 요청을 무시하거나 연락을 피하면 파트너 평가에 영향을 줄 수 있습니다.
+        </div>
+      </div>
+
+      <div class="as-card reveal d2">
+        <div class="as-card-head">
+          <div class="as-card-icon">⚖️</div>
+          <div class="as-card-title">고객 분쟁 발생 시</div>
+        </div>
+        <div class="as-steps">
+          <div class="as-step"><div class="as-step-num">1</div><div class="as-step-text">즉시 운영팀에 상황을 알립니다 (전화·문자)</div></div>
+          <div class="as-step"><div class="as-step-num">2</div><div class="as-step-text">작업 전·후 사진과 고객 동의 내역을 제출합니다</div></div>
+          <div class="as-step"><div class="as-step-num">3</div><div class="as-step-text">운영팀이 중재를 진행하는 동안 고객과 독단적 합의는 삼가주세요</div></div>
+          <div class="as-step"><div class="as-step-num">4</div><div class="as-step-text">운영팀 결정에 따라 처리됩니다</div></div>
+        </div>
+        <div class="as-warn">
+          ⚠️ 분쟁 발생 시 현장 사진이 없으면 불리하게 작용할 수 있습니다. 사진 촬영 습관화를 권장합니다.
+        </div>
+      </div>
+
+      <div class="as-card reveal d3">
+        <div class="as-card-head">
+          <div class="as-card-icon">🚨</div>
+          <div class="as-card-title">긴급 상황 발생 시</div>
+        </div>
+        <div class="as-steps">
+          <div class="as-step"><div class="as-step-num">1</div><div class="as-step-text">인명 안전을 최우선으로 합니다</div></div>
+          <div class="as-step"><div class="as-step-num">2</div><div class="as-step-text">필요 시 119·112 등 긴급 기관에 신고합니다</div></div>
+          <div class="as-step"><div class="as-step-num">3</div><div class="as-step-text">상황을 운영팀에 즉시 공유합니다</div></div>
+          <div class="as-step"><div class="as-step-num">4</div><div class="as-step-text">이후 경위서 및 현장 사진을 제출합니다</div></div>
+        </div>
+      </div>
+
+      <div class="as-card reveal d4">
+        <div class="as-card-head">
+          <div class="as-card-icon">📸</div>
+          <div class="as-card-title">사진 촬영 습관</div>
+        </div>
+        <div class="as-steps">
+          <div class="as-step"><div class="as-step-num">✓</div><div class="as-step-text">방문 즉시 현장 전경 사진 (여러 각도)</div></div>
+          <div class="as-step"><div class="as-step-num">✓</div><div class="as-step-text">문제 부위 클로즈업 사진</div></div>
+          <div class="as-step"><div class="as-step-num">✓</div><div class="as-step-text">작업 중간 진행 사진</div></div>
+          <div class="as-step"><div class="as-step-num">✓</div><div class="as-step-text">완료 후 동일 각도 비교 사진</div></div>
+          <div class="as-step"><div class="as-step-num">✓</div><div class="as-step-text">사용 자재·부품 사진 (해당 시)</div></div>
+        </div>
+        <div class="as-warn" style="background:rgba(48,161,210,0.07);border-color:rgba(48,161,210,0.25);color:#1f6f94;">
+          💡 사진 촬영은 고객 동의 후 진행하며, 개인 정보가 포함되지 않도록 주의해 주세요.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 파트너 준수사항 -->
+<section class="sec-compliance" id="compliance">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">Step 6 · Compliance</span>
+      <h2 class="section-title">파트너 준수사항</h2>
+      <p class="section-sub center" style="color:rgba(255,255,255,0.5)">만능맨의 신뢰는 파트너 한 분 한 분의 행동으로 만들어집니다.</p>
+    </div>
+    <div class="compliance-grid">
+      <div class="comp-card reveal d1">
+        <div class="comp-icon">🤝</div>
+        <div class="comp-body">
+          <div class="comp-title">투명한 고객 응대</div>
+          <div class="comp-desc">작업 범위, 비용, 일정을 고객에게 명확하게 안내하고 동의를 받은 후 작업을 시작합니다. 숨겨진 비용이나 불명확한 설명은 분쟁의 원인이 됩니다.</div>
+        </div>
+      </div>
+      <div class="comp-card reveal d2">
+        <div class="comp-icon">🔒</div>
+        <div class="comp-body">
+          <div class="comp-title">고객 정보 보호</div>
+          <div class="comp-desc">업무상 알게 된 고객의 개인 정보(이름·주소·연락처 등)는 플랫폼 외 목적으로 사용하거나 제3자에게 제공할 수 없습니다.</div>
+        </div>
+      </div>
+      <div class="comp-card reveal d3">
+        <div class="comp-icon">📋</div>
+        <div class="comp-body">
+          <div class="comp-title">플랫폼 정책 준수</div>
+          <div class="comp-desc">만능맨을 통해 연결된 고객 건은 플랫폼 운영 정책을 따라야 합니다. 운영 정책이 변경될 경우 사전 공지 후 적용됩니다.</div>
+        </div>
+      </div>
+      <div class="comp-card reveal d4">
+        <div class="comp-icon">⚡</div>
+        <div class="comp-body">
+          <div class="comp-title">안전 기준 준수</div>
+          <div class="comp-desc">작업 시 관련 법령·안전 수칙을 반드시 준수합니다. 전기·가스 작업의 경우 해당 자격을 갖춘 인력이 작업해야 합니다.</div>
+        </div>
+      </div>
+      <div class="comp-card reveal d1">
+        <div class="comp-icon">⏰</div>
+        <div class="comp-body">
+          <div class="comp-title">약속 시간 준수</div>
+          <div class="comp-desc">고객과 약속한 방문 시간을 지켜주세요. 불가피하게 지연되는 경우 최소 30분 전에 고객에게 안내해야 합니다.</div>
+        </div>
+      </div>
+      <div class="comp-card reveal d2">
+        <div class="comp-icon">🌟</div>
+        <div class="comp-body">
+          <div class="comp-title">전문성 유지</div>
+          <div class="comp-desc">본인의 전문 분야 내에서만 작업합니다. 전문 지식이 부족한 분야의 작업 요청은 정중히 거절하거나 운영팀에 문의해 주세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-warn-box reveal">
+      <div class="comp-warn-title">⚠️ 아래 행위는 파트너 자격 정지·해지 사유가 될 수 있습니다</div>
+      <div class="comp-warn-list">
+        <div class="comp-warn-item">만능맨을 통해 연결된 고객과의 무단 직거래 유도</div>
+        <div class="comp-warn-item">고객 개인 정보의 무단 활용 또는 외부 제공</div>
+        <div class="comp-warn-item">허위·과장 견적 안내 또는 부당 추가 비용 청구</div>
+        <div class="comp-warn-item">고객 재산 손상 후 은폐 또는 고의 방치</div>
+        <div class="comp-warn-item">운영팀 중재 거부 또는 고객 협박·강압적 태도</div>
+        <div class="comp-warn-item">무자격 분야 작업으로 인한 안전사고 유발</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 파트너 전용 FAQ -->
+<section class="sec-faq" id="faq">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-label">FAQ · Partners Only</span>
+      <h2 class="section-title">파트너 전용 FAQ</h2>
+      <p class="section-sub center">현장에서 자주 생기는 궁금증을 모았습니다.</p>
+    </div>
+    <div class="faq-search-wrap reveal">
+      <input type="text" id="faqSearch" placeholder="궁금한 내용을 검색하세요. 예) 정산, 사진, 취소" oninput="filterFAQ()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <div class="faq-cat-tabs reveal">
+      <button class="cat-btn active" onclick="filterCat('all',this)">전체</button>
+      <button class="cat-btn" onclick="filterCat('order',this)">수주·배정</button>
+      <button class="cat-btn" onclick="filterCat('settle',this)">정산·수수료</button>
+      <button class="cat-btn" onclick="filterCat('customer',this)">고객 응대</button>
+      <button class="cat-btn" onclick="filterCat('as',this)">A/S·분쟁</button>
+      <button class="cat-btn" onclick="filterCat('etc',this)">기타</button>
+    </div>
+    <div class="faq-list">
+      <div id="faqNoResult">검색 결과가 없습니다. 다른 키워드로 검색해보세요.</div>
+
+      <div class="faq-group" data-cat="order">
+        <div class="faq-group-title"><div class="faq-group-icon">📋</div>수주·배정<div class="faq-group-line"></div></div>
+        <div class="faq-item" data-cat="order"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업 요청 알림을 받지 못했습니다. 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">앱 알림 설정 및 문자 수신 여부를 먼저 확인해 주세요. 이상이 있으면 운영팀(1899-8827)에 연락해 주시면 안내드리겠습니다.</div></div></div>
+        <div class="faq-item" data-cat="order"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">요청을 수락했는데 고객과 연락이 안 됩니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">3회 이상 시도 후에도 연락이 되지 않으면 운영팀에 상황을 알려주세요. 운영팀이 고객에게 직접 연락해 드립니다.<div class="highlight">📌 무단으로 방문을 취소하지 말고 반드시 운영팀에 먼저 알려주세요.</div></div></div></div>
+        <div class="faq-item" data-cat="order"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업 요청을 거절하면 불이익이 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">정당한 이유(일정 충돌, 전문 분야 외 등)가 있다면 거절이 가능합니다. 다만 반복적인 거절은 연결 검토 시 영향을 줄 수 있습니다. 운영팀에 사유를 공유해 주시면 함께 조율하겠습니다.</div></div></div>
+        <div class="faq-item" data-cat="order"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">동시에 여러 건을 수락할 수 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">가능합니다. 단, 각 고객에게 충분한 응대가 가능한 범위에서만 수락해 주세요. 과도한 수락으로 응대 품질이 낮아지면 파트너 평가에 영향을 줄 수 있습니다.</div></div></div>
+      </div>
+
+      <div class="faq-group" data-cat="settle">
+        <div class="faq-group-title"><div class="faq-group-icon">💰</div>정산·수수료<div class="faq-group-line"></div></div>
+        <div class="faq-item" data-cat="settle"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">정산이 예정보다 늦어지고 있습니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">완료 사진 제출 여부와 고객 확인 완료 상태를 먼저 확인해 주세요. 이상이 없는데도 지연된다면 운영팀에 문의해 주시면 빠르게 확인해 드리겠습니다.</div></div></div>
+        <div class="faq-item" data-cat="settle"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">자재비를 추가로 쓴 경우 정산은 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">자재·부품비는 고객 동의 후 사용된 건에 한해 영수증 제출 시 별도 검토합니다. 반드시 고객 동의를 먼저 받은 후 구매해 주세요.<div class="highlight">📌 영수증이 없거나 동의 내역이 없는 경우 별도 정산이 어려울 수 있습니다.</div></div></div></div>
+        <div class="faq-item" data-cat="settle"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객이 작업 완료 확인을 안 해줍니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">고객 미확인 시에도 운영팀이 일정 기간 후 확인 처리를 진행하는 방안을 운영할 예정입니다. 확인이 늦어지는 경우 운영팀에 알려주세요.</div></div></div>
+      </div>
+
+      <div class="faq-group" data-cat="customer">
+        <div class="faq-group-title"><div class="faq-group-icon">🤝</div>고객 응대<div class="faq-group-line"></div></div>
+        <div class="faq-item" data-cat="customer"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객이 견적 외 추가 작업을 요청합니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">추가 작업은 추가 비용이 발생함을 안내한 뒤 고객 동의를 받고 진행해 주세요. 동의 없이 진행한 작업은 정산 분쟁의 원인이 됩니다.</div></div></div>
+        <div class="faq-item" data-cat="customer"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객이 무리한 요구를 하거나 불쾌한 언행을 합니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">안전하게 현장을 빠져나온 뒤 즉시 운영팀에 상황을 알려주세요. 파트너의 안전과 권익을 보호하기 위해 운영팀이 함께 대응합니다.<div class="highlight">📌 어떤 상황에서도 보복성 언행이나 물리적 충돌은 삼가주세요.</div></div></div></div>
+        <div class="faq-item" data-cat="customer"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객이 만능맨 외 개인 연락처를 달라고 합니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">플랫폼 운영 정책상 개인 연락처 교환은 제한될 수 있습니다. "이후 작업도 만능맨을 통해 연결해 드리겠다"고 안내해 주시면 됩니다.</div></div></div>
+      </div>
+
+      <div class="faq-group" data-cat="as">
+        <div class="faq-group-title"><div class="faq-group-icon">🛠️</div>A/S · 분쟁<div class="faq-group-line"></div></div>
+        <div class="faq-item" data-cat="as"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업 후 고객이 하자를 주장하는데 제 잘못이 아닌 것 같습니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">작업 전·후 사진과 고객 동의 내역을 운영팀에 제출해 주세요. 운영팀이 객관적으로 확인하고 중재합니다. 독단적으로 합의하거나 비용을 지급하지 마세요.</div></div></div>
+        <div class="faq-item" data-cat="as"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">A/S 기간이 별도로 정해져 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">A/S 기간과 기준은 작업 분야별로 다르며, 운영 정책에 따라 안내됩니다. 현재 정식 운영 준비 중이므로 구체적인 기준은 합류 후 별도 공지됩니다.</div></div></div>
+        <div class="faq-item" data-cat="as"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업 중 실수로 고객 물건을 파손했습니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">즉시 고객에게 사실을 알리고 운영팀에 보고해 주세요. 파손 물품 사진을 촬영해 두고 운영팀 지침에 따라 처리합니다. 은폐하거나 방치하면 더 큰 분쟁으로 이어질 수 있습니다.</div></div></div>
+      </div>
+
+      <div class="faq-group" data-cat="etc">
+        <div class="faq-group-title"><div class="faq-group-icon">📋</div>기타<div class="faq-group-line"></div></div>
+        <div class="faq-item" data-cat="etc"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">파트너 정보(연락처, 지역 등)를 변경하고 싶습니다.</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">운영팀에 연락해 변경 사항을 알려주세요. 신속하게 업데이트 해드리겠습니다.</div></div></div>
+        <div class="faq-item" data-cat="etc"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">장기간 활동이 어려운 경우(휴가, 부상 등) 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">사전에 운영팀에 기간과 사유를 알려주세요. 해당 기간 동안 연결 요청을 중단 처리해 드립니다.</div></div></div>
+        <div class="faq-item" data-cat="etc"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">운영 정책이 바뀌면 어떻게 알 수 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">운영 정책 변경 시 문자 또는 앱 알림으로 사전에 공지합니다. 중요 변경 사항은 최소 7일 전 안내를 원칙으로 합니다.</div></div></div>
+        <div class="faq-item" data-cat="etc"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">운영팀 문의 연락처는 어디인가요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">전화: <strong>1899-8827</strong><br>운영시간: 평일 09:00 – 18:00 (점심 12:00–13:00 제외, 주말·공휴일 제외)<br>긴급 현장 상황은 운영 시간 외에도 연락해 주세요.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 지원 연락처 -->
+<section class="sec-cta" id="support">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-label">Support</span>
+      <h2 class="section-title">운영 지원 채널</h2>
+      <p class="section-sub">혼자 고민하지 마세요. 만능맨 운영팀이 함께 해결합니다.</p>
+    </div>
+    <div class="support-grid">
+      <div class="support-card reveal d1">
+        <div class="support-icon">📞</div>
+        <div class="support-title">전화 문의</div>
+        <div class="support-desc">가장 빠른 상담 채널입니다.<br>현장 긴급 상황에도 연락해 주세요.</div>
+        <div class="support-info">1899-8827</div>
+      </div>
+      <div class="support-card reveal d2">
+        <div class="support-icon">⏰</div>
+        <div class="support-title">운영 시간</div>
+        <div class="support-desc">평일 09:00 – 18:00<br>(점심 12:00~13:00 제외)<br>주말·공휴일 제외</div>
+      </div>
+      <div class="support-card reveal d3">
+        <div class="support-icon">🚨</div>
+        <div class="support-title">긴급 상황</div>
+        <div class="support-desc">인명 위험·안전사고 발생 시<br>먼저 119·112에 신고 후<br>운영팀에 상황을 알려주세요.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <img src="만능맨_final/logo_gnb_pc.png" alt="만능맨" style="height:28px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.8;margin-bottom:14px;display:block" onerror="this.outerHTML='<div style=\'font-size:16px;font-weight:900;color:#30A1D2;margin-bottom:14px\'>만능맨 파트너스</div>'">
+        <div class="ft-contact">1899-8827</div>
+        <div class="ft-hours">평일 09:00 - 18:00<br>(점심시간 12:00~13:00제외 · 주말/공휴일 제외)</div>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">사전등록 페이지</a>
+        <a href="#" rel="noopener noreferrer">이용약관</a>
+        <a href="#" rel="noopener noreferrer">개인정보 처리방침</a>
+        <a href="#" rel="noopener noreferrer">사업자 정보확인</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      상호명: <strong>(주)삼양밸브종합메이커</strong> · 대표이사: 양경삼 · 주소: 경기도 부천시 오정구 오정로 119(삼정동)<br>
+      사업자등록번호: 130-81-09164<br>
+      © 2026 만능맨, Inc. All rights reserved. — 파트너 전용 운영 가이드
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* 인트로 */
+  (function() {
+    const intro = document.getElementById('intro');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const shown = sessionStorage.getItem('mnm_guide_intro');
+    function hideIntro() {
+      intro.classList.add('hide');
+      document.body.style.overflow = '';
+      setTimeout(() => { if(intro) intro.style.display = 'none'; }, 1000);
+    }
+    if(shown || reduced) { intro.style.display = 'none'; return; }
+    sessionStorage.setItem('mnm_guide_intro', '1');
+    document.body.style.overflow = 'hidden';
+    setTimeout(hideIntro, 3500);
+  })();
+
+  /* 헤더 스크롤 */
+  window.addEventListener('scroll', () => {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  /* 스크롤 reveal */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold:0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* 체크리스트 탭 */
+  function showPanel(id, btn) {
+    document.querySelectorAll('.cl-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cl-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+  }
+
+  /* FAQ 토글 */
+  function toggleFAQ(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  }
+
+  /* FAQ 카테고리 */
+  function filterCat(cat, btn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('faqSearch').value = '';
+    document.querySelectorAll('.faq-group').forEach(g => {
+      g.style.display = (cat === 'all' || g.dataset.cat === cat) ? '' : 'none';
+    });
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('hidden'));
+    checkNoResult();
+  }
+
+  /* FAQ 검색 */
+  function filterFAQ() {
+    const q = document.getElementById('faqSearch').value.trim().toLowerCase();
+    document.querySelectorAll('.cat-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+    document.querySelectorAll('.faq-group').forEach(g => g.style.display='');
+    if(!q) {
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('hidden'));
+    } else {
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.toggle('hidden', !item.innerText.toLowerCase().includes(q));
+      });
+      document.querySelectorAll('.faq-group').forEach(g => {
+        const vis = [...g.querySelectorAll('.faq-item')].some(i => !i.classList.contains('hidden'));
+        g.style.display = vis ? '' : 'none';
+      });
+    }
+    checkNoResult();
+  }
+
+  function checkNoResult() {
+    const any = [...document.querySelectorAll('.faq-item')].some(i => !i.classList.contains('hidden'));
+    document.getElementById('faqNoResult').style.display = any ? 'none' : 'block';
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     콘텐츠 보호 및 보안 강화 (Content Protection & Security)
+     ════════════════════════════════════════════════════════════ */
+
+  /* 1. 우클릭(컨텍스트 메뉴) 전체 방지 */
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  /* 2. 단축키 방지 — 소스보기·저장·개발자도구 차단 */
+  document.addEventListener('keydown', function(e) {
+    const mod = e.ctrlKey || e.metaKey;
+    if(mod && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) {
+      e.preventDefault(); return false;
+    }
+    if(e.key === 'F12') { e.preventDefault(); return false; }
+    if(mod && e.shiftKey && 'ijcIJC'.indexOf(e.key) !== -1) {
+      e.preventDefault(); return false;
+    }
+  });
+
+  /* 3. 이미지 드래그 저장 방지 */
+  (function() {
+    function protectImgs() {
+      document.querySelectorAll('img').forEach(function(img) {
+        if(img.dataset.protected) return;
+        img.dataset.protected = '1';
+        img.setAttribute('draggable', 'false');
+        img.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+        img.addEventListener('mousedown', function(e) { if(e.button !== 0) e.preventDefault(); });
+      });
+    }
+    protectImgs();
+    if(window.MutationObserver) {
+      new MutationObserver(protectImgs).observe(document.body, { childList: true, subtree: true });
+    }
+  })();
+
+  /* 4. 텍스트 복사 시 출처 자동 첨부 */
+  document.addEventListener('copy', function(e) {
+    const sel = window.getSelection();
+    if(!sel || sel.isCollapsed) return;
+    const txt = sel.toString();
+    if(txt.length < 2) return;
+    const src = '\n\n출처: 만능맨 파트너스 © 2026 삼양시스템그룹 | 무단 복제·배포를 금합니다.';
+    try {
+      e.clipboardData.setData('text/plain', txt + src);
+      e.clipboardData.setData('text/html', txt + src);
+      e.preventDefault();
+    } catch(err) {}
+  });
+
+  /* 5. 개발자도구 콘솔 보안 경고 */
+  (function() {
+    console.log('%c⚠ 보안 경고 / Security Warning', 'color:#e53e3e;font-size:22px;font-weight:900;');
+    console.log(
+      '%c이 사이트의 모든 콘텐츠(이미지·텍스트·디자인)는 저작권법에 의해 보호됩니다.\n무단 복제·배포·스크래핑은 법적 책임의 대상이 됩니다.',
+      'color:#333;font-size:13px;line-height:1.8;'
+    );
+    console.log('%c© 2026 만능맨 파트너스 | 삼양시스템그룹. All rights reserved.', 'color:#30A1D2;font-size:11px;font-weight:700;');
+    let _devOpen = false;
+    setInterval(function() {
+      const opened = (window.outerWidth - window.innerWidth) > 160 || (window.outerHeight - window.innerHeight) > 160;
+      if(opened && !_devOpen) {
+        _devOpen = true;
+        console.warn('%c콘텐츠 무단 복제는 법적 책임을 질 수 있습니다.', 'color:#e53e3e;font-weight:700;');
+      }
+      if(!opened) _devOpen = false;
+    }, 1000);
+  })();
+</script>
+</body>
+</html>
