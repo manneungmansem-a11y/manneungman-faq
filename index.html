@@ -41,6 +41,7 @@ body {
   overflow:hidden;
 }
 #intro.hide { opacity:0; visibility:hidden; pointer-events:none; }
+body.intro-active > *:not(#intro) { visibility:hidden; }
 
 /* 별빛 파티클 캔버스 */
 #intro-stars {
@@ -885,7 +886,7 @@ img {
 
 </style>
 </head>
-<body>
+<body class="intro-active">
 
 <!-- 인트로 화면 -->
 <div id="intro" role="status" aria-label="만능맨 파트너스">
@@ -1617,16 +1618,15 @@ img {
   (function() {
     const intro   = document.getElementById('intro');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const shown   = sessionStorage.getItem('mnm_intro');
 
     function hideIntro() {
       intro.classList.add('hide');
+      document.body.classList.remove('intro-active');
       document.body.style.overflow = '';
       setTimeout(() => { if(intro) intro.style.display = 'none'; }, 1000);
     }
 
-    if(shown || reduced) { intro.style.display = 'none'; return; }
-    sessionStorage.setItem('mnm_intro', '1');
+    if(reduced) { intro.style.display = 'none'; document.body.classList.remove('intro-active'); return; }
     document.body.style.overflow = 'hidden';
 
     // 유성/별똥별 인트로 효과 (로딩 화면 전용)
