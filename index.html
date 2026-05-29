@@ -237,11 +237,12 @@ nav a:hover { color:var(--dark); }
 .culture-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:48px; }
 @media(max-width:780px){ .culture-grid{grid-template-columns:1fr 1fr;} }
 @media(max-width:480px){ .culture-grid{grid-template-columns:1fr;} }
-.culture-card { background:var(--white); border-radius:14px; padding:24px 20px; border:1.5px solid transparent; box-shadow:0 1px 8px rgba(0,0,0,0.04); transition:all 0.25s; display:flex; flex-direction:column; gap:10px; }
+.culture-card { background:var(--white); border-radius:14px; padding:24px 20px; border:1.5px solid transparent; box-shadow:0 1px 8px rgba(0,0,0,0.04); transition:all 0.25s; display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
 .culture-card:hover { border-color:var(--blue); box-shadow:0 6px 24px rgba(48,161,210,0.1); transform:translateY(-3px); }
-.culture-icon { width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--blue-dim);border:1.5px solid rgba(48,161,210,0.25);border-radius:13px;font-size:22px; }
+.culture-icon { width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--blue-dim);border:1.5px solid rgba(48,161,210,0.25);border-radius:13px;font-size:22px;flex-shrink:0; }
 .culture-icon img { width:26px;height:26px;object-fit:contain;filter:invert(46%) sepia(80%) saturate(450%) hue-rotate(165deg) brightness(90%) contrast(95%); }
-.culture-text { font-size:14px; color:var(--dark); line-height:1.65; font-weight:600; }
+.culture-text { font-size:16px; color:#111827; line-height:1.55; font-weight:700; letter-spacing:-0.2px; word-break:keep-all; }
+@media(max-width:480px){ .culture-text { font-size:15px; } }
 
 /* ABOUT — 만능맨 소개 */
 .sec-about { background:var(--white); }
@@ -443,7 +444,7 @@ footer { background:var(--dark); border-top:1px solid rgba(255,255,255,0.06); pa
 .modal-close:hover { background:rgba(255,255,255,0.15); color:#fff; }
 .modal-body { padding:28px 28px 0; flex:1; min-height:0; overflow-y:auto; }
 .modal-steps { display:flex; align-items:center; gap:0; margin-bottom:28px; }
-.modal-step { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:#ccc; flex:1; }
+.modal-step { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:#ccc; flex:1; white-space:nowrap; }
 .modal-step.active { color:var(--blue); }
 .modal-step.done { color:var(--blue); opacity:0.5; }
 .step-num { width:24px; height:24px; border-radius:50%; background:#eee; color:#aaa; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.3s; }
@@ -455,6 +456,7 @@ footer { background:var(--dark); border-top:1px solid rgba(255,255,255,0.06); pa
 .form-row { margin-bottom:18px; }
 .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
 @media(max-width:480px){ .form-row-2{grid-template-columns:1fr;} }
+@media(max-width:400px){ .modal-step{ font-size:10px; gap:5px; } .step-num{ width:20px; height:20px; font-size:10px; } .step-line{ margin:0 3px; } }
 .form-label { display:block; font-size:13px; font-weight:700; color:var(--dark); margin-bottom:7px; }
 .form-label .req { color:var(--blue); margin-left:2px; }
 .form-input { width:100%; padding:13px 16px; background:var(--off-white); border:1.5px solid var(--border); border-radius:10px; color:var(--dark); font-size:15px; font-family:inherit; outline:none; transition:border-color 0.25s, box-shadow 0.25s; }
@@ -649,6 +651,7 @@ select.form-input { cursor:pointer; }
 .culture-card {
   border-radius: 18px;
   padding: 28px 22px;
+  gap: 14px;
   box-shadow: 0 2px 20px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03);
   transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
 }
