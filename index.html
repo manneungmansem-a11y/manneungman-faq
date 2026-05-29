@@ -147,6 +147,7 @@ body.intro-active > *:not(#intro) { visibility:hidden; }
   margin-top:18px;
   opacity:0; transform:translateY(10px);
   animation:introFadeUp 0.6s 1.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  word-break:keep-all; overflow-wrap:break-word;
 }
 
 @keyframes introCharIn {
@@ -190,8 +191,8 @@ nav a:hover { color:var(--dark); }
   display:inline-block; font-size:11px; font-weight:700;
   letter-spacing:2.5px; text-transform:uppercase; color:var(--blue); margin-bottom:14px;
 }
-.section-title { font-size:clamp(26px,4vw,44px); font-weight:900; line-height:1.2; letter-spacing:-1px; margin-bottom:14px; color:var(--dark); }
-.section-sub { font-size:16px; color:var(--gray); line-height:1.8; max-width:640px; }
+.section-title { font-size:clamp(26px,4vw,44px); font-weight:900; line-height:1.2; letter-spacing:-1px; margin-bottom:14px; color:var(--dark); word-break:keep-all; overflow-wrap:break-word; }
+.section-sub { font-size:16px; color:var(--gray); line-height:1.8; max-width:640px; word-break:keep-all; overflow-wrap:break-word; }
 .section-sub.center { margin:0 auto; text-align:center; }
 .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.65s var(--ease), transform 0.65s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
@@ -205,14 +206,14 @@ nav a:hover { color:var(--dark); }
 .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); color:var(--blue); font-size:13px; font-weight:700; padding:8px 18px; border-radius:99px; margin-bottom:24px; letter-spacing:0.5px; }
 .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); animation:blink 1.8s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.hero h1 { font-size:clamp(32px,4.5vw,58px); font-weight:900; color:var(--dark); line-height:1.18; letter-spacing:-2px; margin-bottom:20px; }
+.hero h1 { font-size:clamp(32px,4.5vw,58px); font-weight:900; color:var(--dark); line-height:1.18; letter-spacing:-2px; margin-bottom:20px; word-break:keep-all; overflow-wrap:break-word; }
 .hero h1 em { color:var(--blue); font-style:normal; }
-.hero-sub { font-size:16px; color:var(--gray); line-height:1.85; margin-bottom:12px; }
-.hero-sub2 { font-size:14px; color:var(--gray-lt); line-height:1.8; margin-bottom:32px; border-left:2px solid var(--border); padding-left:14px; }
+.hero-sub { font-size:16px; color:var(--gray); line-height:1.85; margin-bottom:12px; word-break:keep-all; overflow-wrap:break-word; }
+.hero-sub2 { font-size:14px; color:var(--gray-lt); line-height:1.8; margin-bottom:32px; border-left:2px solid var(--border); padding-left:14px; word-break:keep-all; overflow-wrap:break-word; }
 .hero-btns { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; flex-direction:column; }
 .hero-btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:10px; background:var(--blue); color:#fff; font-size:17px; font-weight:800; padding:18px 36px; border-radius:14px; border:none; cursor:pointer; font-family:inherit; box-shadow:0 4px 20px var(--blue-glow); transition:all 0.25s; }
 .hero-btn-primary:hover { background:var(--blue-dark); transform:translateY(-2px); box-shadow:0 8px 32px var(--blue-glow); }
-.hero-notice { font-size:13px; color:#1f6f94; line-height:1.75; margin-top:14px; padding:14px 16px 14px 44px; background:rgba(48,161,210,0.07); border-radius:12px; border:1px solid rgba(48,161,210,0.25); position:relative; }
+.hero-notice { font-size:13px; color:#1f6f94; line-height:1.75; margin-top:14px; padding:14px 16px 14px 44px; background:rgba(48,161,210,0.07); border-radius:12px; border:1px solid rgba(48,161,210,0.25); position:relative; word-break:keep-all; overflow-wrap:break-word; }
 .hero-notice::before { content:'ℹ'; position:absolute; left:14px; top:13px; font-size:16px; color:var(--blue); font-style:normal; font-weight:700; }
 .hero-visual { display:flex; align-items:center; justify-content:center; position:relative; align-self:start; padding-top:0; }
 .hero-char-area { position:relative; width:480px; height:480px; display:flex; align-items:center; justify-content:center; }
@@ -226,10 +227,10 @@ nav a:hover { color:var(--dark); }
 .sec-why .section-title { color:#fff; }
 .why-body { margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
 @media(max-width:760px){ .why-body{grid-template-columns:1fr;} }
-.why-text { font-size:16px; color:rgba(255,255,255,0.6); line-height:2; }
+.why-text { font-size:16px; color:rgba(255,255,255,0.6); line-height:2; word-break:keep-all; overflow-wrap:break-word; }
 .why-text p+p { margin-top:18px; }
 .why-quote { background:rgba(48,161,210,0.08); border:1px solid rgba(48,161,210,0.2); border-radius:16px; padding:32px 28px; }
-.why-quote-text { font-size:17px; font-weight:700; color:#fff; line-height:1.75; letter-spacing:-0.3px; }
+.why-quote-text { font-size:17px; font-weight:700; color:#fff; line-height:1.75; letter-spacing:-0.3px; word-break:keep-all; overflow-wrap:break-word; }
 .why-quote-line { width:48px; height:3px; background:var(--blue); border-radius:2px; margin-top:22px; }
 
 /* CULTURE — 투명한 문화 */
@@ -248,12 +249,12 @@ nav a:hover { color:var(--dark); }
 .sec-about { background:var(--white); }
 .about-inner { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
 @media(max-width:760px){ .about-inner{grid-template-columns:1fr;} }
-.about-text p { font-size:15px; color:var(--gray); line-height:1.95; margin-top:20px; }
+.about-text p { font-size:15px; color:var(--gray); line-height:1.95; margin-top:20px; word-break:keep-all; overflow-wrap:break-word; }
 .about-badge-wrap { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; }
 .about-badge { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); border-radius:8px; font-size:13px; font-weight:700; color:var(--blue); }
 .about-visual { background:var(--off-white); border-radius:20px; padding:40px; text-align:center; border:1.5px solid var(--border); }
 .about-logo-img { height:48px; object-fit:contain; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto; }
-.about-visual-text { font-size:13px; color:var(--gray); line-height:1.9; }
+.about-visual-text { font-size:13px; color:var(--gray); line-height:1.9; word-break:keep-all; overflow-wrap:break-word; }
 .about-visual-text strong { color:var(--dark); font-weight:700; }
 
 /* PARTNER — 파트너 모집 */
@@ -267,8 +268,8 @@ nav a:hover { color:var(--dark); }
 .partner-field { display:flex; align-items:flex-start; gap:12px; padding:18px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; transition:all 0.2s; }
 .partner-field:hover { border-color:rgba(48,161,210,0.4); background:rgba(48,161,210,0.06); }
 .partner-field-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); flex-shrink:0; margin-top:6px; }
-.partner-field-text { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.5; }
-.partner-sub-note { margin-top:24px; padding:16px 20px; background:rgba(48,161,210,0.08); border:1px solid rgba(48,161,210,0.2); border-radius:10px; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; }
+.partner-field-text { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.5; word-break:keep-all; overflow-wrap:break-word; }
+.partner-sub-note { margin-top:24px; padding:16px 20px; background:rgba(48,161,210,0.08); border:1px solid rgba(48,161,210,0.2); border-radius:10px; font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; word-break:keep-all; overflow-wrap:break-word; }
 .partner-sub-note em { color:var(--blue); font-style:normal; }
 
 /* VALUE — 함께 만들 수 있는 가치 */
@@ -276,13 +277,13 @@ nav a:hover { color:var(--dark); }
 .value-notice { padding:18px 22px 18px 52px; background:var(--white); border-radius:12px; border:1px solid rgba(48,161,210,0.25); margin-top:32px; position:relative; }
 .value-notice::before { content:'ℹ'; position:absolute; left:18px; top:17px; font-size:16px; color:var(--blue); font-weight:700; }
 .value-notice-title { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:6px; }
-.value-notice-text { font-size:13px; color:var(--gray); line-height:1.75; }
+.value-notice-text { font-size:13px; color:var(--gray); line-height:1.75; word-break:keep-all; overflow-wrap:break-word; }
 .value-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:24px; }
 @media(max-width:640px){ .value-grid{grid-template-columns:1fr;} }
 .value-card { display:flex; align-items:flex-start; gap:12px; padding:18px 18px; background:var(--white); border-radius:12px; border:1.5px solid var(--border); box-shadow:0 1px 6px rgba(0,0,0,0.04); transition:all 0.25s; }
 .value-card:hover { border-color:var(--blue); box-shadow:0 4px 18px rgba(48,161,210,0.1); transform:translateY(-2px); }
 .value-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); flex-shrink:0; margin-top:6px; }
-.value-item-text { font-size:14px; color:var(--dark); line-height:1.65; font-weight:500; }
+.value-item-text { font-size:14px; color:var(--dark); line-height:1.65; font-weight:500; word-break:keep-all; overflow-wrap:break-word; }
 
 /* FLOW — 운영 흐름 */
 .sec-flow { background: linear-gradient(135deg,rgba(48,161,210,0.03) 0%,transparent 60%), var(--white); }
@@ -294,8 +295,8 @@ nav a:hover { color:var(--dark); }
 .flow-line { width:2px; flex:1; background:var(--border); margin-top:4px; min-height:32px; }
 .flow-step:last-child .flow-line { display:none; }
 .flow-content { padding-top:8px; padding-bottom:4px; }
-.flow-title { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px; }
-.flow-desc { font-size:14px; color:var(--gray); line-height:1.75; }
+.flow-title { font-size:16px; font-weight:800; color:var(--dark); margin-bottom:6px; word-break:keep-all; overflow-wrap:break-word; }
+.flow-desc { font-size:14px; color:var(--gray); line-height:1.75; word-break:keep-all; overflow-wrap:break-word; }
 
 /* ROLES — 역할 분담 */
 .sec-roles { background: radial-gradient(circle,rgba(48,161,210,0.065) 1.5px,transparent 1.5px) 0 0/28px 28px, var(--off-white); }
@@ -307,7 +308,7 @@ nav a:hover { color:var(--dark); }
 .roles-col-title .tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--blue); background:var(--blue-dim); padding:3px 10px; border-radius:99px; }
 .roles-col-sub { font-size:13px; color:var(--gray-lt); margin-bottom:20px; }
 .roles-list { display:flex; flex-direction:column; gap:10px; }
-.roles-item { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.6; }
+.roles-item { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.6; word-break:keep-all; overflow-wrap:break-word; }
 .roles-check { width:18px; height:18px; border-radius:5px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--blue); flex-shrink:0; margin-top:1px; }
 
 /* PREP — 신청 전 준비 */
@@ -315,9 +316,9 @@ nav a:hover { color:var(--dark); }
 .prep-list-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; margin-top:32px; }
 .prep-col { display:flex; flex-direction:column; gap:10px; }
 @media(max-width:760px){ .prep-list-grid { grid-template-columns:1fr; } }
-.prep-item { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--off-white); border-radius:9px; font-size:14px; color:var(--dark); }
+.prep-item { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--off-white); border-radius:9px; font-size:14px; color:var(--dark); word-break:keep-all; overflow-wrap:break-word; }
 .prep-num { width:24px; height:24px; border-radius:50%; background:var(--blue-dim); color:var(--blue); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.prep-note { padding:22px 24px; background:var(--off-white); border-radius:12px; border-left:3px solid var(--blue); font-size:14px; color:var(--gray); line-height:1.8; }
+.prep-note { padding:22px 24px; background:var(--off-white); border-radius:12px; border-left:3px solid var(--blue); font-size:14px; color:var(--gray); line-height:1.8; word-break:keep-all; overflow-wrap:break-word; }
 .prep-note strong { color:var(--dark); }
 
 /* SETTLEMENT — 정산·수수료 */
@@ -328,7 +329,7 @@ nav a:hover { color:var(--dark); }
 .settlement-card.highlight { border-color:var(--blue); }
 .settlement-card-title { font-size:14px; font-weight:800; color:var(--blue); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:14px; }
 .settlement-points { display:flex; flex-direction:column; gap:10px; }
-.settlement-pt { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.6; }
+.settlement-pt { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--gray); line-height:1.6; word-break:keep-all; overflow-wrap:break-word; }
 .settlement-pt::before { content:'—'; color:var(--blue); flex-shrink:0; font-weight:700; margin-top:1px; }
 .settlement-free { margin-top:20px; padding:14px 18px; background:var(--blue-dim); border-radius:10px; text-align:center; }
 .settlement-free strong { font-size:15px; color:var(--blue); font-weight:800; }
@@ -356,12 +357,12 @@ nav a:hover { color:var(--dark); }
 .faq-q { width:100%; background:none; border:none; padding:18px 20px; cursor:pointer; display:flex; align-items:flex-start; gap:14px; font-family:inherit; text-align:left; }
 .q-badge { flex-shrink:0; width:26px; height:26px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.25); color:var(--blue); border-radius:7px; font-size:11px; font-weight:800; font-style:italic; display:flex; align-items:center; justify-content:center; transition:all 0.25s; }
 .faq-item.open .q-badge { background:var(--blue); color:#fff; }
-.q-text { flex:1; font-size:15px; font-weight:600; color:var(--dark); line-height:1.55; }
+.q-text { flex:1; font-size:15px; font-weight:600; color:var(--dark); line-height:1.55; word-break:keep-all; overflow-wrap:break-word; }
 .arrow { flex-shrink:0; color:#ccc; font-size:14px; transition:transform 0.3s, color 0.2s; margin-top:4px; }
 .faq-item.open .arrow { transform:rotate(180deg); color:var(--blue); }
 .faq-a { max-height:0; overflow:hidden; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
 .faq-item.open .faq-a { max-height:900px; }
-.faq-a-inner { margin:0 20px; padding:14px 0 20px 40px; font-size:14px; color:var(--gray); line-height:1.9; border-top:1px solid var(--border); position:relative; }
+.faq-a-inner { margin:0 20px; padding:14px 0 20px 40px; font-size:14px; color:var(--gray); line-height:1.9; border-top:1px solid var(--border); position:relative; word-break:keep-all; overflow-wrap:break-word; }
 .faq-a-inner::before { content:''; position:absolute; left:0; top:14px; bottom:20px; width:2px; background:linear-gradient(to bottom,var(--blue),transparent); border-radius:2px; }
 .faq-a-inner strong { color:var(--blue); font-weight:700; }
 .faq-a-inner ul { padding-left:18px; margin-top:8px; }
@@ -380,7 +381,7 @@ nav a:hover { color:var(--dark); }
 .cta-btns { display:flex; justify-content:center; gap:12px; margin-top:32px; flex-wrap:wrap; }
 .cta-btn-white { display:inline-flex; align-items:center; gap:8px; background:#fff; color:var(--blue); font-size:15px; font-weight:800; padding:16px 40px; border-radius:12px; border:none; cursor:pointer; font-family:inherit; box-shadow:0 4px 24px rgba(0,0,0,0.2); transition:all 0.25s; }
 .cta-btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 36px rgba(0,0,0,0.25); }
-.cta-notice { font-size:12px; color:rgba(255,255,255,0.35); margin-top:20px; line-height:1.8; }
+.cta-notice { font-size:12px; color:rgba(255,255,255,0.35); margin-top:20px; line-height:1.8; word-break:keep-all; overflow-wrap:break-word; }
 
 /* COOLDOWN MODAL */
 #cooldown-modal {
@@ -398,7 +399,7 @@ nav a:hover { color:var(--dark); }
 #cooldown-modal.show .cooldown-box { transform:scale(1) translateY(0); }
 .cooldown-icon { font-size:40px; margin-bottom:16px; display:block; }
 .cooldown-title { font-size:17px; font-weight:900; color:var(--dark); margin-bottom:10px; line-height:1.4; }
-.cooldown-desc { font-size:14px; color:var(--gray); line-height:1.75; margin-bottom:24px; }
+.cooldown-desc { font-size:14px; color:var(--gray); line-height:1.75; margin-bottom:24px; word-break:keep-all; overflow-wrap:break-word; }
 .cooldown-timer-wrap {
   display:flex; align-items:center; justify-content:center;
   background:var(--blue-dim); border:1.5px solid rgba(48,161,210,0.3);
@@ -424,11 +425,11 @@ footer { background:var(--dark); border-top:1px solid rgba(255,255,255,0.06); pa
 .footer-top { display:grid; grid-template-columns:220px 1fr; gap:48px; padding-bottom:32px; border-bottom:1px solid rgba(255,255,255,0.07); }
 @media(max-width:680px){ .footer-top{grid-template-columns:1fr;gap:24px;} }
 .ft-contact { font-size:20px; font-weight:900; color:var(--blue); margin-bottom:4px; }
-.ft-hours { font-size:12px; line-height:1.9; }
+.ft-hours { font-size:12px; line-height:1.9; word-break:keep-all; overflow-wrap:break-word; }
 .footer-links { display:flex; flex-wrap:wrap; gap:20px; padding-top:6px; }
 .footer-links a { color:rgba(255,255,255,0.35); font-size:13px; text-decoration:none; transition:color 0.2s; white-space:nowrap; }
 .footer-links a:hover { color:#fff; }
-.footer-bottom { padding-top:24px; font-size:11px; line-height:2.2; color:rgba(255,255,255,0.2); }
+.footer-bottom { padding-top:24px; font-size:11px; line-height:2.2; color:rgba(255,255,255,0.2); word-break:keep-all; overflow-wrap:break-word; }
 .footer-bottom strong { color:rgba(255,255,255,0.4); }
 
 /* MODAL */
@@ -490,7 +491,7 @@ select.form-input { cursor:pointer; }
 .agree-row:hover { border-color:var(--blue); }
 .agree-check { width:20px; height:20px; border-radius:5px; border:1.5px solid #ccc; background:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:1px; transition:all 0.2s; }
 .agree-row.checked .agree-check { background:var(--blue); border-color:var(--blue); color:#fff; }
-.agree-text { font-size:13px; color:var(--gray); line-height:1.6; }
+.agree-text { font-size:13px; color:var(--gray); line-height:1.6; word-break:keep-all; overflow-wrap:break-word; }
 .agree-text strong { color:var(--dark); }
 .modal-footer { display:flex; gap:10px; justify-content:space-between; padding:16px 0 24px; border-top:1px solid var(--border); margin-top:16px; position:sticky; bottom:0; background:var(--white); z-index:1; }
 .btn-back { padding:13px 24px; border-radius:10px; border:1.5px solid var(--border); background:none; font-size:15px; font-weight:600; color:var(--gray); cursor:pointer; font-family:inherit; transition:all 0.2s; }
@@ -501,7 +502,7 @@ select.form-input { cursor:pointer; }
 .modal-success { text-align:center; padding:20px 0 8px; }
 .success-icon { width:72px; height:72px; border-radius:50%; background:var(--blue-dim); border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 20px; }
 .success-title { font-size:22px; font-weight:900; color:var(--dark); margin-bottom:10px; }
-.success-desc { font-size:15px; color:var(--gray); line-height:1.8; }
+.success-desc { font-size:15px; color:var(--gray); line-height:1.8; word-break:keep-all; overflow-wrap:break-word; }
 .success-email { color:var(--blue); font-weight:700; }
 
 /* ── 시각 강화 추가 스타일 ── */
@@ -632,7 +633,7 @@ select.form-input { cursor:pointer; }
 .priority-item { display:flex; align-items:flex-start; gap:14px; padding:20px 18px; background:var(--white); border-radius:14px; border:1.5px solid var(--border); box-shadow:0 1px 6px rgba(0,0,0,0.04); transition:all 0.25s; }
 .priority-item:hover { border-color:var(--blue); box-shadow:0 4px 18px rgba(48,161,210,0.1); transform:translateY(-2px); }
 .priority-icon { font-size:22px; flex-shrink:0; }
-.priority-text { font-size:14px; color:var(--dark); line-height:1.65; font-weight:600; padding-top:2px; }
+.priority-text { font-size:14px; color:var(--dark); line-height:1.65; font-weight:600; padding-top:2px; word-break:keep-all; overflow-wrap:break-word; }
 
 /* ═══════════════════════════════════════════════════════════
    DESIGN UPGRADE v2 — Soft UI · Bento Grid · Motion · Sticky
@@ -941,8 +942,8 @@ img {
         초기 파트너 사전 등록 모집 중
       </div>
       <h1>건축 설비 장인의<br>기술을 잇는 플랫폼,<br><em>만능맨</em></h1>
-      <p class="hero-sub">만능맨은 고객과 지역 설비 전문가를 연결하고, 현장의 기술과 신뢰를 투명하게 보여주는 건축설비 플랫폼입니다.</p>
-      <p class="hero-sub2">삼양시스템그룹의 현장 경험을 바탕으로 생활설비부터 건축설비까지 믿을 수 있는 연결을 준비합니다.</p>
+      <p class="hero-sub">만능맨은 고객과 지역 설비 전문가를 연결하고,<br class="pc-br"> 현장의 기술과 신뢰를 투명하게 보여주는 건축설비 플랫폼입니다.</p>
+      <p class="hero-sub2">삼양시스템그룹의 현장 경험을 바탕으로<br class="pc-br"> 생활설비부터 건축설비까지 믿을 수 있는 연결을 준비합니다.</p>
       <div class="hero-btns">
         <button class="hero-btn-primary" onclick="openModal()">
           만능맨 파트너스 사전등록 신청하기 →
@@ -953,7 +954,7 @@ img {
           <span class="hero-benefit-badge">✓ 수도권 중심 초기 파트너 우선 모집</span>
         </div>
         <div class="hero-notice">
-          정식 오픈 전 초기 파트너를 모집 중입니다. 사전등록은 검토 절차이며 계약·작업 배정을 보장하지 않습니다.
+          정식 오픈 전 초기 파트너를 모집 중입니다.<br class="pc-br"> 사전등록은 검토 절차이며 계약·작업 배정을 보장하지 않습니다.
         </div>
       </div>
     </div>
@@ -979,13 +980,13 @@ img {
       <div class="reveal d1">
         <img src="파트너스 랜딩페이지 전용 이미지/ChatGPT Image 2026년 5월 20일 오후 02_34_29 (1).png" alt="만능맨 설비 서비스 전문 분야" style="width:100%;max-width:300px;border-radius:16px;margin-bottom:24px;display:block;box-shadow:0 8px 32px rgba(0,0,0,0.3);" onerror="this.style.display='none'">
         <div class="why-text">
-          <p>현장에는 오랜 경험으로 쌓인 기술이 있지만, 고객이 믿을 업체를 찾기 어렵고 기술의 가치도 충분히 드러나지 않는 경우가 많습니다.</p>
-          <p>만능맨은 고객에게는 선택 기준을, 파트너에게는 기술과 신뢰를 보여줄 기회를 제공하기 위해 시작되었습니다.</p>
+          <p>현장에는 오랜 경험으로 쌓인 기술이 있지만,<br class="pc-br"> 고객이 믿을 업체를 찾기 어렵고 기술의 가치도 충분히 드러나지 않는 경우가 많습니다.</p>
+          <p>만능맨은 고객에게는 선택 기준을,<br class="pc-br"> 파트너에게는 기술과 신뢰를 보여줄 기회를 제공하기 위해 시작되었습니다.</p>
         </div>
       </div>
       <div class="reveal d2">
         <div class="why-quote">
-          <div class="why-quote-text">현장의 기술은 더 오래 이어지고, 고객은 더 투명하게 선택하는 건축설비 문화를 만듭니다.</div>
+          <div class="why-quote-text">현장의 기술은 더 오래 이어지고,<br class="pc-br"> 고객은 더 투명하게 선택하는 건축설비 문화를 만듭니다.</div>
           <div class="why-quote-line"></div>
         </div>
       </div>
@@ -999,7 +1000,7 @@ img {
     <div class="reveal" style="text-align:center">
       <span class="section-label">Our Standards</span>
       <h2 class="section-title">투명하고 신뢰할 수 있는 현장 문화</h2>
-      <p class="section-sub center">생활·건축설비는 일상과 안전에 닿아 있습니다. 만능맨은 다음 기준으로 고객과 파트너의 신뢰를 쌓아갑니다.</p>
+      <p class="section-sub center">생활·건축설비는 일상과 안전에 닿아 있습니다.<br class="pc-br"> 만능맨은 다음 기준으로 고객과 파트너의 신뢰를 쌓아갑니다.</p>
     </div>
     <div class="culture-grid">
       <div class="culture-card reveal d1"><div class="culture-icon"><img src="만능맨_final/ic_note.png" alt="" onerror="this.outerHTML='📋'"></div><div class="culture-text">작업 범위와 비용 사전 안내</div></div>
@@ -1020,8 +1021,8 @@ img {
         <span class="section-label">About</span>
         <h2 class="section-title">고객과 지역 전문가를<br>연결하는 건축설비 플랫폼</h2>
         <div class="about-text">
-          <p>만능맨은 배관, 누수, 수도, 전기·조명, 생활설비 유지보수 분야의 고객 요청을 지역 전문업체와 연결합니다.</p>
-          <p>갑작스러운 누수나 설비 불편이 생겼을 때, 고객이 믿을 수 있는 전문가를 빠르게 만날 수 있도록 준비하고 있습니다.</p>
+          <p>만능맨은 배관, 누수, 수도, 전기·조명, 생활설비 유지보수 분야의<br class="pc-br"> 고객 요청을 지역 전문업체와 연결합니다.</p>
+          <p>갑작스러운 누수나 설비 불편이 생겼을 때,<br class="pc-br"> 고객이 믿을 수 있는 전문가를 빠르게 만날 수 있도록 준비하고 있습니다.</p>
         </div>
         <div class="about-badge-wrap">
           <span class="about-badge">🔧 생활설비</span>
@@ -1035,7 +1036,7 @@ img {
         <div class="about-visual">
           <img src="만능맨_final/logo_gnb_pc.png" alt="만능맨" class="about-logo-img" onerror="this.outerHTML='<div style=\'font-size:28px;font-weight:900;color:#30A1D2;margin-bottom:20px\'>만능맨</div>'">
           <p class="about-visual-text">
-            <strong>삼양시스템그룹</strong>은 1960년대부터 밸브 제조, 건축설비, 에너지 관리 분야에서 쌓아온 기술과 현장 경험을 바탕으로 만능맨을 준비하고 있습니다.<br><br>
+            <strong>삼양시스템그룹</strong>은 1960년대부터 밸브 제조, 건축설비, 에너지 관리 분야에서<br class="pc-br"> 쌓아온 기술과 현장 경험을 바탕으로 만능맨을 준비하고 있습니다.<br><br>
             문고리부터 배관 누수까지, 생활 속 설비 문제를 믿을 수 있는 전문가와 연결합니다.
           </p>
           <img src="파트너스 랜딩페이지 전용 이미지/ChatGPT Image 2026년 5월 20일 오후 02_34_29 (2).png" alt="기술자와 고객 연결" style="width:100%;max-width:260px;border-radius:16px;margin-top:20px;display:block;margin-left:auto;margin-right:auto;" onerror="this.style.display='none'">
@@ -1051,7 +1052,7 @@ img {
     <div class="reveal" style="text-align:center">
       <span class="section-label">Who We're Looking For</span>
       <h2 class="section-title">현장을 책임지는<br>전문 파트너를 찾습니다</h2>
-      <p class="section-sub center">만능맨은 단순 작업자가 아닌, 기술과 책임감을 갖춘 현장 파트너를 찾습니다.</p>
+      <p class="section-sub center">만능맨은 단순 작업자가 아닌,<br class="pc-br"> 기술과 책임감을 갖춘 현장 파트너를 찾습니다.</p>
     </div>
     <div class="partner-grid reveal">
       <div class="partner-field"><div class="partner-field-dot"></div><div class="partner-field-text">누수 탐지·보수</div></div>
@@ -1094,28 +1095,28 @@ img {
     <div class="reveal" style="text-align:center">
       <span class="section-label">App Preview</span>
       <h2 class="section-title">만능맨이 구현하는<br>현장 연결 경험</h2>
-      <p class="section-sub center">파트너 등록부터 고객 요청 확인, 작업 완료 후 정산까지<br>투명하고 신뢰할 수 있는 운영 흐름을 제공합니다.</p>
+      <p class="section-sub center">파트너 등록부터 고객 요청 확인, 작업 완료 후 정산까지<br class="pc-br"> 투명하고 신뢰할 수 있는 운영 흐름을 제공합니다.</p>
     </div>
     <div class="app-preview-grid">
       <div class="app-preview-card reveal d1">
         <img src="app/1.png" alt="간편한 파트너 등록" style="width:100%;display:block;">
         <div style="padding:14px 16px;text-align:center;">
           <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">간편한 파트너 등록</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;">기본 정보와 가능 작업 분야를 입력하면<br>검토 후 만능맨 파트너로 등록됩니다.</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;word-break:keep-all;overflow-wrap:break-word;">기본 정보와 가능 작업 분야를 입력하면 검토 후 만능맨 파트너로 등록됩니다.</div>
         </div>
       </div>
       <div class="app-preview-card featured reveal d2">
         <img src="app/2.png" alt="고객 요청 확인" style="width:100%;display:block;">
         <div style="padding:14px 16px;text-align:center;">
           <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">고객 요청 확인</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;">고객이 남긴 작업 내용과 현장 정보를 확인하고<br>가능한 작업만 상담과 견적을 진행할 수 있습니다.</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;word-break:keep-all;overflow-wrap:break-word;">고객이 남긴 작업 내용과 현장 정보를 확인하고<br class="pc-br"> 가능한 작업만 상담과 견적을 진행할 수 있습니다.</div>
         </div>
       </div>
       <div class="app-preview-card reveal d3">
         <img src="app/3.png" alt="작업 완료 후 정산" style="width:100%;display:block;">
         <div style="padding:14px 16px;text-align:center;">
           <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">작업 완료 후 정산</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;">작업 완료 확인 후 정산 절차가 진행되며<br>투명한 운영 흐름으로 파트너를 지원합니다.</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;letter-spacing:0;text-transform:none;word-break:keep-all;overflow-wrap:break-word;">작업 완료 확인 후 정산 절차가 진행되며 투명한 운영 흐름으로 파트너를 지원합니다.</div>
         </div>
       </div>
     </div>
@@ -1135,7 +1136,7 @@ img {
     </div>
     <div class="value-notice reveal">
       <div class="value-notice-title">안내 사항</div>
-      <div class="value-notice-text">사전등록은 작업 배정이나 매출 보장이 아닙니다. 정식 운영 후 지역, 분야, 일정, 운영 정책을 기준으로 연결을 검토합니다.</div>
+      <div class="value-notice-text">사전등록은 작업 배정이나 매출 보장이 아닙니다.<br class="pc-br"> 정식 운영 후 지역, 분야, 일정, 운영 정책을 기준으로 연결을 검토합니다.</div>
     </div>
     <div class="value-grid">
       <div class="value-card bento-wide reveal d2"><div class="value-dot"></div><div class="value-item-text">작업 완료 후 3일 내 정산 예정</div></div>
@@ -1255,7 +1256,7 @@ img {
     <div class="reveal" style="text-align:center">
       <span class="section-label">Checklist</span>
       <h2 class="section-title">신청 전<br>확인해주세요</h2>
-      <p class="section-sub center" style="margin-top:16px">검토를 위해 아래 정보가 필요할 수 있습니다. 신청 단계에서는 간단히 작성해도 됩니다.</p>
+      <p class="section-sub center" style="margin-top:16px">검토를 위해 아래 정보가 필요할 수 있습니다.<br class="pc-br"> 신청 단계에서는 간단히 작성해도 됩니다.</p>
     </div>
     <div class="prep-list-grid reveal d2">
       <div class="prep-col">
@@ -1285,7 +1286,7 @@ img {
     <div class="reveal" style="text-align:center">
       <span class="section-label">Settlement</span>
       <h2 class="section-title">정산과 비용 안내</h2>
-      <p class="section-sub center">만능맨은 건별 정산 방식을 기준으로 준비 중이며, 작업 완료 확인 후 3일 내 정산을 목표로 합니다.</p>
+      <p class="section-sub center">만능맨은 건별 정산 방식을 기준으로 준비 중이며,<br class="pc-br"> 작업 완료 확인 후 3일 내 정산을 목표로 합니다.</p>
     </div>
     <div class="reveal" style="text-align:center;margin-top:32px;margin-bottom:8px;">
       <img src="파트너스 랜딩페이지 전용 이미지/ChatGPT Image 2026년 5월 20일 오후 02_34_31 (5).png" alt="작업 완료 후 정산" style="max-width:260px;width:100%;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.08);" onerror="this.style.display='none'">
@@ -1353,30 +1354,30 @@ img {
         <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">개인사업자도 신청 가능한가요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">네, 가능합니다. 개인사업자 및 법인업체 모두 신청 가능합니다.</div></div></div>
         <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">사업자등록증이 꼭 있어야 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">신청은 가능하지만, 실제 파트너 활동 시 사업자 정보 확인이 필요할 수 있습니다.</div></div></div>
         <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">특정 지역만 활동해도 되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">네, 가능합니다. 신청 시 활동 가능한 지역을 작성해주시면 해당 지역을 기준으로 검토합니다.</div></div></div>
-        <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">긴급 출동이 꼭 가능해야 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">필수는 아닙니다. 다만 누수, 배관, 생활설비 문제는 긴급 요청이 발생할 수 있어 검토 시 참고될 수 있습니다.</div></div></div>
-        <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">지방 업체도 신청할 수 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">네, 전국 업체 모두 신청 가능합니다. 다만 초기 운영은 서울, 인천, 경기 등 수도권을 우선 검토할 예정입니다.</div></div></div>
+        <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">긴급 출동이 꼭 가능해야 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">필수는 아닙니다.<br class="pc-br"> 다만 누수, 배관, 생활설비 문제는 긴급 요청이 발생할 수 있어 검토 시 참고될 수 있습니다.</div></div></div>
+        <div class="faq-item" data-cat="join"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">지방 업체도 신청할 수 있나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">네, 전국 업체 모두 신청 가능합니다.<br class="pc-br"> 다만 초기 운영은 서울, 인천, 경기 등 수도권을 우선 검토할 예정입니다.</div></div></div>
       </div>
 
       <div class="faq-group" data-cat="ops">
         <div class="faq-group-title"><div class="faq-group-icon">🔗</div>운영 방식<div class="faq-group-line"></div></div>
-        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">바로 작업이 연결되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">현재는 정식 오픈 전 단계로 초기 협력업체를 모집하고 있습니다. 정식 운영 후 지역 및 작업 분야 기반으로 순차 연결을 검토할 예정입니다.</div></div></div>
+        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">바로 작업이 연결되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">현재는 정식 오픈 전 단계로 초기 협력업체를 모집하고 있습니다.<br class="pc-br"> 정식 운영 후 지역 및 작업 분야 기반으로 순차 연결을 검토할 예정입니다.</div></div></div>
         <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업이 반드시 보장되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">사전등록은 검토 절차이며 작업 배정을 보장하지 않습니다.</div></div></div>
         <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">작업 건은 어떻게 연결되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">고객 요청이 접수되면 지역, 작업 분야, 일정, 운영 정책 등을 기준으로 연결을 검토합니다.</div></div></div>
-        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객에게 견적은 누가 안내하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">현장 상황을 확인한 뒤 파트너 업체가 작업 범위와 비용을 안내하고, 고객 동의 후 작업을 진행하는 방식입니다.</div></div></div>
-        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객과 직접 거래해도 되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">만능맨을 통해 연결된 고객 건은 플랫폼 운영 정책을 따라야 합니다. 무단 직거래 유도나 고객 정보의 별도 활용은 제한될 수 있습니다.</div></div></div>
+        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객에게 견적은 누가 안내하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">현장 상황을 확인한 뒤 파트너 업체가 작업 범위와 비용을 안내하고,<br class="pc-br"> 고객 동의 후 작업을 진행하는 방식입니다.</div></div></div>
+        <div class="faq-item" data-cat="ops"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객과 직접 거래해도 되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">만능맨을 통해 연결된 고객 건은 플랫폼 운영 정책을 따라야 합니다.<br class="pc-br"> 무단 직거래 유도나 고객 정보의 별도 활용은 제한될 수 있습니다.</div></div></div>
       </div>
 
       <div class="faq-group" data-cat="fee">
         <div class="faq-group-title"><div class="faq-group-icon">💰</div>정산·수수료<div class="faq-group-line"></div></div>
         <div class="faq-item" data-cat="fee"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">수수료는 얼마인가요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">수수료 및 취소 정책은 파트너 합류 후 운영 정책에 따라 안내드립니다.</div></div></div>
         <div class="faq-item" data-cat="fee"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">정산은 언제 진행되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">작업 완료 확인 후 3일 내 정산을 기준으로 준비 중입니다.</div></div></div>
-        <div class="faq-item" data-cat="fee"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">자재비나 부품비는 어떻게 처리되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">필요한 자재나 부품이 있는 경우 고객에게 사전에 안내하고 동의를 받은 뒤 진행하는 것을 원칙으로 합니다.</div></div></div>
+        <div class="faq-item" data-cat="fee"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">자재비나 부품비는 어떻게 처리되나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">필요한 자재나 부품이 있는 경우 고객에게 사전에 안내하고<br class="pc-br"> 동의를 받은 뒤 진행하는 것을 원칙으로 합니다.</div></div></div>
       </div>
 
       <div class="faq-group" data-cat="service">
         <div class="faq-group-title"><div class="faq-group-icon">🛠️</div>A/S·고객 응대<div class="faq-group-line"></div></div>
         <div class="faq-item" data-cat="service"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">A/S 요청이 들어오면 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">작업 내용과 운영 정책에 따라 확인 및 협조가 필요할 수 있습니다.</div></div></div>
-        <div class="faq-item" data-cat="service"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객 분쟁이 발생하면 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">운영팀이 기준에 따라 확인·지원하며, 작업 전후 사진을 남겨두면 도움이 됩니다.<div class="highlight">📸 작업 전·후 사진을 항상 촬영해 두시면 분쟁 시 큰 도움이 됩니다.</div></div></div></div>
+        <div class="faq-item" data-cat="service"><button class="faq-q" onclick="toggleFAQ(this)"><span class="q-badge">Q</span><span class="q-text">고객 분쟁이 발생하면 어떻게 하나요?</span><span class="arrow">▾</span></button><div class="faq-a"><div class="faq-a-inner">운영팀이 기준에 따라 확인·지원하며,<br class="pc-br"> 작업 전후 사진을 남겨두면 도움이 됩니다.<div class="highlight">📸 작업 전·후 사진을 항상 촬영해 두시면 분쟁 시 큰 도움이 됩니다.</div></div></div></div>
       </div>
 
       <div class="faq-group" data-cat="etc">
@@ -1394,7 +1395,7 @@ img {
     <div class="reveal">
       <span class="section-label">Join Us</span>
       <h2 class="section-title">현장의 기술이 더 오래 이어지도록,<br>만능맨과 함께해주세요</h2>
-      <p class="section-sub">만능맨은 고객에게 믿을 수 있는 설비 해결 경험을, 파트너에게는 기술과 전문성을 보여줄 연결 기회를 제공합니다. 더 투명한 건축설비 문화를 함께 만들 파트너를 기다립니다.</p>
+      <p class="section-sub">만능맨은 고객에게 믿을 수 있는 설비 해결 경험을,<br class="pc-br"> 파트너에게는 기술과 전문성을 보여줄 연결 기회를 제공합니다.<br class="pc-br"> 더 투명한 건축설비 문화를 함께 만들 파트너를 기다립니다.</p>
     </div>
     <div class="cta-btns reveal">
       <button class="cta-btn-white" onclick="openModal()">
@@ -1402,7 +1403,7 @@ img {
       </button>
     </div>
     <div class="cta-notice reveal">
-      본 신청은 계약 체결이 아닌 사전 검토 등록입니다. 접수 후 적합 여부를 확인해 순차적으로 연락드립니다.
+      본 신청은 계약 체결이 아닌 사전 검토 등록입니다.<br class="pc-br"> 접수 후 적합 여부를 확인해 순차적으로 연락드립니다.
     </div>
   </div>
 </section>
@@ -1467,7 +1468,7 @@ img {
         <div class="step-line"></div>
         <div class="modal-step" id="step-ind-2"><div class="step-num">2</div><span>서비스 분야</span></div>
         <div class="step-line"></div>
-        <div class="modal-step" id="step-ind-3"><div class="step-num">3</div><span>경력 &amp; 동의</span></div>
+        <div class="modal-step" id="step-ind-3"><div class="step-num">3</div><span>경력·동의</span></div>
       </div>
 
       <!-- 봇 방지 honeypot (절대 보이지 않음) -->
