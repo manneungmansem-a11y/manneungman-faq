@@ -181,12 +181,12 @@ header.scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.08); }
 .hd-logo-text em { color:var(--blue); font-style:normal; }
 .hd-logo-sub { font-size:9px; color:var(--gray-lt); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
 nav { display:flex; gap:28px; }
-nav a { font-size:13px; font-weight:500; color:var(--gray); text-decoration:none; transition:color 0.2s; white-space:nowrap; }
+nav a { font-size:15px; font-weight:600; color:var(--gray); text-decoration:none; transition:color 0.2s; white-space:nowrap; }
 nav a:hover { color:var(--dark); }
 .hd-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
 .btn-apply {
-  font-size:13px; font-weight:700; color:#fff; background:var(--blue); border:none;
-  padding:8px 20px; border-radius:8px; cursor:pointer; font-family:inherit;
+  font-size:15px; font-weight:700; color:#fff; background:var(--blue); border:none;
+  padding:10px 24px; border-radius:8px; cursor:pointer; font-family:inherit;
   box-shadow:0 2px 12px var(--blue-glow); transition:all 0.2s;
 }
 .btn-apply:hover { background:var(--blue-dark); transform:translateY(-1px); box-shadow:0 4px 20px var(--blue-glow); }
@@ -209,7 +209,7 @@ nav a:hover { color:var(--dark); }
 .hero-deco { position:absolute; top:-120px; right:-120px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle,rgba(48,161,210,0.1) 0%,transparent 65%); pointer-events:none; }
 .hero-deco-2 { position:absolute; bottom:-80px; left:-80px; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle,rgba(48,161,210,0.05) 0%,transparent 65%); pointer-events:none; }
 .hero-inner { max-width:1100px; margin:0 auto; padding:80px 24px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; width:100%; }
-.hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); color:var(--blue); font-size:11px; font-weight:700; padding:6px 14px; border-radius:99px; margin-bottom:24px; letter-spacing:0.5px; }
+.hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--blue-dim); border:1px solid rgba(48,161,210,0.2); color:var(--blue); font-size:13px; font-weight:700; padding:8px 18px; border-radius:99px; margin-bottom:24px; letter-spacing:0.5px; }
 .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--blue); animation:blink 1.8s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 .hero h1 { font-size:clamp(32px,4.5vw,58px); font-weight:900; color:var(--dark); line-height:1.18; letter-spacing:-2px; margin-bottom:20px; }
@@ -622,10 +622,11 @@ select.form-input { cursor:pointer; }
   display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;
 }
 .hero-benefit-badge {
-  display:inline-flex; align-items:center; gap:5px;
+  display:inline-flex; align-items:center; gap:6px;
   background:rgba(48,161,210,0.09); border:1px solid rgba(48,161,210,0.28);
-  color:var(--blue); font-size:12px; font-weight:700;
-  padding:6px 12px; border-radius:99px; white-space:nowrap;
+  color:var(--blue); font-size:14px; font-weight:700;
+  padding:8px 16px; border-radius:99px; white-space:nowrap;
+  line-height:1.5;
 }
 
 /* 우선 검토 파트너 섹션 */
@@ -642,8 +643,8 @@ select.form-input { cursor:pointer; }
 
 /* Hero: CTA 버튼 위계 강화 */
 .hero-btn-primary {
-  font-size: 17px;
-  padding: 20px 40px;
+  font-size: 19px;
+  padding: 22px 48px;
   border-radius: 16px;
   letter-spacing: -0.2px;
 }
@@ -797,6 +798,7 @@ img {
   -webkit-user-select: none;
   user-select: none;
 }
+
 </style>
 </head>
 <body>
@@ -870,10 +872,6 @@ img {
       <div class="hero-char-area">
         <div class="hero-char-circle"></div>
         <img class="hero-char" src="만능맨_final/img_character_home_pc.png" alt="만능맨 파트너스 캐릭터" onerror="this.style.visibility='hidden'">
-        <div class="hero-app-card-wrap">
-          <img class="hero-app-card-2" src="만능맨_final/card_typeA.png" alt="" onerror="this.style.display='none'">
-          <img class="hero-app-card" src="만능맨_final/card_pc.png" alt="" onerror="this.style.display='none'">
-        </div>
       </div>
     </div>
   </div>
