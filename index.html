@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://formsubmit.co; font-src 'self'; frame-ancestors 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.web3forms.com; font-src 'self'; frame-ancestors 'none';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <style>
@@ -2004,39 +2004,32 @@ img {
     submitBtn.disabled = true;
     submitBtn.textContent = '제출 중...';
 
-    /* FormData 방식 (JSON보다 안정적) */
-    const fd = new FormData();
-    fd.append('_subject', `[만능맨 파트너스 사전등록] ${name} (${phone})`);
-    fd.append('_template', 'table');
-    fd.append('_captcha', 'false');
-    fd.append('_replyto', email);
-    fd.append('신청일시', submitTime);
-    fd.append('이름', name);
-    fd.append('연락처', phone);
-    fd.append('이메일', email);
-    fd.append('활동지역', region);
-    fd.append('사업자구분', bizType);
-    fd.append('업체명·상호명', company);
-    fd.append('서비스분야', services);
-    fd.append('보유자격증', cert);
-    fd.append('경력연수', career);
-    fd.append('자기소개', intro);
-    fd.append('추가문의', note);
-    fd.append('_cc', 'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr');
+    /* Web3Forms 공통 데이터 */
+    const _W3F_KEY = 'abd0e700-db0f-497e-85a6-b787fde2c06f';
+    const _CC = 'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr';
+    const _formData = {
+      access_key: _W3F_KEY,
+      subject: '[만능맨 파트너스 사전등록] ' + name + ' (' + phone + ')',
+      from_name: '만능맨 파트너스',
+      replyto: email,
+      cc: _CC,
+      '신청일시': submitTime,
+      '이름': name, '연락처': phone, '이메일': email,
+      '활동지역': region, '사업자구분': bizType, '업체명·상호명': company,
+      '서비스분야': services, '보유자격증': cert, '경력연수': career,
+      '자기소개': intro, '추가문의': note
+    };
 
-    /* AJAX 시도 → 실패 시 form POST 폴백 */
+    /* AJAX 시도 */
     let ajaxOk = false;
     try {
-      const _ep = (function(){ const p=['sy.kim','samyangvalve.com']; return 'https://formsubmit.co/ajax/' + p[0] + '@' + p[1]; })();
-      const res = await fetch(_ep, {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: fd
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(_formData)
       });
-      const rawText = await res.text();
-      let data = {};
-      try { data = JSON.parse(rawText); } catch(e) {}
-      if((res.ok || res.status === 200) && (data.success === 'true' || data.success === true)) {
+      const data = await res.json();
+      if(data.success) {
         ajaxOk = true;
         const ts = Date.now().toString();
         localStorage.setItem('mnm_last_submit', ts);
@@ -2050,28 +2043,16 @@ img {
       console.warn('[만능맨] AJAX 실패, form POST 폴백 시도:', e);
     }
 
+    /* form POST 폴백 — CORS 제약 없이 항상 동작 */
     if(!ajaxOk) {
-      /* form POST 폴백 — CORS 제약 없이 항상 동작 */
       try { sessionStorage.setItem('mnm_pending_email', email); } catch(e) {}
-      const base = (function(){ const p=['sy.kim','samyangvalve.com']; return p[0]+'@'+p[1]; })();
       const frm = document.createElement('form');
       frm.method = 'POST';
-      frm.action = 'https://formsubmit.co/' + base;
+      frm.action = 'https://api.web3forms.com/submit';
       frm.style.display = 'none';
-      const nextUrl = window.location.href.split('?')[0] + '?mnm_ok=1';
-      const flds = {
-        '_subject': '[만능맨 파트너스 사전등록] ' + name + ' (' + phone + ')',
-        '_template': 'table',
-        '_captcha': 'false',
-        '_replyto': email,
-        '_cc': 'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr',
-        '_next': nextUrl,
-        '신청일시': submitTime,
-        '이름': name, '연락처': phone, '이메일': email,
-        '활동지역': region, '사업자구분': bizType, '업체명·상호명': company,
-        '서비스분야': services, '보유자격증': cert, '경력연수': career,
-        '자기소개': intro, '추가문의': note
-      };
+      const flds = Object.assign({}, _formData, {
+        redirect: window.location.href.split('?')[0] + '?mnm_ok=1'
+      });
       Object.keys(flds).forEach(function(k) {
         const inp = document.createElement('input');
         inp.type = 'hidden'; inp.name = k; inp.value = flds[k] || '';
