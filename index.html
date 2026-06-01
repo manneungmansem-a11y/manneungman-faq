@@ -2022,33 +2022,22 @@ img {
     fd.append('경력연수', career);
     fd.append('자기소개', intro);
     fd.append('추가문의', note);
+    fd.append('_cc', 'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr');
 
+    /* AJAX 시도 → 실패 시 form POST 폴백 */
+    let ajaxOk = false;
     try {
       const _ep = (function(){ const p=['sy.kim','samyangvalve.com']; return 'https://formsubmit.co/ajax/' + p[0] + '@' + p[1]; })();
-      let res;
-      try {
-        res = await fetch(_ep, {
-          method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: fd
-        });
-      } catch(networkErr) {
-        console.error('[만능맨] 네트워크 오류:', networkErr);
-        throw new Error('NETWORK');
-      }
-
-      let data;
+      const res = await fetch(_ep, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
       const rawText = await res.text();
-      console.log('[만능맨] HTTP 상태:', res.status, '응답:', rawText);
-
-      try { data = JSON.parse(rawText); } catch(e) { data = {}; }
-
-      if(res.status === 403 || (rawText && rawText.toLowerCase().includes('activat'))) {
-        throw new Error('NOT_ACTIVATED');
-      }
-      if(!res.ok) throw new Error('HTTP_' + res.status);
-
-      if(data.success === 'true' || data.success === true) {
+      let data = {};
+      try { data = JSON.parse(rawText); } catch(e) {}
+      if((res.ok || res.status === 200) && (data.success === 'true' || data.success === true)) {
+        ajaxOk = true;
         const ts = Date.now().toString();
         localStorage.setItem('mnm_last_submit', ts);
         sessionStorage.setItem('mnm_last_submit', ts);
@@ -2056,23 +2045,58 @@ img {
         document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
         document.getElementById('form-success').classList.add('active');
         document.querySelectorAll('.modal-step').forEach(d => d.classList.add('done'));
-      } else {
-        console.error('[만능맨] 서버 응답 실패:', data);
-        throw new Error('SUBMIT_FAILED');
       }
-    } catch(err) {
-      console.error('[만능맨] 제출 오류:', err.message);
-      let msg = '제출 중 오류가 발생했습니다.\n\n직접 문의: 1899-8827\n(평일 09:00~18:00)';
-      if(err.message === 'NETWORK') {
-        msg = '인터넷 연결을 확인하고 다시 시도해 주세요.\n\n직접 문의: 1899-8827';
-      } else if(err.message === 'NOT_ACTIVATED') {
-        msg = '메일 발송 서비스 설정이 필요합니다.\n관리자가 FormSubmit 인증 이메일을 확인해야 합니다.\n\n직접 문의: 1899-8827';
-      }
-      alert(msg);
-      submitBtn.disabled = false;
-      submitBtn.textContent = '신청서 제출하기';
+    } catch(e) {
+      console.warn('[만능맨] AJAX 실패, form POST 폴백 시도:', e);
+    }
+
+    if(!ajaxOk) {
+      /* form POST 폴백 — CORS 제약 없이 항상 동작 */
+      try { sessionStorage.setItem('mnm_pending_email', email); } catch(e) {}
+      const base = (function(){ const p=['sy.kim','samyangvalve.com']; return p[0]+'@'+p[1]; })();
+      const frm = document.createElement('form');
+      frm.method = 'POST';
+      frm.action = 'https://formsubmit.co/' + base;
+      frm.style.display = 'none';
+      const nextUrl = window.location.href.split('?')[0] + '?mnm_ok=1';
+      const flds = {
+        '_subject': '[만능맨 파트너스 사전등록] ' + name + ' (' + phone + ')',
+        '_template': 'table',
+        '_captcha': 'false',
+        '_replyto': email,
+        '_cc': 'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr',
+        '_next': nextUrl,
+        '신청일시': submitTime,
+        '이름': name, '연락처': phone, '이메일': email,
+        '활동지역': region, '사업자구분': bizType, '업체명·상호명': company,
+        '서비스분야': services, '보유자격증': cert, '경력연수': career,
+        '자기소개': intro, '추가문의': note
+      };
+      Object.keys(flds).forEach(function(k) {
+        const inp = document.createElement('input');
+        inp.type = 'hidden'; inp.name = k; inp.value = flds[k] || '';
+        frm.appendChild(inp);
+      });
+      document.body.appendChild(frm);
+      frm.submit();
     }
   }
+
+  /* form POST 폴백 후 리다이렉트 감지 */
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('mnm_ok') !== '1') return;
+    history.replaceState(null, '', window.location.pathname);
+    const ts = Date.now().toString();
+    try { localStorage.setItem('mnm_last_submit', ts); } catch(e) {}
+    try { sessionStorage.setItem('mnm_last_submit', ts); } catch(e) {}
+    openModal();
+    const savedEmail = (function(){ try { return sessionStorage.getItem('mnm_pending_email') || ''; } catch(e) { return ''; } })();
+    if(savedEmail) document.getElementById('success-email-display').textContent = savedEmail;
+    document.querySelectorAll('.form-page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('form-success').classList.add('active');
+    document.querySelectorAll('.modal-step').forEach(function(d) { d.classList.add('done'); });
+  })();
 
   /* ════════════════════════════════════════════════════════════
      콘텐츠 보호 및 보안 강화 (Content Protection & Security)
