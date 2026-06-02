@@ -1090,6 +1090,86 @@ input, textarea, select, button {
   .cooldown-timer-wrap { background: rgba(48,161,210,0.08) !important; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   PC/모바일 노출 구조 분리 — 모바일 가독성 개선
+   PC (≥861px): 기존 디자인 완전 유지 / 모바일 (≤860px): 배치·크기·여백만 조정
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 히어로 모바일: 텍스트·CTA 우선 노출, 캐릭터 하단 배치 ── */
+@media (max-width: 860px) {
+  .hero-inner {
+    padding: 36px 20px 52px;
+    gap: 28px;
+  }
+  .hero-copy  { order: 1; }
+  .hero-visual { order: 2; }
+  .hero-char-area {
+    width: 220px;
+    height: 220px;
+  }
+  .hero-char {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+/* ── 소형 모바일: 360 – 414px ── */
+@media (max-width: 414px) {
+  .hero-inner {
+    padding: 24px 16px 44px;
+    gap: 24px;
+  }
+  .section-inner {
+    padding: 44px 16px;
+  }
+  .hero-char-area {
+    width: 180px;
+    height: 180px;
+  }
+  .hero-char {
+    width: 158px;
+    height: 158px;
+  }
+  .hero-btn-primary {
+    font-size: 16px;
+    padding: 17px 20px;
+  }
+  .hero-notice {
+    font-size: 12px;
+    padding: 12px 14px 12px 38px;
+  }
+  .hero-notice::before {
+    left: 12px;
+    top: 12px;
+  }
+}
+
+/* ── 극소형 모바일: ≤ 360px ── */
+@media (max-width: 360px) {
+  .hero-inner {
+    padding: 20px 14px 40px;
+    gap: 20px;
+  }
+  .section-inner {
+    padding: 40px 14px;
+  }
+  .hero-char-area {
+    width: 160px;
+    height: 160px;
+  }
+  .hero-char {
+    width: 140px;
+    height: 140px;
+  }
+  .hero-btn-primary {
+    font-size: 15px;
+    padding: 15px 16px;
+  }
+  .settlement-inner {
+    gap: 12px;
+  }
+}
+
 </style>
 </head>
 <body class="intro-active">
