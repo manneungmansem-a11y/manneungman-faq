@@ -1630,7 +1630,8 @@ img {
       setTimeout(() => { if(intro) intro.style.display = 'none'; }, 1000);
     }
 
-    if(reduced) { intro.style.display = 'none'; document.body.classList.remove('intro-active'); return; }
+    const isSubmitted = new URLSearchParams(window.location.search).get('mnm_ok') === '1';
+    if(reduced || isSubmitted) { intro.style.display = 'none'; document.body.classList.remove('intro-active'); return; }
     document.body.style.overflow = 'hidden';
 
     // 유성/별똥별 인트로 효과 (로딩 화면 전용)
