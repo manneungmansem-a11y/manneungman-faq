@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.web3forms.com; font-src 'self'; frame-ancestors 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://formsubmit.co; font-src 'self'; frame-ancestors 'none';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <style>
@@ -2004,71 +2004,41 @@ img {
     submitBtn.disabled = true;
     submitBtn.textContent = '제출 중...';
 
-    /* Web3Forms 공통 데이터 */
-    const _W3F_KEY = 'abd0e700-db0f-497e-85a6-b787fde2c06f';
+    try { sessionStorage.setItem('mnm_pending_email', email); } catch(e) {}
 
-    const _formData = {
-      access_key: _W3F_KEY,
-      subject: '[만능맨 파트너스 사전등록] ' + name + ' (' + phone + ')',
-      from_name: '만능맨 파트너스',
-      replyto: email,
-      /* Web3Forms PRO 필요 가능성 있음 */
-      ccemail: 'yu.heo@samyangvalve.com;sh.jun@samyangvalve.com;st.lee@samyangvalve.com;manneungman1@10000man.co.kr',
-      '신청자 이름': name,
-      '연락처': phone,
-      '이메일': email,
-      '활동지역': region,
-      '사업자 구분': bizType,
-      '업체명': company,
-      '서비스 분야': services,
-      '보유 자격증': cert,
-      '경력 연수': career,
-      '자기소개': intro,
-      '추가 문의사항': note,
-      '신청 시간': submitTime
+    const frm = document.createElement('form');
+    frm.method = 'POST';
+    frm.action = 'https://formsubmit.co/sy.kim@samyangvalve.com';
+    frm.style.display = 'none';
+
+    const fields = {
+      '신청일시':   submitTime,
+      '이름':      name,
+      '연락처':    phone,
+      '이메일':    email,
+      '활동지역':  region,
+      '사업자구분': bizType,
+      '업체명':    company,
+      '서비스분야': services,
+      '보유자격증': cert,
+      '경력연수':  career,
+      '자기소개':  intro,
+      '추가문의':  note,
+      '_subject':  '[만능맨 파트너스 사전등록] 신청서가 접수되었습니다',
+      '_template': 'table',
+      /* CC 추가 수신자 — 문제 발생 시 아래 줄 제거 */
+      '_cc':       'yu.heo@samyangvalve.com,sh.jun@samyangvalve.com,st.lee@samyangvalve.com,manneungman1@10000man.co.kr',
+      '_next':     window.location.href.split('?')[0] + '?mnm_ok=1'
     };
 
-    /* AJAX 시도 */
-    let ajaxOk = false;
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(_formData)
-      });
-      const data = await res.json();
-      if(data.success) {
-        ajaxOk = true;
-        const ts = Date.now().toString();
-        localStorage.setItem('mnm_last_submit', ts);
-        sessionStorage.setItem('mnm_last_submit', ts);
-        document.getElementById('success-email-display').textContent = email;
-        document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
-        document.getElementById('form-success').classList.add('active');
-        document.querySelectorAll('.modal-step').forEach(d => d.classList.add('done'));
-      }
-    } catch(e) {
-      console.warn('[만능맨] AJAX 실패, form POST 폴백 시도:', e);
-    }
+    Object.keys(fields).forEach(function(k) {
+      const inp = document.createElement('input');
+      inp.type = 'hidden'; inp.name = k; inp.value = fields[k] || '';
+      frm.appendChild(inp);
+    });
 
-    /* form POST 폴백 — CORS 제약 없이 항상 동작 */
-    if(!ajaxOk) {
-      try { sessionStorage.setItem('mnm_pending_email', email); } catch(e) {}
-      const frm = document.createElement('form');
-      frm.method = 'POST';
-      frm.action = 'https://api.web3forms.com/submit';
-      frm.style.display = 'none';
-      const flds = Object.assign({}, _formData, {
-        redirect: window.location.href.split('?')[0] + '?mnm_ok=1'
-      });
-      Object.keys(flds).forEach(function(k) {
-        const inp = document.createElement('input');
-        inp.type = 'hidden'; inp.name = k; inp.value = flds[k] || '';
-        frm.appendChild(inp);
-      });
-      document.body.appendChild(frm);
-      frm.submit();
-    }
+    document.body.appendChild(frm);
+    frm.submit();
   }
 
   /* form POST 폴백 후 리다이렉트 감지 */
