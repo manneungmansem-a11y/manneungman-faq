@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://formsubmit.co; font-src 'self'; frame-ancestors 'none';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="light">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:smooth; color-scheme:only light; }
 :root {
+  color-scheme: only light;
   --blue:      #30A1D2;
   --blue-dark: #1f7fa8;
   --blue-glow: rgba(48,161,210,0.25);
@@ -25,7 +27,8 @@ html { scroll-behavior:smooth; }
 }
 body {
   font-family:-apple-system,'Malgun Gothic','맑은 고딕',BlinkMacSystemFont,sans-serif;
-  color:var(--dark); background:var(--white); overflow-x:hidden;
+  color:#231815; background:#ffffff; overflow-x:hidden;
+  color-scheme: only light;
 }
 
 /* INTRO */
@@ -886,6 +889,205 @@ img {
 /* ── 우선 검토 파트너 — 모바일 1열 ── */
 @media (max-width: 480px) {
   .priority-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   다크모드 완전 차단 — 항상 라이트 기준 렌더링
+   ═══════════════════════════════════════════════════════════ */
+
+/* 폼 요소: 브라우저 자동 다크 적용 차단 */
+input, textarea, select, button {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  /* ─ 기본 레이아웃 ─ */
+  html, body {
+    background-color: #ffffff !important;
+    color: #231815 !important;
+  }
+
+  /* ─ 헤더 ─ */
+  header {
+    background: rgba(255,255,255,0.88) !important;
+    border-bottom-color: #e8e8e8 !important;
+  }
+  .hd-logo-text { color: #231815 !important; }
+  nav a { color: #666666 !important; }
+  nav a:hover { color: #231815 !important; }
+
+  /* ─ 라이트 배경 섹션 ─ */
+  .hero,
+  .sec-about,
+  .sec-flow,
+  .sec-prep,
+  .sec-faq {
+    background-color: #ffffff !important;
+  }
+  .sec-culture,
+  .sec-value,
+  .sec-roles,
+  .sec-settlement,
+  .sec-priority-partner {
+    background-color: #f5f5f7 !important;
+  }
+
+  /* ─ 카드 및 컨테이너 ─ */
+  .culture-card,
+  .value-card,
+  .priority-item,
+  .roles-col,
+  .settlement-card,
+  .faq-item,
+  .value-notice,
+  .about-visual {
+    background-color: #ffffff !important;
+    border-color: #e8e8e8 !important;
+  }
+  .prep-item,
+  .prep-note,
+  .agree-row,
+  .radio-btn:not(.selected),
+  .check-item:not(.selected) {
+    background-color: #f5f5f7 !important;
+    border-color: #e8e8e8 !important;
+  }
+
+  /* ─ 텍스트 색상 ─ */
+  .section-title,
+  .flow-title,
+  .culture-text,
+  .value-item-text,
+  .priority-text,
+  .roles-col-title,
+  .q-text,
+  .form-label,
+  .cooldown-title,
+  .success-title,
+  .about-visual-text strong,
+  .value-notice-title,
+  .prep-item,
+  .roles-item { color: #231815 !important; }
+
+  .section-sub,
+  .hero-sub,
+  .why-text,
+  .about-text p,
+  .flow-desc,
+  .roles-item,
+  .settlement-pt,
+  .value-notice-text,
+  .faq-a-inner,
+  .cooldown-desc,
+  .success-desc,
+  .agree-text,
+  .about-visual-text { color: #666666 !important; }
+
+  /* ─ 버튼 (라이트 배경용) ─ */
+  .btn-apply { background: #30A1D2 !important; color: #ffffff !important; }
+  .hero-btn-primary { background: #30A1D2 !important; color: #ffffff !important; }
+  .cta-btn-white { background: #ffffff !important; color: #30A1D2 !important; }
+  .cat-btn:not(.active) {
+    background: transparent !important;
+    color: #666666 !important;
+    border-color: #e8e8e8 !important;
+  }
+  .btn-back {
+    background: transparent !important;
+    color: #666666 !important;
+    border-color: #e8e8e8 !important;
+  }
+  .btn-next { background: #30A1D2 !important; color: #ffffff !important; }
+  .radio-btn:not(.selected) { color: #666666 !important; }
+  .check-item:not(.selected) { color: #666666 !important; }
+  .agree-text { color: #666666 !important; }
+
+  /* ─ 폼 입력 요소 ─ */
+  input,
+  textarea,
+  select,
+  .form-input,
+  .faq-search-wrap input {
+    background-color: #f5f5f7 !important;
+    color: #231815 !important;
+    border-color: #e8e8e8 !important;
+    caret-color: #231815 !important;
+  }
+  input:focus,
+  textarea:focus,
+  select:focus,
+  .form-input:focus {
+    background-color: #ffffff !important;
+    border-color: #30A1D2 !important;
+  }
+  input::placeholder,
+  textarea::placeholder,
+  .form-input::placeholder,
+  .faq-search-wrap input::placeholder { color: #999999 !important; }
+
+  /* ─ 커스텀 셀렉트 ─ */
+  .custom-select-trigger {
+    background-color: #f5f5f7 !important;
+    color: #231815 !important;
+    border-color: #e8e8e8 !important;
+  }
+  .custom-select-trigger.placeholder { color: #bbbbbb !important; }
+  .custom-select-trigger.open {
+    background-color: #ffffff !important;
+    border-color: #30A1D2 !important;
+  }
+  .custom-select-dropdown {
+    background-color: #ffffff !important;
+    border-color: #30A1D2 !important;
+  }
+  .custom-select-option { color: #231815 !important; background-color: #ffffff !important; }
+  .custom-select-option:hover { background-color: rgba(48,161,210,0.08) !important; }
+
+  /* ─ 체크/동의 아이콘 ─ */
+  .check-icon {
+    background-color: #ffffff !important;
+    border-color: #e8e8e8 !important;
+  }
+  .agree-check {
+    background-color: #ffffff !important;
+    border-color: #cccccc !important;
+  }
+
+  /* ─ 모달 ─ */
+  .modal-box,
+  .cooldown-box { background-color: #ffffff !important; }
+  .modal-footer {
+    background-color: #ffffff !important;
+    border-top-color: #e8e8e8 !important;
+  }
+  .step-num:not(.active):not(.done) {
+    background-color: #eeeeee !important;
+    color: #aaaaaa !important;
+  }
+  .step-line { background-color: #eeeeee !important; }
+  .modal-step:not(.active):not(.done) { color: #cccccc !important; }
+
+  /* ─ Sticky CTA ─ */
+  #sticky-cta {
+    background: linear-gradient(to top, rgba(255,255,255,0.97) 70%, rgba(255,255,255,0)) !important;
+  }
+  .sticky-cta-btn { background: #30A1D2 !important; color: #ffffff !important; }
+
+  /* ─ FAQ 부가 요소 ─ */
+  #faqNoResult { color: #bbbbbb !important; }
+  .faq-group-line { background-color: #e8e8e8 !important; }
+  .faq-a-inner { border-top-color: #e8e8e8 !important; }
+  .faq-search-wrap svg { color: #bbbbbb !important; }
+
+  /* ─ 기타 구분선 및 라인 ─ */
+  .flow-line { background-color: #e8e8e8 !important; }
+  .hero-sub2 { border-left-color: #e8e8e8 !important; color: #999999 !important; }
+  .hero-notice { background: rgba(48,161,210,0.07) !important; border-color: rgba(48,161,210,0.25) !important; }
+  .partner-sub-note { background: rgba(48,161,210,0.08) !important; border-color: rgba(48,161,210,0.2) !important; }
+  .value-notice { background-color: #ffffff !important; }
+  .settlement-free { background: rgba(48,161,210,0.08) !important; }
+  .cooldown-timer-wrap { background: rgba(48,161,210,0.08) !important; }
 }
 
 </style>
