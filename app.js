@@ -340,12 +340,17 @@
       '유입경로':   referralVal
     };
 
+    console.log('신청폼 제출 시작');
+    console.log('Apps Script 전송 payload:', payload);
+    console.log('Apps Script URL:', SCRIPT_URL);
+
     var btn = document.getElementById('submitBtn');
     var errEl = document.getElementById('submitErrMsg');
     btn.disabled = true; btn.textContent = '제출 중…';
     if (errEl) errEl.style.display = 'none';
 
     function onSuccess() {
+      console.log('Apps Script 전송 완료');
       localStorage.setItem('mnm_lastSubmit', Date.now());
       try {
         var mName = payload['이름'] ? payload['이름'].charAt(0) + '○○' : '신규';
@@ -359,7 +364,8 @@
       btn.disabled = false; btn.textContent = '신청서 제출하기';
     }
 
-    function onError() {
+    function onError(error) {
+      console.error('Apps Script 전송 실패:', error);
       btn.disabled = false; btn.textContent = '신청서 제출하기';
       if (errEl) errEl.style.display = 'block';
     }
@@ -402,15 +408,30 @@
     if (!toast) return;
     if (sessionStorage.getItem('mnm_rtClosed') === '1') { toast.remove(); return; }
 
-    var NAMES = ['김○○','이○○','박○○','최○○','정○○','강○○','윤○○','임○○','조○○','한○○','서○○','신○○','오○○','권○○','황○○','안○○','송○○','류○○','전○○','고○○'];
-    var JOBS = ['누수탐지','배관설비','보일러·난방','수도설비','밸브교체','온수배관','난방배관','욕실설비','상가설비','기계설비','펌프설비','냉난방설비','배관청소','하수도설비','온수기설치','분배기교체','열교환기','자동제어설비','공조설비','빌딩설비'];
+    var NAMES = [
+      '김○○','이○○','박○○','최○○','정○○','강○○','윤○○','임○○','조○○','한○○',
+      '서○○','신○○','오○○','권○○','황○○','안○○','송○○','류○○','전○○','고○○',
+      '장○○','유○○','백○○','노○○','하○○','홍○○','마○○','양○○','손○○','민○○',
+      '차○○','진○○','원○○','천○○','방○○','공○○','석○○','구○○','나○○','도○○',
+      '라○○','명○○','봉○○','엄○○','여○○','연○○','우○○','은○○','자○○','제○○',
+      '지○○','채○○','표○○','함○○','허○○','문○○','배○○','남○○','위○○','사○○'
+    ];
+    var JOBS = [
+      '누수탐지','배관설비','보일러·난방','수도설비','밸브교체','온수배관','난방배관','욕실설비','상가설비','기계설비',
+      '펌프설비','냉난방설비','배관청소','하수도설비','온수기설치','분배기교체','열교환기','자동제어설비','공조설비','빌딩설비',
+      '보일러 수리','수전 교체','하수구 막힘','욕실 수리','수도 배관','전기 수리','배관 누수','보일러 점검','싱크대 수리','변기 막힘',
+      '난방 분배기','수전 설치','온수 누수','배관 교체','욕실 설비','주방 수리','수도 누수','보일러 배관','배수관 청소','세면대 수리',
+      '샤워기 교체','급수 배관','급탕 배관','펌프 점검','온도조절기','계량기 점검','배관 보수','난방 점검','누수 보수','욕실 배관',
+      '주방 배관','보일러 설치','수도 설비','전기 점검','난방 설비','하수 배관','배관 설비','수전 수리','화장실 수리','싱크대 막힘',
+      '보일러 교체','배관 진단','난방 누수','수도 공사','욕실 리모델링','주방 설비','누수 검사','밸브 수리','온수기 점검','배관 점검'
+    ];
     var TIMES = ['방금 전','1분 전','2분 전','3분 전','4분 전','5분 전','6분 전','7분 전','8분 전','9분 전','10분 전','11분 전','12분 전','13분 전','14분 전','15분 전','16분 전','17분 전','18분 전','19분 전','20분 전','22분 전','25분 전','28분 전','31분 전','35분 전','42분 전','51분 전'];
 
     var initEl = toast.querySelector('.rt-ava-init');
     var nameEl = toast.querySelector('.rt-name-txt');
     var jobEl = toast.querySelector('.rt-job');
     var timeEl = toast.querySelector('.rt-time');
-    var lastKey = '';
+    var recentKeys = [];
     var hideTimer = null, nextTimer = null, closed = false;
     var realQueue = [];
 
@@ -418,11 +439,12 @@
     function rand(a, b) { return a + Math.random() * (b - a); }
 
     function nextData() {
-      if (realQueue.length) { lastKey = ''; return realQueue.shift(); }
+      if (realQueue.length) { recentKeys = []; return realQueue.shift(); }
       var n, j, t, key, guard = 0;
-      do { n = pick(NAMES); j = pick(JOBS); t = pick(TIMES); key = n + '|' + j + '|' + t; }
-      while (key === lastKey && ++guard < 12);
-      lastKey = key;
+      do { n = pick(NAMES); j = pick(JOBS); t = pick(TIMES); key = n + '|' + j; }
+      while (recentKeys.indexOf(key) !== -1 && ++guard < 30);
+      recentKeys.push(key);
+      if (recentKeys.length > 5) recentKeys.shift();
       return { n: n, j: j, t: t, real: false };
     }
 

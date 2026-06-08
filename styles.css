@@ -1254,3 +1254,81 @@ textarea.inp{resize:vertical;min-height:60px}
     padding-top: 0;
   }
 }
+
+/* =========================================================
+   MODAL 한 화면 최적화 — PC & 모바일 높이·간격 압축
+   ========================================================= */
+
+/* 1. 모달 max-height — 상하 여백 축소 (40px → 24px) */
+.modal {
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+}
+
+/* 2. 오버레이 패딩 축소 */
+.overlay { padding: 12px 16px; }
+
+/* 3. 모달 헤더·단계 표시 압축 */
+.modal-head { padding: 10px 24px 0; }
+.modal-head h3 { font-size: 17px; margin-top: 1px; }
+.steps { padding: 8px 24px 2px; }
+
+/* 4. 모달 바디 패딩 압축 */
+.modal-body { padding: 8px 24px 8px; }
+
+/* 5. 필드 행 간격 축소 */
+.field-row { margin-bottom: 8px; }
+
+/* 6. 3단계 textarea 높이 제한 (자기소개·추가문의) */
+.fstep[data-step="3"] textarea.inp {
+  height: 68px;
+  min-height: 52px;
+}
+
+/* 7. 유입경로 선택지 — 패딩·간격 압축 */
+.referral-grid { gap: 5px; }
+.ref-opt { padding: 6px 9px; font-size: 12.5px; }
+
+/* 8. 개인정보 동의 박스 압축 */
+.consent { padding: 8px 10px; }
+.consent .ctxt { font-size: 12.5px; line-height: 1.5; }
+.consent .ctxt b { font-size: 13px; }
+
+/* 9. 하단 버튼 영역 여백 압축 */
+.form-nav { margin-top: 8px; padding: 6px 0 2px; }
+
+/* ── 모바일(680px 이하) 추가 압축 ── */
+@media (max-width: 680px) {
+  /* 모달 max-height 및 width */
+  .modal {
+    max-height: calc(100dvh - 12px);
+    width: calc(100% - 20px);
+  }
+  /* 오버레이 */
+  .overlay { padding: 6px 10px; }
+
+  /* 헤더·단계 */
+  .modal-head { padding: 9px 16px 0; }
+  .steps { padding: 7px 16px 1px; }
+
+  /* 바디 */
+  .modal-body { padding: 7px 16px 6px; }
+
+  /* 3단계 textarea */
+  .fstep[data-step="3"] textarea.inp {
+    height: 58px;
+    min-height: 46px;
+  }
+
+  /* 유입경로 */
+  .referral-grid { gap: 4px; }
+  .ref-opt { padding: 5px 7px; font-size: 12px; }
+
+  /* 개인정보 동의 */
+  .consent { padding: 7px 9px; }
+  .consent .ctxt { font-size: 12px; line-height: 1.45; }
+  .consent .ctxt b { font-size: 12.5px; }
+
+  /* 하단 버튼 */
+  .form-nav { margin-top: 6px; padding: 5px 0 1px; }
+}

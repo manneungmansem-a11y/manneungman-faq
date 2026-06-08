@@ -225,6 +225,102 @@ function setupSheet() {
   }
 }
 
+/* ─── 관리용 시트 서식 세팅 (수동 1회 실행) ─────────────── */
+// Apps Script 편집기에서 이 함수를 선택 후 [실행]을 눌러 사용하세요.
+// 기존 데이터와 doPost는 영향받지 않습니다.
+//
+// 실제 시트 컬럼 구조 (A~Q, 총 17열):
+//   A 신청일시  B 이름  C 연락처  D 이메일  E 활동지역  F 사업자구분
+//   G 서비스분야  H 보유자격증  I 경력연수  J 자기소개  K 추가문의
+//   L 유입경로  M 처리상태  N 담당자  O 연락일  P 관리자 메모  Q 최종결과
+function setupManagementSheet() {
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) { Logger.log('시트를 찾을 수 없습니다: ' + SHEET_NAME); return; }
+
+  var totalCols   = 17;   // A~Q
+  var maxDataRows = 1000; // 드롭다운·조건부서식 적용 행 범위
+
+  // 1. 1행 고정
+  sheet.setFrozenRows(1);
+
+  // 2. 필터 적용 (기존 필터 있으면 제거 후 재설정)
+  var existingFilter = sheet.getFilter();
+  if (existingFilter) existingFilter.remove();
+  sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 2), totalCols).createFilter();
+
+  // 3. 헤더 스타일
+  //    신청 데이터 컬럼 A~L (1~12) → 진한 파랑
+  //    관리자 편집 컬럼 M~Q (13~17) → 주황 (처리상태·담당자·연락일·관리자 메모·최종결과)
+  sheet.getRange(1, 1, 1, 12)
+    .setBackground('#1565C0').setFontColor('#FFFFFF')
+    .setFontWeight('bold').setHorizontalAlignment('center');
+  sheet.getRange(1, 13, 1, 5)
+    .setBackground('#E65100').setFontColor('#FFFFFF')
+    .setFontWeight('bold').setHorizontalAlignment('center');
+
+  // 4. 열 너비 (A~Q, 17열)
+  //     A    B    C    D    E    F    G    H    I    J    K    L    M    N    O    P    Q
+  var widths = [160, 90, 130, 190, 100, 110, 130, 140, 80, 250, 250, 110, 120, 90, 110, 250, 110];
+  widths.forEach(function(w, i) { sheet.setColumnWidth(i + 1, w); });
+
+  // 5. 긴 텍스트 컬럼 줄바꿈
+  //    J 자기소개=10, K 추가문의=11, P 관리자 메모=16
+  [10, 11, 16].forEach(function(col) {
+    sheet.getRange(2, col, maxDataRows, 1)
+      .setWrap(true)
+      .setVerticalAlignment('top');
+  });
+
+  // 6. 처리상태 드롭다운 (M열 = 13번째)
+  var statusList = [
+    '신규 접수', '연락 예정', '1차 연락 완료', '재연락 필요',
+    '입점 검토', '입점 가능', '입점 완료', '보류', '거절'
+  ];
+  var dropRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(statusList, true)
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange(2, 13, maxDataRows, 1).setDataValidation(dropRule);
+
+  // 7. 처리상태별 행 전체 색상 (조건부 서식)
+  //    공식 =$M2="값" → M열(13번째, 처리상태) 기준으로 전체 행 색상 변경
+  var colorMap = [
+    { status: '신규 접수',     bg: '#BBDEFB', font: '#0D47A1' },
+    { status: '연락 예정',     bg: '#FFF9C4', font: '#E65100' },
+    { status: '1차 연락 완료', bg: '#DCEDC8', font: '#1B5E20' },
+    { status: '재연락 필요',   bg: '#FFE0B2', font: '#BF360C' },
+    { status: '입점 검토',     bg: '#E8EAF6', font: '#283593' },
+    { status: '입점 가능',     bg: '#C8E6C9', font: '#1B5E20' },
+    { status: '입점 완료',     bg: '#A5D6A7', font: '#1B5E20' },
+    { status: '보류',          bg: '#F5F5F5', font: '#757575' },
+    { status: '거절',          bg: '#FFCDD2', font: '#B71C1C' }
+  ];
+
+  sheet.clearConditionalFormatRules();
+  var cfRules = colorMap.map(function(c) {
+    return SpreadsheetApp.newConditionalFormatRule()
+      .whenFormulaSatisfied('=$M2="' + c.status + '"')
+      .setBackground(c.bg)
+      .setFontColor(c.font)
+      .setRanges([sheet.getRange(2, 1, maxDataRows, totalCols)])
+      .build();
+  });
+  sheet.setConditionalFormatRules(cfRules);
+
+  SpreadsheetApp.flush();
+  Logger.log('✅ 관리용 시트 세팅 완료');
+  SpreadsheetApp.getUi().alert(
+    '✅ 관리용 시트 세팅 완료!\n\n' +
+    '• 1행 고정\n' +
+    '• 필터 적용\n' +
+    '• 처리상태 드롭다운 적용 (M열, 1000행)\n' +
+    '• 처리상태별 행 색상 조건부 서식 적용\n' +
+    '• 열 너비 및 줄바꿈 설정 완료\n\n' +
+    '주황색 헤더(M~Q) = 관리자가 직접 입력하는 컬럼입니다.'
+  );
+}
+
 /* ─── 테스트용 더미 요청 (수동 실행용) ──────────────────── */
 // Apps Script 편집기에서 이 함수를 실행하면 Sheets 저장 + 이메일 발송을 테스트합니다.
 function testPost() {
