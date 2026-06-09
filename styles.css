@@ -212,7 +212,7 @@ h1,h2,h3{letter-spacing:-.035em;line-height:1.16;font-weight:800;color:var(--ink
 .bg-navy h2,.bg-navy h3{color:#fff}
 h2{font-size:clamp(29px,3.6vw,44px)}
 .sec-head{max-width:720px;margin-bottom:60px}
-.sec-head p{margin-top:22px;font-size:clamp(16px,1.35vw,17.5px);color:var(--ink-2);line-height:1.78}
+.sec-head p{margin-top:22px;font-size:clamp(16px,1.35vw,17.5px);color:var(--ink);line-height:1.78;opacity:.85}
 .bg-navy .sec-head p{color:var(--blue-100)}
 .hl{color:var(--brand)}
 .bg-navy .hl{color:var(--blue-300)}
@@ -272,18 +272,20 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .nav a:hover{color:var(--brand);background:var(--blue-50)}
 .header .cta{margin-left:12px}
 .header .btn{padding:11px 22px;font-size:15px}
+.header .btn--ghost{box-shadow:inset 0 0 0 1.5px var(--blue-300);color:var(--brand)}
 .menu-toggle{display:none;margin-left:auto;width:42px;height:42px;border-radius:10px;align-items:center;justify-content:center;color:var(--ink)}
 .menu-toggle svg{width:24px;height:24px}
 
 /* ---------- HERO ---------- */
-.hero{position:relative;overflow:hidden;background:
+.hero{position:relative;overflow:clip;background:
    radial-gradient(80% 80% at 88% -10%, var(--blue-50), transparent 60%),
    linear-gradient(180deg,#fff, var(--surface-2));}
 .hero-grid{
-  display:grid;grid-template-columns:1.04fr .96fr;gap:40px 56px;align-items:stretch;
+  display:grid;grid-template-columns:1.04fr .96fr;gap:32px 48px;align-items:stretch;
   grid-template-areas:"copy visual";
-  padding:56px 0 76px;
+  padding:24px 0 32px;
 }
+.hero-grid > * { min-width: 0; }
 .hero-copy{grid-area:copy;display:flex;flex-direction:column}
 .hero-visual{grid-area:visual}
 .hero .pill{
@@ -291,12 +293,12 @@ h2{font-size:clamp(29px,3.6vw,44px)}
   color:var(--brand-ink);font-weight:700;font-size:13.5px;padding:8px 15px;border-radius:999px;box-shadow:var(--shadow-s);white-space:nowrap;
 }
 .hero .pill .live{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px oklch(0.62 0.15 155 /.18)}
-.hero h1{font-size:clamp(44px,6vw,76px);margin:20px 0 0;line-height:1.08;letter-spacing:-.04em}
+.hero h1{font-size:clamp(50px,6.5vw,82px);margin:0;line-height:1.08;letter-spacing:-.04em}
 .hero h1 .em{color:var(--brand-dk);position:relative;white-space:nowrap;font-weight:900}
-.hero-copy-bottom{margin-top:auto;padding-top:56px}
-.hero-sub{margin-top:0;font-size:clamp(15px,1.35vw,17.5px);color:var(--ink-2);line-height:1.75;max-width:520px}
-.hero-sub b{color:var(--ink);font-weight:700}
-.hero-cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
+.hero-copy-bottom{margin-top:0;padding-top:12px;flex:1;display:flex;flex-direction:column}
+.hero-sub{margin-top:0;font-size:clamp(17px,1.6vw,20.5px);color:var(--ink);line-height:1.82;max-width:520px;padding:13px 15px 13px 17px;background:oklch(0.975 0.018 251 / 0.5);border-radius:10px}
+.hero-sub b{color:var(--brand-dk);font-weight:800}
+.hero-cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
 .hero-note{margin-top:18px;font-size:12.5px;color:var(--ink-3);line-height:1.6;max-width:520px}
 
 /* hero visual — clean character card + KPI strip (no grid, no overlap) */
@@ -333,10 +335,10 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .hero .wrap{position:relative;z-index:1}
 
 /* hero quick-checks */
-.hero-checks{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:16px}
-.hero-checks li{display:flex;align-items:flex-start;gap:11px;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.015em;line-height:1.45}
+.hero-checks{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.hero-checks li{display:flex;align-items:flex-start;gap:12px;font-size:clamp(17px,1.55vw,20px);font-weight:700;color:var(--ink);letter-spacing:-.015em;line-height:1.55}
 .hero-checks li b{font-weight:800;color:var(--brand-ink)}
-.hero-checks li i{flex:none;margin-top:1px;display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:oklch(0.95 0.04 155);color:var(--ok);font-style:normal;font-size:12px;font-weight:900}
+.hero-checks li i{flex:none;margin-top:2px;display:grid;place-items:center;width:25px;height:25px;border-radius:8px;background:oklch(0.95 0.04 155);color:var(--ok);font-style:normal;font-size:13.5px;font-weight:900}
 
 /* hero dashboard panel */
 .dash{position:relative;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-l);padding:18px;overflow:hidden}
@@ -429,7 +431,7 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .benefit-card:hover .tagno span{background:rgba(255,255,255,.18);color:#fff}
 .benefit-card .bic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:var(--blue-50);margin-bottom:20px;transition:background .25s,color .25s}
 .benefit-card h3{font-size:18px;font-weight:800;margin-bottom:10px;letter-spacing:-.025em;line-height:1.35;transition:color .25s}
-.benefit-card p{font-size:14.5px;color:var(--ink-2);line-height:1.68;transition:color .25s}
+.benefit-card p{font-size:15px;color:var(--ink-2);line-height:1.72;transition:color .25s}
 .benefit-card.feature{grid-column:span 1}
 .benefit-card.feature .tagno{display:inline-flex;gap:6px;margin-top:16px;flex-wrap:wrap}
 .benefit-card.feature .tagno span{background:var(--blue-50);color:var(--brand-ink);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;transition:background .25s,color .25s}
@@ -445,7 +447,7 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .split.rev .media{order:2}
 .media{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-m), inset 0 0 0 1px oklch(0.92 0.006 258 / .9);background:var(--surface-3)}
 .media img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;display:block}
-.lede{font-size:clamp(16px,1.4vw,17.5px);color:var(--ink-2);line-height:1.82}
+.lede{font-size:clamp(16px,1.4vw,17.5px);color:var(--ink);opacity:.76;line-height:1.82}
 .lede + .lede{margin-top:20px}
 .split h2{margin-bottom:24px}
 
@@ -483,14 +485,37 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .app-card p{font-size:14.5px;color:var(--blue-100);line-height:1.65}
 
 /* ---------- process timeline ---------- */
-.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.flow-step{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 22px;box-shadow:var(--shadow-s);transition:.22s}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+.flow-step{
+  position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:20px 20px 22px;box-shadow:var(--shadow-s);transition:.22s;
+  display:flex;flex-direction:column;
+}
 .flow-step:hover{transform:translateY(-4px);box-shadow:var(--shadow-m);border-color:var(--blue-200)}
-.flow-step .n{display:flex;align-items:center;gap:10px;margin-bottom:15px}
-.flow-step .n b{width:30px;height:30px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:800}
-.flow-step .n .ico{font-size:22px}
-.flow-step h3{font-size:17px;margin-bottom:7px;font-weight:800;letter-spacing:-.02em}
-.flow-step p{font-size:13.8px;color:var(--ink-2);line-height:1.6}
+.fs-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fs-header--cta{margin-bottom:12px}
+.fs-ico{
+  flex:none;width:36px;height:36px;border-radius:10px;
+  background:var(--blue-50);border:1px solid var(--blue-100);
+  display:grid;place-items:center;font-size:18px;
+}
+.flow-step h3{font-size:16px;font-weight:800;letter-spacing:-.025em;line-height:1.3;margin:0;color:var(--ink)}
+.flow-step p{font-size:14px;color:var(--ink-2);line-height:1.72;flex:1}
+.flow-step--cta{background:linear-gradient(160deg,var(--brand),var(--brand-dk));border:none;padding-top:22px}
+.flow-step--cta:hover{box-shadow:var(--shadow-blue)}
+.flow-step--cta h3{color:#fff}
+.flow-step--cta p{color:rgba(255,255,255,.82)}
+.fs-ico--white{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.22)}
+.flow-cta-btn{
+  margin-top:14px;align-self:flex-start;
+  background:#fff;color:var(--brand);
+  font-size:14px;font-weight:800;letter-spacing:-.01em;
+  padding:9px 20px;border-radius:999px;
+  display:inline-flex;align-items:center;
+  transition:transform .18s,background .18s;
+  white-space:nowrap;
+}
+.flow-cta-btn:hover{background:var(--blue-50);transform:translateY(-1px)}
 
 /* ---------- roles ---------- */
 .roles{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -504,7 +529,8 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 .role ul{list-style:none;display:flex;flex-direction:column;gap:13px}
 .role li{display:flex;align-items:flex-start;gap:12px;font-size:15.5px;font-weight:600;line-height:1.45}
 .role li .ck{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900}
-.role.platform li{color:#eaf1ff}.role.platform .ck{background:var(--blue-500);color:#fff}
+.role.platform h3{color:#fff;font-weight:900;text-shadow:0 1px 8px rgba(0,0,0,.30)}
+.role.platform li{color:rgba(255,255,255,.93)}.role.platform .ck{background:var(--blue-500);color:#fff}
 .role.partner li{color:var(--ink)}.role.partner .ck{background:var(--blue-50);color:var(--brand)}
 
 /* ---------- settlement ---------- */
@@ -583,22 +609,22 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 /* ---------- realtime application toast ---------- */
 .rt-toast{
   position:fixed;right:24px;bottom:24px;z-index:70;
-  width:308px;max-width:calc(100vw - 32px);
-  display:flex;gap:13px;align-items:center;
+  width:348px;max-width:calc(100vw - 32px);
+  display:flex;gap:14px;align-items:center;
   background:oklch(1 0 0 / .88);backdrop-filter:blur(16px) saturate(160%);
-  border:1px solid var(--line);border-radius:16px;
-  padding:14px 16px;box-shadow:var(--shadow-l);
+  border:1px solid var(--line);border-radius:18px;
+  padding:16px 18px;box-shadow:var(--shadow-l);
   opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;
   transition:opacity .55s ease, transform .55s cubic-bezier(.2,.8,.3,1);
 }
 .rt-toast.show{opacity:1;transform:none;pointer-events:auto}
-.rt-ava{position:relative;flex:none;width:44px;height:44px;border-radius:50%;
-  background:var(--grad-brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;box-shadow:var(--shadow-blue)}
-.rt-ava .badge{position:absolute;right:-3px;bottom:-3px;width:19px;height:19px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:900;border:2.5px solid #fff}
+.rt-ava{position:relative;flex:none;width:50px;height:50px;border-radius:50%;
+  background:var(--grad-brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:19px;box-shadow:var(--shadow-blue)}
+.rt-ava .badge{position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:900;border:2.5px solid #fff}
 .rt-body{min-width:0;flex:1}
-.rt-name{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt-name{font-size:15.5px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rt-name .rt-job{color:var(--brand);font-weight:700}
-.rt-meta{display:flex;align-items:center;gap:7px;margin-top:3px;font-size:12.5px;color:var(--ink-3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt-meta{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:13px;color:var(--ink-3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rt-live{flex:none;width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px oklch(0.62 0.15 155 / .16);animation:pulse 1.8s infinite}
 .rt-close{position:absolute;top:7px;right:8px;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:var(--ink-3);font-size:12px;line-height:1;transition:.15s}
 .rt-close:hover{background:var(--surface-3);color:var(--ink)}
@@ -717,7 +743,7 @@ textarea.inp{resize:vertical;min-height:60px}
   .check-grid{grid-template-columns:repeat(2,1fr)}
   .field-row.two,.svc-grid{grid-template-columns:1fr 1fr}
   .svc-grid{grid-template-columns:repeat(4,1fr)}
-  .hero h1{font-size:clamp(32px,9vw,50px)}
+  .hero h1{font-size:clamp(32px,8.5vw,46px)}
   .hero-copy-bottom{margin-top:24px;padding-top:0}
   .hero-sub{font-size:16px;line-height:1.7}
   .hero-orb{padding:16px;border-radius:22px}
@@ -1152,11 +1178,11 @@ textarea.inp{resize:vertical;min-height:60px}
   .benefit-grid{grid-template-columns:repeat(2,1fr);gap:18px}
   .split{gap:40px}
   .mini-grid{grid-template-columns:repeat(2,1fr)}
-  .hero-copy-bottom{padding-top:36px}
+  .hero-copy-bottom{padding-top:14px}
 }
 
 @media(max-width:880px){
-  .hero-copy-bottom{margin-top:28px;padding-top:0}
+  .hero-copy-bottom{margin-top:20px;padding-top:0}
 }
 
 /* ---------- 모바일 hero visual 개선 ---------- */
@@ -1256,6 +1282,390 @@ textarea.inp{resize:vertical;min-height:60px}
 }
 
 /* =========================================================
+   HERO CARD CAROUSEL — 자동 전환 안내 카드
+   ========================================================= */
+.hero-card {
+  border-radius: 28px;
+  background: #fff;
+  border: 1px solid oklch(0.90 0.015 255);
+  box-shadow:
+    0 2px 6px rgba(14,30,68,.04),
+    0 8px 28px rgba(14,30,68,.08),
+    0 28px 64px rgba(14,30,68,.07);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+.hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 4px 12px rgba(14,30,68,.06),
+    0 16px 44px rgba(14,30,68,.11),
+    0 40px 80px rgba(14,30,68,.09);
+}
+
+/* 헤더 밴드 */
+.hc-head {
+  background: linear-gradient(135deg, oklch(0.54 0.17 252) 0%, oklch(0.43 0.155 258) 100%);
+  padding: 18px 22px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.hc-head::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -30px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.11), transparent 65%);
+  pointer-events: none;
+}
+.hc-head::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(75% 65% at 88% -8%, rgba(255,255,255,.16), transparent 58%);
+}
+.hc-head .sb-badge { position: relative; z-index: 1; }
+
+/* 파란 배경 위 초록 점 — 화이트 링 + glow로 명시도 확보 */
+.hc-head .dot-live {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.55), 0 0 7px 1px rgba(80,220,130,.70);
+}
+
+.hc-head-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.03em;
+  line-height: 1.25;
+  margin-top: 11px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 슬라이드 래퍼 — grid overlay로 높이 점프 없음 */
+.hc-slides {
+  padding: 20px 22px 8px;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 250px;
+}
+.hc-slide {
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .42s ease, transform .42s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.hc-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hcs-icon {
+  font-size: 32px;
+  line-height: 1;
+  display: block;
+}
+.hcs-title {
+  font-size: clamp(20px, 2.0vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -.03em;
+  line-height: 1.28;
+  margin: 0;
+}
+.hcs-desc {
+  font-size: clamp(15.5px, 1.55vw, 17.5px);
+  color: var(--ink-2);
+  line-height: 1.76;
+  margin: 0;
+}
+.hcs-desc b { color: var(--brand-ink); font-weight: 800; }
+
+.hcs-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+}
+.hcs-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: clamp(15px, 1.45vw, 16.5px);
+  color: var(--ink-2);
+  line-height: 1.68;
+  font-weight: 700;
+}
+.hcs-list li::before {
+  content: "✓";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: oklch(0.95 0.04 155);
+  border-radius: 6px;
+  color: var(--ok);
+  font-size: 10.5px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+.hcs-list li b { color: var(--brand-ink); font-weight: 800; }
+
+/* 슬라이드 3 — 0원 트리오 */
+.hcs-perk-header {
+  display: flex;
+  align-items: center;
+  margin: 0 0 4px;
+}
+.hcs-perk-header span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: oklch(0.38 0.12 58);
+  background: linear-gradient(135deg, oklch(0.968 0.055 84), oklch(0.930 0.085 74));
+  border: 1.5px solid oklch(0.82 0.11 70);
+  border-radius: 999px;
+  padding: 5px 14px;
+  letter-spacing: .01em;
+  box-shadow: 0 2px 7px oklch(0.65 0.12 72 / .16);
+}
+.hcs-perks {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+}
+.hcp {
+  flex: 1;
+  background: linear-gradient(170deg, #fff 0%, oklch(0.942 0.070 82) 100%);
+  border: 2px solid oklch(0.79 0.13 68);
+  border-radius: 20px;
+  padding: 16px 6px 13px;
+  text-align: center;
+  box-shadow:
+    0 4px 14px oklch(0.65 0.12 72 / .22),
+    0 1px 4px rgba(0,0,0,.05),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.hcp::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, oklch(0.74 0.155 70), oklch(0.65 0.155 57));
+  pointer-events: none;
+}
+.hcp:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px oklch(0.65 0.12 72 / .28), 0 2px 7px rgba(0,0,0,.06);
+  border-color: oklch(0.72 0.14 63);
+}
+.hcp-val {
+  display: block;
+  font-size: clamp(28px, 3.2vw, 34px);
+  font-weight: 900;
+  letter-spacing: -.045em;
+  color: oklch(0.30 0.15 50);
+  line-height: 1;
+}
+.hcp-lab {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: oklch(0.38 0.10 62);
+  margin-top: 5px;
+  letter-spacing: -.01em;
+  background: oklch(0.920 0.062 78);
+  padding: 2px 9px;
+  border-radius: 6px;
+  border: 1px solid oklch(0.855 0.090 73);
+}
+.hcp-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: oklch(0.52 0.08 68);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* 슬라이드 4 — 분야 칩 */
+.hcs-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.hcs-fields span {
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  color: var(--brand-ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 5px 11px;
+}
+
+/* 분야 칩 아래 추가 분야 텍스트 */
+.hcs-fields-extra {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+  line-height: 1.6;
+  margin: -2px 0 0;
+}
+
+.hcs-note {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+}
+.hcs-note--em {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+/* 닷 인디케이터 — pill 형태 */
+.hc-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 22px 8px;
+}
+.hcd {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue-200);
+  border: none;
+  cursor: pointer;
+  padding: 7px;              /* 넓은 터치 영역 확보 */
+  box-sizing: content-box;
+  background-clip: content-box;
+  transition: background .25s ease, width .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  opacity: .6;
+}
+.hcd:hover {
+  background: var(--blue-500);
+  background-clip: content-box;
+  opacity: .85;
+}
+.hcd.active {
+  background: var(--brand);
+  background-clip: content-box;
+  width: 30px;
+  border-radius: 4px;
+  opacity: 1;
+}
+
+/* 고정 CTA 영역 */
+.hc-cta {
+  padding: 16px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+/* 안내 문구 — 신청 버튼 대체 */
+.hc-guide-note {
+  background: linear-gradient(145deg, var(--surface-2) 0%, #fff 100%);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hgn-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.hgn-badge {
+  flex: none;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.hgn-badge--blue {
+  background: var(--blue-50);
+  color: var(--brand);
+  border: 1px solid var(--blue-200);
+}
+.hgn-badge--gray {
+  background: var(--surface-3);
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+}
+
+/* CTA 하단 상담 시간 — 괄호 보조 텍스트 */
+.sb-note-sub {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 880px) {
+  .hc-slides { min-height: 240px; padding: 18px 20px 8px; }
+  .hcs-icon { font-size: 26px; }
+  .hcs-title { font-size: 19px; }
+  .hcs-desc { font-size: 15.5px; }
+  .hcs-list li { font-size: 15px; font-weight: 700; }
+  .hcp-val { font-size: 26px; }
+  .hcp-lab { font-size: 12px; }
+  .hcp-sub { font-size: 10.5px; }
+  .hc-head { padding: 18px 20px 16px; }
+  .hc-head-title { font-size: 17px; }
+  .hc-cta { padding: 14px 18px 18px; gap: 10px; }
+  .hc-guide-note { padding: 11px 13px; gap: 7px; }
+  .hgn-row { font-size: 12.5px; gap: 8px; }
+  .hgn-badge { font-size: 10.5px; padding: 2px 7px; }
+  .hcs-perk-header span { font-size: 11px; }
+}
+
+/* 중간 해상도(880~1200px) — 카드 레이아웃 보정 */
+@media (max-width: 1100px) and (min-width: 881px) {
+  .hero-grid { gap: 24px 36px; padding: 20px 0 28px; }
+  .hero-copy-bottom { padding-top: 10px; }
+}
+
+/* =========================================================
    MODAL 한 화면 최적화 — PC & 모바일 높이·간격 압축
    ========================================================= */
 
@@ -1332,3 +1742,264 @@ textarea.inp{resize:vertical;min-height:60px}
   /* 하단 버튼 */
   .form-nav { margin-top: 6px; padding: 5px 0 1px; }
 }
+
+/* =========================================================
+   DESIGN LAYOUT IMPROVEMENTS — 2026-06
+   ========================================================= */
+
+/* ---------- PC: 오른쪽 카드 살짝 아래 배치 ---------- */
+@media (min-width: 881px) {
+  .hero-visual { padding-top: 14px; }
+}
+
+/* ---------- CTA 버튼 active 효과 개선 ---------- */
+.btn--primary:active {
+  transform: translateY(1px) scale(.97);
+  box-shadow: 0 4px 12px oklch(0.55 0.17 252 / .24);
+  transition: transform .09s ease, box-shadow .09s ease;
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px oklch(0.55 0.17 252 / .30), 0 4px 8px oklch(0.55 0.17 252 / .14);
+}
+
+/* ---------- 반응형: 히어로 clamp 텍스트 최소 크기 보장 ---------- */
+@media (max-width: 960px) and (min-width: 881px) {
+  .hero h1 { font-size: clamp(40px, 5.2vw, 58px); }
+  .hero-sub { font-size: clamp(15px, 1.6vw, 17px); }
+  .hcs-title { font-size: 19px; }
+  .hcs-desc { font-size: 15px; }
+}
+
+/* ---------- 모바일 0원 박스 크기 유지 ---------- */
+@media (max-width: 880px) {
+  .hcp-val { font-size: 26px; }
+  .hcp-lab { font-size: 12px; padding: 2px 7px; }
+  .hcp { padding: 14px 4px 11px; border-radius: 16px; }
+  .hcp::before { height: 2.5px; }
+}
+
+/* ---------- 분야 칩 추가 텍스트 가시성 ---------- */
+.hcs-fields-extra {
+  color: var(--ink-2);
+  font-weight: 600;
+  opacity: .80;
+}
+.hcs-note--em {
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------- 스크롤 위로가기 버튼 ---------- */
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 84px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px oklch(0.58 0.17 251 / .30), 0 1px 3px rgba(0,0,0,.08);
+  z-index: 54;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease, background .2s ease, box-shadow .2s ease;
+  border: none;
+  cursor: pointer;
+}
+.scroll-top-btn.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.scroll-top-btn:hover {
+  background: var(--brand-dk);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px oklch(0.55 0.17 252 / .36);
+}
+.scroll-top-btn:active {
+  transform: translateY(0) scale(.93);
+  transition: transform .08s ease;
+}
+@media (max-width: 880px) {
+  .scroll-top-btn {
+    right: 16px;
+    bottom: 100px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ---------- 역할 섹션 tag 텍스트 가시성 ---------- */
+.role.platform .tag {
+  background: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.95);
+  border: 1px solid rgba(255,255,255,.24);
+  font-weight: 700;
+}
+
+/* ---------- 카드 슬라이더 인디케이터 개선 ---------- */
+.hc-dots {
+  padding: 10px 22px 10px;
+  gap: 4px;
+}
+.hcd {
+  opacity: .55;
+}
+.hcd:hover {
+  opacity: 1;
+}
+.hcd.active {
+  opacity: 1;
+}
+
+/* ---------- 히어로 카드 min-height — 슬라이드 콘텐츠 기반 ---------- */
+.hc-slides { min-height: 220px; }
+
+/* ---------- 히어로 반응형 clipping 방지 ---------- */
+.hero-card { min-width: 0; }
+.hero-visual { min-width: 0; }
+
+/* ---------- hc-note 텍스트 가시성 개선 ---------- */
+.hcs-note {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+/* =========================================================
+   HERO POSITION · READABILITY · CTA FIX — 2026-06-09
+   ========================================================= */
+
+/* --- 1. PC 히어로 상단 여백 축소 (왼쪽 콘텐츠 전체 위로) --- */
+@media (min-width: 881px) {
+  .hero-grid {
+    padding: 10px 0 26px;
+  }
+  .hero-copy-bottom {
+    padding-top: 24px;
+  }
+}
+
+/* --- 2. 중간 해상도 (881–1100px) 세부 조정 --- */
+@media (max-width: 1100px) and (min-width: 881px) {
+  .hero-grid {
+    padding: 8px 0 22px;
+  }
+  .hero-copy-bottom {
+    padding-top: 18px;
+  }
+  .hero-visual {
+    padding-top: 28px;
+  }
+  /* 좌측 콘텐츠 상단을 우측 카드 상단과 맞춤 */
+  .hero-copy {
+    padding-top: 28px;
+  }
+}
+
+/* --- 3. 오른쪽 카드 슬라이더 — 넓은 PC에서 아래로 배치 --- */
+@media (min-width: 1101px) {
+  .hero-visual {
+    padding-top: 36px;
+  }
+  /* 좌측 콘텐츠 상단을 우측 카드 상단과 맞춤 */
+  .hero-copy {
+    padding-top: 36px;
+  }
+}
+
+/* --- 4. 혜택 리스트 → 버튼 간격 정리 --- */
+.hero-cta {
+  margin-top: 22px;
+}
+
+/* --- 5. 왼쪽 CTA 버튼 크기·강조 강화 --- */
+.hero-cta .btn--primary.btn--lg {
+  width: 100%;
+  padding: 28px 48px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -.025em;
+  min-height: 86px;
+  box-shadow:
+    0 12px 36px oklch(0.58 0.17 251 / .44),
+    0 4px 12px oklch(0.5 0.16 253 / .28);
+}
+.hero-cta .btn--primary.btn--lg:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 24px 54px oklch(0.55 0.17 252 / .48),
+    0 7px 18px oklch(0.5 0.16 253 / .32);
+}
+.hero-cta .btn--primary.btn--lg:active {
+  transform: translateY(2px) scale(.97);
+  box-shadow: 0 4px 14px oklch(0.55 0.17 252 / .24);
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+
+/* --- 6. 모집 분야 슬라이드 — 하단 설명 가독성 개선 --- */
+.hcs-fields-extra {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-2);
+  opacity: 1;
+  margin: 8px 0 0;
+  line-height: 1.62;
+}
+.hcs-note--em {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.68;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  border-radius: 10px;
+  padding: 11px 14px;
+  box-shadow: 0 1px 5px rgba(14,30,68,.07);
+  margin-top: 6px;
+}
+
+/* --- 7. 슬라이드 min-height 확장 (모집 분야 내용 잘림 방지) --- */
+.hc-slides { min-height: 270px; }
+
+/* --- 8. 모바일 반응형 보정 --- */
+@media (max-width: 880px) {
+  .hcs-fields-extra {
+    font-size: 13.5px;
+    margin-top: 6px;
+  }
+  .hcs-note--em {
+    font-size: 13.5px;
+    padding: 10px 13px;
+  }
+  .hc-slides { min-height: 252px; }
+}
+@media (max-width: 680px) {
+  .hcs-fields-extra { font-size: 13px; }
+  .hcs-note--em { font-size: 13px; padding: 9px 12px; }
+}
+
+/* =========================================================
+   HERO LEFT BOX — 파란색 테두리 박스 높이 연장
+   ========================================================= */
+
+/* --- PC 기본 (>1100px): 하단 여백 — 폰트 확대 후 과도한 여백 방지 --- */
+@media (min-width: 1101px) {
+  .hero-copy-bottom {
+    padding-bottom: 40px;
+  }
+}
+
+/* --- 중간 PC (881–1100px): 하단 여백 소폭 축소 --- */
+@media (max-width: 1100px) and (min-width: 881px) {
+  .hero-copy-bottom {
+    padding-bottom: 30px;
+  }
+}
+

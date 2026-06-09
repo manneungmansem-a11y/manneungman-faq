@@ -401,73 +401,187 @@
   });
 
   /* =========================================================
-     REALTIME APPLICATION TOAST (decorative social proof)
+     REALTIME APPLICATION TOAST (social proof)
      ========================================================= */
   (function () {
     var toast = document.getElementById('rtToast');
     if (!toast) return;
-    if (sessionStorage.getItem('mnm_rtClosed') === '1') { toast.remove(); return; }
+
+    /* ---- 시간대별 스케줄 ---- */
+    var popupSchedule = {
+      dawn:        { start: 0,  end: 6,  firstDelay: [60, 90],  interval: [240, 360], maxPerSession: 1,
+                     timeAgoList: ['6시간 전','7시간 전','8시간 전','9시간 전','10시간 전','어제'] },
+      earlyMorning:{ start: 7,  end: 8,  firstDelay: [25, 40],  interval: [90, 150],  maxPerSession: 2,
+                     timeAgoList: ['1시간 전','2시간 전','3시간 전','4시간 전'] },
+      morning:     { start: 9,  end: 11, firstDelay: [8, 18],   interval: [25, 45],   maxPerSession: 5,
+                     timeAgoList: ['7분 전','12분 전','18분 전','25분 전','34분 전','48분 전','1시간 전'] },
+      lunch:       { start: 12, end: 12, firstDelay: [25, 40],  interval: [60, 100],  maxPerSession: 2,
+                     timeAgoList: ['38분 전','52분 전','1시간 전','2시간 전'] },
+      afternoon:   { start: 13, end: 17, firstDelay: [8, 15],   interval: [25, 40],   maxPerSession: 6,
+                     timeAgoList: ['5분 전','9분 전','14분 전','22분 전','31분 전','43분 전','58분 전','1시간 전'] },
+      evening:     { start: 18, end: 20, firstDelay: [30, 50],  interval: [90, 150],  maxPerSession: 2,
+                     timeAgoList: ['1시간 전','2시간 전','3시간 전','4시간 전'] },
+      lateEvening: { start: 21, end: 23, firstDelay: [50, 80],  interval: [180, 300], maxPerSession: 1,
+                     timeAgoList: ['3시간 전','4시간 전','5시간 전','6시간 전','오늘 오후','어제'] }
+    };
+
+    /* 실제 데이터 → 등록완료 계열 / 샘플 데이터 → 예시 계열 */
+    var REAL_ACTIONS   = ['파트너스 등록완료','입점 신청완료','사전등록 완료','파트너 신청완료','만능맨 파트너스 등록완료'];
+    var SAMPLE_ACTIONS = ['파트너 등록 예시','입점 예시','사전등록 예시','파트너 신청 예시','만능맨 파트너 등록 예시'];
 
     var NAMES = [
-      '김○○','이○○','박○○','최○○','정○○','강○○','윤○○','임○○','조○○','한○○',
-      '서○○','신○○','오○○','권○○','황○○','안○○','송○○','류○○','전○○','고○○',
-      '장○○','유○○','백○○','노○○','하○○','홍○○','마○○','양○○','손○○','민○○',
-      '차○○','진○○','원○○','천○○','방○○','공○○','석○○','구○○','나○○','도○○',
-      '라○○','명○○','봉○○','엄○○','여○○','연○○','우○○','은○○','자○○','제○○',
-      '지○○','채○○','표○○','함○○','허○○','문○○','배○○','남○○','위○○','사○○'
+      '김○○','이○○','박○○','최○○','정○○','강○○','조○○','윤○○','장○○','임○○',
+      '한○○','오○○','서○○','신○○','권○○','황○○','안○○','송○○','류○○','유○○',
+      '홍○○','전○○','고○○','문○○','양○○','손○○','배○○','백○○','허○○','남○○',
+      '심○○','노○○','하○○','곽○○','성○○','차○○','주○○','우○○','구○○','민○○',
+      '진○○','엄○○','채○○','원○○','천○○','방○○','공○○','현○○','함○○','변○○',
+      '염○○','여○○','추○○','도○○','소○○','석○○','선○○','설○○','마○○','길○○',
+      '연○○','명○○','위○○','표○○','기○○','반○○','라○○','왕○○','금○○','옥○○',
+      '육○○','인○○','맹○○','제○○','탁○○','편○○','봉○○','두○○','모○○','사○○',
+      '빈○○','피○○','지○○','단○○','국○○','어○○','은○○','궁○○','내○○'
     ];
-    var JOBS = [
-      '누수탐지','배관설비','보일러·난방','수도설비','밸브교체','온수배관','난방배관','욕실설비','상가설비','기계설비',
-      '펌프설비','냉난방설비','배관청소','하수도설비','온수기설치','분배기교체','열교환기','자동제어설비','공조설비','빌딩설비',
-      '보일러 수리','수전 교체','하수구 막힘','욕실 수리','수도 배관','전기 수리','배관 누수','보일러 점검','싱크대 수리','변기 막힘',
-      '난방 분배기','수전 설치','온수 누수','배관 교체','욕실 설비','주방 수리','수도 누수','보일러 배관','배수관 청소','세면대 수리',
-      '샤워기 교체','급수 배관','급탕 배관','펌프 점검','온도조절기','계량기 점검','배관 보수','난방 점검','누수 보수','욕실 배관',
-      '주방 배관','보일러 설치','수도 설비','전기 점검','난방 설비','하수 배관','배관 설비','수전 수리','화장실 수리','싱크대 막힘',
-      '보일러 교체','배관 진단','난방 누수','수도 공사','욕실 리모델링','주방 설비','누수 검사','밸브 수리','온수기 점검','배관 점검'
+
+    var FIELDS = [
+      '배관수리','배관설비','배관점검','배관교체','배관공사','배관막힘','배관누수','노후배관교체',
+      '급수배관수리','급탕배관수리','온수배관수리','난방배관수리','수도배관수리','화장실배관수리','주방배관수리',
+      '누수탐지','누수수리','누수공사','누수점검','천장누수','벽면누수','욕실누수','주방누수',
+      '베란다누수','수도누수','배관누수탐지','아파트누수','상가누수','건물누수','옥상누수',
+      '수도수리','수도설비','수도점검','수도배관','수도꼭지수리','수도꼭지교체','수전교체','수전수리',
+      '싱크수전교체','욕실수전교체','샤워수전교체','세면대수전교체','수압점검','수압조절','물샘수리',
+      '보일러수리','보일러점검','보일러교체','보일러설치','보일러배관','보일러누수','보일러분배기',
+      '난방수리','난방점검','난방배관','난방분배기수리','난방분배기교체','온도조절기교체','구동기교체',
+      '난방불량수리','온수불량수리','온수기수리','온수기설치','전기온수기수리','가스온수기수리',
+      '밸브교체','밸브수리','밸브점검','수도밸브교체','난방밸브교체','가스밸브점검','분배기밸브교체',
+      '감압밸브교체','정수위밸브점검','자동제어밸브점검',
+      '설비수리','기계설비','건물설비','아파트설비','상가설비','사무실설비','공장설비','위생설비',
+      '급수설비','급탕설비','배수설비','냉난방설비','설비점검','설비보수','시설관리','건물유지보수',
+      '하수구막힘','하수구수리','하수구뚫음','하수구냄새','배수구막힘','배수구수리','배수관수리',
+      '배수관막힘','싱크대막힘','싱크대수리','싱크대배수','싱크대누수','싱크대교체',
+      '세면대막힘','세면대수리','세면대교체','욕조배수수리','욕실배수수리',
+      '변기수리','변기막힘','변기교체','변기부속교체','변기누수','양변기수리','양변기교체',
+      '화장실수리','욕실수리','욕실설비','샤워기교체','샤워기수리','욕실환풍기교체','욕실환풍기수리',
+      '욕실실리콘','욕실타일수리',
+      '에어컨수리','에어컨설치','에어컨이전설치','에어컨철거','에어컨청소',
+      '벽걸이에어컨설치','스탠드에어컨설치','시스템에어컨점검','냉매충전','실외기점검',
+      '냉방기수리','냉난방기수리','환풍기교체','환풍기수리','환기설비',
+      '전기수리','전기점검','전기공사','전기배선수리','누전점검','차단기점검','차단기교체',
+      '콘센트교체','콘센트수리','스위치교체','스위치수리','조명교체','조명설치','LED조명교체',
+      '등기구교체','전등수리','전기증설','분전함점검','배선정리',
+      '도어락설치','도어락수리','도어락교체','문수리','문고리교체','방문수리','현관문수리',
+      '중문수리','경첩교체','문틀수리','샷시수리','샷시교체','방충망수리','방충망교체','방범창수리',
+      '실리콘시공','코킹시공','타일수리','타일교체','타일시공','줄눈시공','욕실줄눈',
+      '주방타일수리','벽타일수리','바닥타일수리','도배수리','장판수리','몰딩수리','걸레받이수리','마감수리',
+      '생활수리','집수리','출장수리','긴급수리','소규모수리','간단수리','설치수리','주방수리',
+      '가구수리','가구조립','선반설치','커튼설치','블라인드설치','액자설치','거울설치','행거설치','수납장설치',
+      '철거작업','간단철거','욕실철거','주방철거','타일철거','싱크대철거','폐기물정리',
+      '원상복구','부분보수','하자보수','입주수리','퇴거수리','상가수리','사무실수리',
+      '원룸수리','빌라수리','아파트수리'
     ];
-    var TIMES = ['방금 전','1분 전','2분 전','3분 전','4분 전','5분 전','6분 전','7분 전','8분 전','9분 전','10분 전','11분 전','12분 전','13분 전','14분 전','15분 전','16분 전','17분 전','18분 전','19분 전','20분 전','22분 전','25분 전','28분 전','31분 전','35분 전','42분 전','51분 전'];
+
+    var GLOBAL_MAX        = 6;
+    var CLOSE_COOLDOWN_MS = 3 * 60 * 1000;
+    var SK_COUNT  = 'mnm_rtCount';
+    var SK_CLOSED = 'mnm_rtClosedAt';
+    var SK_RECENT = 'mnm_rtRecent';
+
+    var TEST_WORDS = ['테스트','test','홍길동','1111','1234','asdf','qwer','임시','샘플','테스트이름','테스트업체'];
+    function isTestEntry(val) {
+      var v = String(val || '').toLowerCase();
+      for (var i = 0; i < TEST_WORDS.length; i++) {
+        if (v.indexOf(TEST_WORDS[i].toLowerCase()) !== -1) return true;
+      }
+      return false;
+    }
+
+    function getCurrentSchedule() {
+      var h = new Date().getHours();
+      var keys = Object.keys(popupSchedule);
+      for (var i = 0; i < keys.length; i++) {
+        var s = popupSchedule[keys[i]];
+        if (h >= s.start && h <= s.end) return s;
+      }
+      return popupSchedule.dawn;
+    }
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function randInt(a, b) { return Math.round(a + Math.random() * (b - a)); }
+
+    function getRecentKeys() {
+      try { return JSON.parse(sessionStorage.getItem(SK_RECENT) || '[]'); }
+      catch (e) { return []; }
+    }
+    function addRecentKey(key) {
+      var recent = getRecentKeys();
+      recent.push(key);
+      if (recent.length > 3) recent.shift();
+      try { sessionStorage.setItem(SK_RECENT, JSON.stringify(recent)); } catch (e) {}
+    }
+
+    function buildSampleData(sched) {
+      var recent = getRecentKeys();
+      var name, field, timeAgo, key, guard = 0;
+      do {
+        name    = pick(NAMES);
+        field   = pick(FIELDS);
+        timeAgo = pick(sched.timeAgoList);
+        key = name + '|' + field + '|' + timeAgo;
+        guard++;
+      } while (recent.indexOf(key) !== -1 && guard < 30);
+      addRecentKey(key);
+      return { n: name, j: field, timeAgo: timeAgo, action: pick(SAMPLE_ACTIONS), real: false };
+    }
+
+    function buildRealData(item, sched) {
+      return { n: item.n, j: item.j, timeAgo: pick(sched.timeAgoList), action: pick(REAL_ACTIONS), real: true };
+    }
+
+    var schedule   = getCurrentSchedule();
+    var SESSION_MAX = Math.min(schedule.maxPerSession, GLOBAL_MAX);
+    if (+(sessionStorage.getItem(SK_COUNT) || 0) >= SESSION_MAX) { toast.remove(); return; }
 
     var initEl = toast.querySelector('.rt-ava-init');
     var nameEl = toast.querySelector('.rt-name-txt');
-    var jobEl = toast.querySelector('.rt-job');
+    var jobEl  = toast.querySelector('.rt-job');
     var timeEl = toast.querySelector('.rt-time');
-    var recentKeys = [];
-    var hideTimer = null, nextTimer = null, closed = false;
+    var hideTimer = null, nextTimer = null, stopped = false;
     var realQueue = [];
 
-    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function rand(a, b) { return a + Math.random() * (b - a); }
-
-    function nextData() {
-      if (realQueue.length) { recentKeys = []; return realQueue.shift(); }
-      var n, j, t, key, guard = 0;
-      do { n = pick(NAMES); j = pick(JOBS); t = pick(TIMES); key = n + '|' + j; }
-      while (recentKeys.indexOf(key) !== -1 && ++guard < 30);
-      recentKeys.push(key);
-      if (recentKeys.length > 5) recentKeys.shift();
-      return { n: n, j: j, t: t, real: false };
-    }
-
     function show() {
-      if (closed) return;
-      var d = nextData();
+      if (stopped) return;
+
+      var closedAt = +(sessionStorage.getItem(SK_CLOSED) || 0);
+      if (closedAt && Date.now() - closedAt < CLOSE_COOLDOWN_MS) {
+        nextTimer = setTimeout(show, CLOSE_COOLDOWN_MS - (Date.now() - closedAt) + 500);
+        return;
+      }
+
+      var shownCount = +(sessionStorage.getItem(SK_COUNT) || 0);
+      if (shownCount >= SESSION_MAX) { stopped = true; return; }
+
+      var d = realQueue.length ? buildRealData(realQueue.shift(), schedule) : buildSampleData(schedule);
+
       initEl.textContent = d.n.charAt(0);
       nameEl.textContent = d.n;
-      jobEl.textContent = '(' + d.j + ')';
-      timeEl.textContent = d.t + ' 파트너스 신청 완료';
+      jobEl.textContent  = '(' + d.j + ')';
+      timeEl.textContent = d.timeAgo + ' ' + d.action;
       toast.classList.toggle('rt-real', !!d.real);
       toast.classList.add('show');
+
+      sessionStorage.setItem(SK_COUNT, shownCount + 1);
       hideTimer = setTimeout(hide, d.real ? 6200 : 5200);
     }
+
     function hide() {
       toast.classList.remove('show');
-      if (closed) return;
-      nextTimer = setTimeout(show, rand(8000, 20000));
+      if (stopped) return;
+      var shownCount = +(sessionStorage.getItem(SK_COUNT) || 0);
+      if (shownCount >= SESSION_MAX) { stopped = true; return; }
+      nextTimer = setTimeout(show, randInt(schedule.interval[0], schedule.interval[1]) * 1000);
     }
 
     window.mnmPushApplicant = function (maskedName, job) {
-      if (closed || !maskedName) return;
-      realQueue.push({ n: maskedName, j: job || '설비', t: '방금 전', real: true });
+      if (stopped || !maskedName) return;
+      realQueue.push({ n: maskedName, j: job || '설비' });
       clearTimeout(nextTimer);
       clearTimeout(hideTimer);
       toast.classList.remove('show');
@@ -475,13 +589,93 @@
     };
 
     document.getElementById('rtClose').addEventListener('click', function () {
-      closed = true;
       clearTimeout(hideTimer); clearTimeout(nextTimer);
       toast.classList.remove('show');
-      sessionStorage.setItem('mnm_rtClosed', '1');
-      setTimeout(function () { if (toast.parentNode) toast.remove(); }, 550);
+      sessionStorage.setItem(SK_CLOSED, Date.now());
+      var shownCount = +(sessionStorage.getItem(SK_COUNT) || 0);
+      if (shownCount >= SESSION_MAX) {
+        stopped = true;
+        setTimeout(function () { if (toast.parentNode) toast.remove(); }, 550);
+      } else {
+        nextTimer = setTimeout(show, CLOSE_COOLDOWN_MS + 500);
+      }
     });
 
-    setTimeout(show, rand(3500, 6000));
+    // Google Sheets에서 실제 신청자 fetch → 검증 통과 시 realQueue 주입
+    try {
+      fetch(SCRIPT_URL, { method: 'GET' })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!Array.isArray(data)) return;
+          var valid = data.filter(function (item) {
+            if (!item || !item.n || !item.j) return false;
+            if (isTestEntry(item.n) || isTestEntry(item.j)) return false;
+            if (item.n.length < 2 || /^\d+$/.test(item.n)) return false;
+            return true;
+          });
+          if (valid.length >= 3) {
+            valid.forEach(function (item) { realQueue.push({ n: item.n, j: item.j }); });
+          }
+        })
+        .catch(function () {});
+    } catch (e) {}
+
+    setTimeout(show, randInt(schedule.firstDelay[0], schedule.firstDelay[1]) * 1000);
+  })();
+
+  /* ---------- 히어로 카드 슬라이더 ---------- */
+  (function () {
+    var slides = document.querySelectorAll('.hc-slide');
+    var dots   = document.querySelectorAll('.hcd');
+    if (!slides.length) return;
+
+    var current = 0;
+    var autoTimer = null;
+    var AUTO_INTERVAL = 5500;   /* 기본 자동 전환 간격 */
+    var MANUAL_DELAY  = 8500;   /* 수동 클릭 후 충분히 읽는 시간 */
+
+    function go(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (idx + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function clearAuto() {
+      if (autoTimer !== null) {
+        clearInterval(autoTimer);
+        clearTimeout(autoTimer);
+        autoTimer = null;
+      }
+    }
+
+    function startAuto() {
+      clearAuto();
+      autoTimer = setInterval(function () { go(current + 1); }, AUTO_INTERVAL);
+    }
+
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () {
+        go(i);
+        clearAuto();
+        /* 수동 클릭 후 MANUAL_DELAY 만큼 기다린 뒤 자동 전환 재개 */
+        autoTimer = setTimeout(function () { startAuto(); }, MANUAL_DELAY);
+      });
+    });
+
+    startAuto();
+  })();
+
+  /* ---------- 위로가기 버튼 ---------- */
+  (function () {
+    var btn = document.getElementById('scrollTopBtn');
+    if (!btn) return;
+    window.addEventListener('scroll', function () {
+      btn.classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   })();
 })();

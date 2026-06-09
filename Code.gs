@@ -29,6 +29,76 @@ var HEADERS = [
   '처리상태', '담당자', '연락일', '관리자 메모', '최종결과'
 ];
 
+/* ─── 테스트 데이터 키워드 (팝업 노출 제외) ─────────────── */
+var TEST_KEYWORDS = [
+  '테스트', 'test', '테스트이름', '테스트업체',
+  '홍길동', '1111', '1234', 'asdf', 'qwer', '임시', '샘플'
+];
+
+function isTestRow(row) {
+  var checkCols = [1, 2, 4, 6, 7]; // 이름, 연락처, 활동지역, 업체명, 서비스분야
+  for (var c = 0; c < checkCols.length; c++) {
+    var val = String(row[checkCols[c]] || '').toLowerCase().trim();
+    for (var k = 0; k < TEST_KEYWORDS.length; k++) {
+      if (val.indexOf(TEST_KEYWORDS[k].toLowerCase()) !== -1) return true;
+    }
+  }
+  return false;
+}
+
+function isValidRow(row) {
+  var name = String(row[1] || '').trim();
+  var svc  = String(row[7] || '').trim();
+  // 이름 2자 이상, 숫자만으로 구성되지 않음, 서비스분야 있음
+  return name.length >= 2 && !/^\d+$/.test(name) && svc.length > 0;
+}
+
+/* ─── GET 핸들러 ─────────────────────────────────────────── */
+function doGet(e) {
+  // 관리자 페이지 라우팅
+  if (e && e.parameter && e.parameter.page === 'admin') {
+    return HtmlService.createHtmlOutputFromFile('admin')
+      .setTitle('만능맨 파트너스 — 관리자 대시보드')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DENY);
+  }
+
+  // 기존: 팝업용 최근 신청자 JSON 반환
+  var items = [];
+  try {
+    var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet || sheet.getLastRow() < 2) return buildJson([]);
+
+    var lastRow  = sheet.getLastRow();
+    var startRow = Math.max(2, lastRow - 199);
+    var numRows  = lastRow - startRow + 1;
+    // A~H 8열: 신청일시(0) 이름(1) 연락처(2) 이메일(3) 활동지역(4) 사업자구분(5) 업체명(6) 서비스분야(7)
+    var data = sheet.getRange(startRow, 1, numRows, 8).getValues();
+
+    for (var i = data.length - 1; i >= 0 && items.length < 20; i--) {
+      var row = data[i];
+      if (isTestRow(row) || !isValidRow(row)) continue;
+      var name = String(row[1] || '').trim();
+      var svc  = String(row[7] || '').trim().split(/[,，]/)[0].trim();
+      var ts   = row[0];
+      items.push({
+        n:  name.charAt(0) + '○○',
+        j:  svc,
+        ts: ts ? new Date(ts).getTime() : 0
+      });
+    }
+  } catch (err) {
+    Logger.log('doGet 오류: ' + err.message);
+  }
+  return buildJson(items);
+}
+
+function buildJson(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 /* ─── POST 핸들러 ────────────────────────────────────────── */
 function doPost(e) {
   var result = { result: 'error', message: '알 수 없는 오류' };
@@ -319,6 +389,69 @@ function setupManagementSheet() {
     '• 열 너비 및 줄바꿈 설정 완료\n\n' +
     '주황색 헤더(M~Q) = 관리자가 직접 입력하는 컬럼입니다.'
   );
+}
+
+/* ─── 관리자 인증 ────────────────────────────────────────── */
+// 초기 비밀번호: admin1234
+// Script Properties → ADMIN_PASSWORD 키로 변경 가능
+//   Apps Script 편집기 > 프로젝트 설정 > 스크립트 속성 > 속성 추가
+var ADMIN_DEFAULT_PW = 'admin1234';
+
+function checkAdminAuth_(pw) {
+  var stored = PropertiesService.getScriptProperties()
+                 .getProperty('ADMIN_PASSWORD') || ADMIN_DEFAULT_PW;
+  return pw === stored;
+}
+
+function verifyAdminPassword(pw) {
+  return checkAdminAuth_(pw);
+}
+
+/* ─── 관리자: 전체 데이터 조회 ──────────────────────────── */
+function getAdminData(pw) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet || sheet.getLastRow() < 2) return [];
+
+  var numRows = sheet.getLastRow() - 1;
+  var numCols = HEADERS.length;
+  var data    = sheet.getRange(2, 1, numRows, numCols).getValues();
+
+  return data.map(function (row, i) {
+    var obj = { _row: i + 2 };
+    for (var j = 0; j < HEADERS.length; j++) {
+      var val = row[j];
+      if (val instanceof Date) {
+        obj[HEADERS[j]] = Utilities.formatDate(val, 'Asia/Seoul', 'yyyy-MM-dd HH:mm');
+      } else {
+        obj[HEADERS[j]] = (val === null || val === undefined) ? '' : String(val);
+      }
+    }
+    return obj;
+  });
+}
+
+/* ─── 관리자: 처리상태·메모 업데이트 ───────────────────── */
+function updateRowStatus(rowNum, newStatus, memo, pw) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('시트 없음');
+
+  var statusCol = HEADERS.indexOf('처리상태') + 1;   // 14
+  var memoCol   = HEADERS.indexOf('관리자 메모') + 1; // 17
+
+  if (newStatus !== null && newStatus !== undefined && newStatus !== '') {
+    sheet.getRange(rowNum, statusCol).setValue(newStatus);
+  }
+  if (memo !== null && memo !== undefined) {
+    sheet.getRange(rowNum, memoCol).setValue(memo);
+  }
+  SpreadsheetApp.flush();
+  return true;
 }
 
 /* ─── 테스트용 더미 요청 (수동 실행용) ──────────────────── */
