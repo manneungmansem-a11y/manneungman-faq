@@ -451,9 +451,7 @@
                      timeAgoList: ['3시간 전','4시간 전','5시간 전','6시간 전','오늘 오후','어제'] }
     };
 
-    /* 실제 데이터 → 등록완료 계열 / 샘플 데이터 → 예시 계열 */
-    var REAL_ACTIONS   = ['파트너스 등록완료','입점 신청완료','사전등록 완료','파트너 신청완료','만능맨 파트너스 등록완료'];
-    var SAMPLE_ACTIONS = ['파트너 등록 예시','입점 예시','사전등록 예시','파트너 신청 예시','만능맨 파트너 등록 예시'];
+    var REAL_ACTIONS = ['파트너스 등록완료','입점 신청완료','사전등록 완료','파트너 신청완료','만능맨 파트너스 등록완료'];
 
     var NAMES = [
       '김○○','이○○','박○○','최○○','정○○','강○○','조○○','윤○○','장○○','임○○',
@@ -554,7 +552,7 @@
         guard++;
       } while (recent.indexOf(key) !== -1 && guard < 30);
       addRecentKey(key);
-      return { n: name, j: field, timeAgo: timeAgo, action: pick(SAMPLE_ACTIONS), real: false };
+      return { n: name, j: field, timeAgo: timeAgo, action: pick(REAL_ACTIONS), real: false };
     }
 
     function buildRealData(item, sched) {
