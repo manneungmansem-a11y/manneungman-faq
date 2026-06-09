@@ -4,6 +4,38 @@
 (function () {
   'use strict';
 
+  /* =========================================================
+     보안: 복사 방지 / 소스 열람 차단
+     ========================================================= */
+  (function () {
+    document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+    document.addEventListener('copy', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+      e.preventDefault();
+    });
+
+    document.addEventListener('selectstart', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+      e.preventDefault();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var k = e.keyCode;
+      if (k === 123) { e.preventDefault(); return; }
+      if (e.ctrlKey && k === 85) { e.preventDefault(); return; }
+      if (e.ctrlKey && k === 83) { e.preventDefault(); return; }
+      if (e.ctrlKey && e.shiftKey && (k === 73 || k === 74 || k === 67)) { e.preventDefault(); return; }
+      if (e.ctrlKey && k === 65) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+        e.preventDefault();
+      }
+    });
+  })();
+
   /* ---------- image loader (handles spaces / Korean paths) ---------- */
   var IMG_BASE = 'https://manneungmansem-a11y.github.io/manneungman-faq/';
   document.querySelectorAll('[data-img]').forEach(function (el) {
@@ -340,17 +372,12 @@
       '유입경로':   referralVal
     };
 
-    console.log('신청폼 제출 시작');
-    console.log('Apps Script 전송 payload:', payload);
-    console.log('Apps Script URL:', SCRIPT_URL);
-
     var btn = document.getElementById('submitBtn');
     var errEl = document.getElementById('submitErrMsg');
     btn.disabled = true; btn.textContent = '제출 중…';
     if (errEl) errEl.style.display = 'none';
 
     function onSuccess() {
-      console.log('Apps Script 전송 완료');
       localStorage.setItem('mnm_lastSubmit', Date.now());
       try {
         var mName = payload['이름'] ? payload['이름'].charAt(0) + '○○' : '신규';
@@ -364,8 +391,7 @@
       btn.disabled = false; btn.textContent = '신청서 제출하기';
     }
 
-    function onError(error) {
-      console.error('Apps Script 전송 실패:', error);
+    function onError() {
       btn.disabled = false; btn.textContent = '신청서 제출하기';
       if (errEl) errEl.style.display = 'block';
     }
