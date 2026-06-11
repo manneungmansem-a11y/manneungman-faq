@@ -55,14 +55,33 @@
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* ---------- mobile menu ---------- */
+  /* ---------- mobile side menu ---------- */
   var menuToggle = document.getElementById('menuToggle');
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function () {
-      var t = document.getElementById('benefits');
-      if (t) window.scrollTo({ top: t.offsetTop - 60, behavior: 'smooth' });
-    });
+  var mobMenu    = document.getElementById('mobMenu');
+  var mobOverlay = document.getElementById('mobOverlay');
+  var mobClose   = document.getElementById('mobClose');
+
+  function openMobMenu() {
+    if (!mobMenu) return;
+    mobMenu.classList.add('open');
+    mobOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
+  function closeMobMenu() {
+    if (!mobMenu) return;
+    mobMenu.classList.remove('open');
+    mobOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if (menuToggle) menuToggle.addEventListener('click', openMobMenu);
+  if (mobClose)   mobClose.addEventListener('click', closeMobMenu);
+  if (mobOverlay) mobOverlay.addEventListener('click', closeMobMenu);
+
+  document.querySelectorAll('.mob-link').forEach(function (a) {
+    a.addEventListener('click', function () { closeMobMenu(); });
+  });
+
+  /* ---------- smooth anchor scroll ---------- */
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');
@@ -363,7 +382,7 @@
       '이메일':     form.email.value.trim(),
       '활동지역':   form.region.value,
       '사업자구분': (form.querySelector('input[name="bizType"]:checked') || {}).value || '',
-      '업체명':     form.company.value.trim(),
+      '업체명·상호명': form.company.value.trim(),
       '서비스분야': svcFinal,
       '보유자격증': form.license.value.trim(),
       '경력연수':   form.career.value,
@@ -556,7 +575,8 @@
     }
 
     function buildRealData(item, sched) {
-      return { n: item.n, j: item.j, timeAgo: pick(sched.timeAgoList), action: pick(REAL_ACTIONS), real: true };
+      var timeAgo = item.fresh ? '방금' : pick(sched.timeAgoList);
+      return { n: item.n, j: item.j, timeAgo: timeAgo, action: pick(REAL_ACTIONS), real: true };
     }
 
     var schedule   = getCurrentSchedule();
@@ -605,7 +625,7 @@
 
     window.mnmPushApplicant = function (maskedName, job) {
       if (stopped || !maskedName) return;
-      realQueue.push({ n: maskedName, j: job || '설비' });
+      realQueue.push({ n: maskedName, j: job || '설비', fresh: true });
       clearTimeout(nextTimer);
       clearTimeout(hideTimer);
       toast.classList.remove('show');
