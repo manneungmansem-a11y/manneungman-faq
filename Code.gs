@@ -8,25 +8,27 @@
 
 // 수신자 이메일 주소 (5개, 순서 무관)
 var RECIPIENTS = [
-  '메일주소1@example.com',   // ← 실제 주소로 교체
-  '메일주소2@example.com',   // ← 실제 주소로 교체
-  '메일주소3@example.com',   // ← 실제 주소로 교체
-  '메일주소4@example.com',   // ← 실제 주소로 교체
-  '메일주소5@example.com'    // ← 실제 주소로 교체
+  '10000form_relay@samyangvalve.com'
 ];
 
 // Google Sheets ID (스프레드시트 URL에서 /d/와 /edit 사이의 긴 문자열)
-var SPREADSHEET_ID = '여기에 Google Sheets ID 입력';
+var SPREADSHEET_ID = '1p-_YZySYf4X_UFP0saoqPIwFRuyKd8U04ZhfDuViF7M';
 
 // 저장할 시트 이름
 var SHEET_NAME = '사전등록신청';
 
+// 삭제된 신청서 시트 이름
+var TRASH_SHEET_NAME = '삭제된 신청서';
+
+// 관리자 활동 로그 시트 이름
+var LOG_SHEET_NAME = '관리자활동로그';
+
 /* ─── Sheets 컬럼 헤더 (순서 고정) ──────────────────────── */
 var HEADERS = [
   '신청일시', '이름', '연락처', '이메일', '활동지역',
-  '사업자구분', '업체명', '서비스분야', '보유자격증', '경력연수',
+  '사업자구분', '업체명·상호명', '서비스분야', '보유자격증', '경력연수',
   '자기소개', '추가문의', '유입경로',
-  '처리상태', '담당자', '연락일', '관리자 메모', '최종결과'
+  '처리상태', '긴급출동가능여부', '담당자', '연락일', '관리자 메모', '최종결과'
 ];
 
 /* ─── 테스트 데이터 키워드 (팝업 노출 제외) ─────────────── */
@@ -59,7 +61,7 @@ function doGet(e) {
   if (e && e.parameter && e.parameter.page === 'admin') {
     return HtmlService.createHtmlOutputFromFile('admin')
       .setTitle('만능맨 파트너스 — 관리자 대시보드')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DENY);
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
   }
 
   // 기존: 팝업용 최근 신청자 JSON 반환
@@ -69,13 +71,14 @@ function doGet(e) {
     var sheet = ss.getSheetByName(SHEET_NAME);
     if (!sheet || sheet.getLastRow() < 2) return buildJson([]);
 
-    var lastRow  = sheet.getLastRow();
-    var startRow = Math.max(2, lastRow - 199);
-    var numRows  = lastRow - startRow + 1;
-    // A~H 8열: 신청일시(0) 이름(1) 연락처(2) 이메일(3) 활동지역(4) 사업자구분(5) 업체명(6) 서비스분야(7)
-    var data = sheet.getRange(startRow, 1, numRows, 8).getValues();
+    var lastRow = sheet.getLastRow();
+    var numRows = Math.min(Math.max(lastRow - 1, 0), 200);
+    if (numRows === 0) return buildJson([]);
+    // A~H 8열: 신청일시(0) 이름(1) 연락처(2) 이메일(3) 활동지역(4) 사업자구분(5) 업체명·상호명(6) 서비스분야(7)
+    // 새 신청은 항상 2행에 삽입되므로, 위에서부터 읽으면 최신순
+    var data = sheet.getRange(2, 1, numRows, 8).getValues();
 
-    for (var i = data.length - 1; i >= 0 && items.length < 20; i--) {
+    for (var i = 0; i < data.length && items.length < 20; i++) {
       var row = data[i];
       if (isTestRow(row) || !isValidRow(row)) continue;
       var name = String(row[1] || '').trim();
@@ -137,46 +140,61 @@ function saveToSheet(d) {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SHEET_NAME);
 
-  // 시트가 없으면 새로 생성
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
   }
 
-  // 헤더 행이 없으면 추가 + 스타일 적용
+  // 새 시트: HEADERS로 초기화
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
     var hRange = sheet.getRange(1, 1, 1, HEADERS.length);
-    hRange.setBackground('#1a56db');
-    hRange.setFontColor('#ffffff');
-    hRange.setFontWeight('bold');
-    hRange.setHorizontalAlignment('center');
+    hRange.setBackground('#1a56db').setFontColor('#ffffff')
+          .setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
     sheet.autoResizeColumns(1, HEADERS.length);
   }
 
-  // 데이터 행 추가
-  var row = [
-    sanitizeSheet(d['신청일시']   || ''),
-    sanitizeSheet(d['이름']       || ''),
-    sanitizeSheet(d['연락처']     || ''),
-    sanitizeSheet(d['이메일']     || ''),
-    sanitizeSheet(d['활동지역']   || ''),
-    sanitizeSheet(d['사업자구분'] || ''),
-    sanitizeSheet(d['업체명']     || ''),
-    sanitizeSheet(d['서비스분야'] || ''),
-    sanitizeSheet(d['보유자격증'] || ''),
-    sanitizeSheet(d['경력연수']   || ''),
-    sanitizeSheet(d['자기소개']   || ''),
-    sanitizeSheet(d['추가문의']   || ''),
-    sanitizeSheet(d['유입경로']   || ''),
-    '신규 접수',  // 처리상태 기본값
-    '',           // 담당자 (관리자 직접 입력)
-    '',           // 연락일 (관리자 직접 입력)
-    '',           // 관리자 메모 (관리자 직접 입력)
-    ''            // 최종결과 (관리자 직접 입력)
-  ];
+  // 실제 시트 헤더를 읽어서 '업체명·상호명' 컬럼 자동 처리
+  var numCols = sheet.getLastColumn();
+  var sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                          .map(function(h) { return String(h || '').trim(); });
 
-  sheet.appendRow(row);
+  var companyKey = '업체명·상호명';
+  if (sheetHeaders.indexOf(companyKey) === -1) {
+    var oldIdx = sheetHeaders.indexOf('업체명');
+    if (oldIdx !== -1) {
+      // 기존 '업체명' 헤더명만 교체 (데이터 위치 그대로 유지)
+      sheet.getRange(1, oldIdx + 1).setValue(companyKey);
+      sheetHeaders[oldIdx] = companyKey;
+    } else {
+      // '사업자구분' 다음에 새 컬럼 삽입 (기존 데이터는 오른쪽으로 밀림)
+      var bizIdx = sheetHeaders.indexOf('사업자구분');
+      var insertAt = bizIdx !== -1 ? bizIdx + 2 : numCols + 1;
+      sheet.insertColumnBefore(insertAt);
+      sheet.getRange(1, insertAt).setValue(companyKey);
+      // 헤더 목록 갱신
+      numCols = sheet.getLastColumn();
+      sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                          .map(function(h) { return String(h || '').trim(); });
+    }
+  }
+
+  // 실제 헤더 순서에 맞춰 데이터 행 구성
+  var newAppId = 'APP' + Date.now() + Math.floor(Math.random() * 9000 + 1000);
+  var adminDefaults = {
+    '신청ID': newAppId,
+    '처리상태': '신규 접수', '담당자': '', '연락일': '',
+    '관리자 메모': '', '최종결과': ''
+  };
+  var rowData = sheetHeaders.map(function(key) {
+    if (!key) return '';
+    if (adminDefaults.hasOwnProperty(key)) return adminDefaults[key];
+    if (key === '긴급출동가능여부') return sanitizeSheet(String(d[key] || '미정'));
+    return sanitizeSheet(String(d[key] || ''));
+  });
+
+  sheet.insertRowBefore(2);
+  sheet.getRange(2, 1, 1, rowData.length).setValues([rowData]);
   SpreadsheetApp.flush();
 }
 
@@ -219,8 +237,9 @@ function sendEmail(d) {
     ['이메일',   d['이메일']],
     ['활동지역', d['활동지역']],
     ['사업자구분', d['사업자구분']],
-    ['업체명',   d['업체명']],
+    ['업체명·상호명', d['업체명·상호명']],
     ['서비스분야', d['서비스분야']],
+    ['긴급출동가능여부', d['긴급출동가능여부']],
     ['보유자격증', d['보유자격증']],
     ['경력연수', d['경력연수']],
     ['자기소개', d['자기소개']],
@@ -391,11 +410,90 @@ function setupManagementSheet() {
   );
 }
 
+/* ─── 점검모드 설정 ──────────────────────────────────────── */
+// 저장 키: maintenanceMode / maintenanceOwnerToken / maintenanceStartAt /
+//          maintenanceEndAt / maintenanceDurationMinutes / maintenanceNoTimer
+
+function getMaintenanceProps_() {
+  var props   = PropertiesService.getScriptProperties();
+  var noTimer = props.getProperty('maintenanceNoTimer') === 'true';
+  return {
+    active:   props.getProperty('maintenanceMode') === 'true',
+    token:    props.getProperty('maintenanceOwnerToken') || '',
+    noTimer:  noTimer,
+    endAt:    parseInt(props.getProperty('maintenanceEndAt') || '0', 10),
+    duration: parseInt(props.getProperty('maintenanceDurationMinutes') || '0', 10)
+  };
+}
+
+// 점검모드 ON이고 ownerToken 불일치 시 에러 throw
+function checkMaintenanceBlock_(ownerToken) {
+  var m = getMaintenanceProps_();
+  if (!m.active) return;
+  // 타이머 모드일 때만 만료 자동 해제
+  if (!m.noTimer && m.endAt > 0 && Date.now() > m.endAt) {
+    PropertiesService.getScriptProperties().setProperty('maintenanceMode', 'false');
+    return;
+  }
+  if (!ownerToken || ownerToken !== m.token) {
+    throw new Error('MAINTENANCE');
+  }
+}
+
+// 점검모드 상태 조회 (인증 불필요)
+function getMaintenanceStatus(ownerToken) {
+  var m = getMaintenanceProps_();
+  // 타이머 모드이고 만료됐으면 자동 해제
+  if (m.active && !m.noTimer && m.endAt > 0 && Date.now() > m.endAt) {
+    PropertiesService.getScriptProperties().setProperty('maintenanceMode', 'false');
+    return { active: false, isOwner: false, remainingMs: 0, noTimer: false };
+  }
+  var remainingMs = 0;
+  if (m.active && !m.noTimer && m.endAt > 0) {
+    remainingMs = Math.max(0, m.endAt - Date.now());
+  }
+  return {
+    active:      m.active,
+    isOwner:     m.active && !!ownerToken && ownerToken === m.token,
+    remainingMs: remainingMs,
+    noTimer:     m.noTimer,
+    endAt:       (m.active && !m.noTimer) ? m.endAt : 0
+  };
+}
+
+// 점검모드 ON/OFF (관리자 인증 필요)
+// durationMinutes: 30 / 60 / 120 / 180 / 0(수동=noTimer)
+function setMaintenanceMode(enabled, ownerToken, durationMinutes, pw) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  var props = PropertiesService.getScriptProperties();
+  if (enabled) {
+    var noTimer = (durationMinutes <= 0);
+    var startAt = Date.now();
+    var endAt   = noTimer ? 0 : startAt + durationMinutes * 60000;
+    props.setProperties({
+      'maintenanceMode':            'true',
+      'maintenanceOwnerToken':      ownerToken,
+      'maintenanceStartAt':         String(startAt),
+      'maintenanceEndAt':           String(endAt),
+      'maintenanceDurationMinutes': String(durationMinutes),
+      'maintenanceNoTimer':         noTimer ? 'true' : 'false'
+    });
+    return { success: true, endAt: endAt, noTimer: noTimer };
+  } else {
+    props.setProperties({
+      'maintenanceMode':    'false',
+      'maintenanceNoTimer': 'false',
+      'maintenanceEndAt':   '0'
+    });
+    return { success: true };
+  }
+}
+
 /* ─── 관리자 인증 ────────────────────────────────────────── */
 // 초기 비밀번호: admin1234
 // Script Properties → ADMIN_PASSWORD 키로 변경 가능
 //   Apps Script 편집기 > 프로젝트 설정 > 스크립트 속성 > 속성 추가
-var ADMIN_DEFAULT_PW = 'admin1234';
+var ADMIN_DEFAULT_PW = '@samyang01!';
 
 function checkAdminAuth_(pw) {
   var stored = PropertiesService.getScriptProperties()
@@ -408,25 +506,61 @@ function verifyAdminPassword(pw) {
 }
 
 /* ─── 관리자: 전체 데이터 조회 ──────────────────────────── */
-function getAdminData(pw) {
+function getAdminData(pw, ownerToken) {
   if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
 
   var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet || sheet.getLastRow() < 2) return [];
 
+  var numCols     = sheet.getLastColumn();
+  var sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                          .map(function(h) { return String(h || '').trim(); });
+
+  // 필수 컬럼이 없으면 최초 1회 생성 및 기존 데이터 마이그레이션
+  if (sheetHeaders.indexOf('신청ID') === -1 || sheetHeaders.indexOf('등록구분') === -1
+      || sheetHeaders.indexOf('긴급출동가능여부') === -1) {
+    ensureColumns_();
+    numCols     = sheet.getLastColumn();
+    sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                        .map(function(h) { return String(h || '').trim(); });
+  }
+
+  // 신청ID가 비어있는 행에 자동 부여 (기존 누락 행 보완)
+  var idColFix = sheetHeaders.indexOf('신청ID');
+  if (idColFix !== -1) {
+    var fixLastRow = sheet.getLastRow();
+    if (fixLastRow >= 2) {
+      var fixRows  = fixLastRow - 1;
+      var idCheck  = sheet.getRange(2, idColFix + 1, fixRows, 1).getValues();
+      var needsFix = false;
+      idCheck.forEach(function(row, i) {
+        if (!row[0]) {
+          row[0] = 'APP' + (Date.now() + i) + Math.floor(Math.random() * 9000 + 1000);
+          needsFix = true;
+        }
+      });
+      if (needsFix) {
+        sheet.getRange(2, idColFix + 1, fixRows, 1).setValues(idCheck);
+        SpreadsheetApp.flush();
+      }
+    }
+  }
+
   var numRows = sheet.getLastRow() - 1;
-  var numCols = HEADERS.length;
   var data    = sheet.getRange(2, 1, numRows, numCols).getValues();
 
   return data.map(function (row, i) {
     var obj = { _row: i + 2 };
-    for (var j = 0; j < HEADERS.length; j++) {
+    for (var j = 0; j < sheetHeaders.length; j++) {
+      var key = String(sheetHeaders[j] || '').trim();
+      if (!key) continue;
       var val = row[j];
       if (val instanceof Date) {
-        obj[HEADERS[j]] = Utilities.formatDate(val, 'Asia/Seoul', 'yyyy-MM-dd HH:mm');
+        obj[key] = Utilities.formatDate(val, 'Asia/Seoul', 'yyyy-MM-dd HH:mm');
       } else {
-        obj[HEADERS[j]] = (val === null || val === undefined) ? '' : String(val);
+        obj[key] = (val === null || val === undefined) ? '' : String(val);
       }
     }
     return obj;
@@ -434,24 +568,479 @@ function getAdminData(pw) {
 }
 
 /* ─── 관리자: 처리상태·메모 업데이트 ───────────────────── */
-function updateRowStatus(rowNum, newStatus, memo, pw) {
+function updateRowStatus(rowNum, newStatus, memo, pw, ownerToken) {
   if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
 
   var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) throw new Error('시트 없음');
 
-  var statusCol = HEADERS.indexOf('처리상태') + 1;   // 14
-  var memoCol   = HEADERS.indexOf('관리자 메모') + 1; // 17
-
-  if (newStatus !== null && newStatus !== undefined && newStatus !== '') {
-    sheet.getRange(rowNum, statusCol).setValue(newStatus);
+  // 실제 시트 헤더를 읽어서 컬럼 위치를 동적으로 찾음
+  var numCols = sheet.getLastColumn();
+  var sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0];
+  var statusCol = 0, memoCol = 0;
+  for (var j = 0; j < sheetHeaders.length; j++) {
+    var h = String(sheetHeaders[j] || '').trim();
+    if (h === '처리상태') statusCol = j + 1;
+    if (h === '관리자 메모') memoCol = j + 1;
   }
-  if (memo !== null && memo !== undefined) {
+
+  // 이름·ID 취득 (로그용)
+  var nameColIdx = sheetHeaders.indexOf('이름');
+  var idColIdx   = sheetHeaders.indexOf('신청ID');
+  var rName  = nameColIdx >= 0 ? String(sheet.getRange(rowNum, nameColIdx + 1).getValue() || '') : '';
+  var rAppId = idColIdx   >= 0 ? String(sheet.getRange(rowNum, idColIdx + 1).getValue()   || '') : '';
+
+  if (newStatus !== null && newStatus !== undefined && newStatus !== '' && statusCol > 0) {
+    var prevStatus = String(sheet.getRange(rowNum, statusCol).getValue() || '');
+    sheet.getRange(rowNum, statusCol).setValue(newStatus);
+    if (prevStatus !== newStatus) {
+      appendLog_(ss, { appId: rAppId, name: rName, field: '처리상태', before: prevStatus, after: newStatus });
+    }
+  }
+  if (memo !== null && memo !== undefined && memoCol > 0) {
+    var prevMemo = String(sheet.getRange(rowNum, memoCol).getValue() || '');
     sheet.getRange(rowNum, memoCol).setValue(memo);
+    if (prevMemo !== String(memo)) {
+      appendLog_(ss, { appId: rAppId, name: rName, field: '관리자 메모', before: prevMemo, after: memo });
+    }
   }
   SpreadsheetApp.flush();
   return true;
+}
+
+/* ─── 삭제된 신청서 시트 자동 생성 ──────────────────────── */
+function ensureTrashSheet_(ss) {
+  var sheet = ss.getSheetByName(TRASH_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(TRASH_SHEET_NAME);
+    var srcSheet = ss.getSheetByName(SHEET_NAME);
+    var trashHeaders;
+    if (srcSheet && srcSheet.getLastColumn() > 0) {
+      var srcH = srcSheet.getRange(1, 1, 1, srcSheet.getLastColumn()).getValues()[0]
+                         .map(function(h) { return String(h || '').trim(); })
+                         .filter(function(h) { return h; });
+      trashHeaders = srcH.concat(['삭제일시', '삭제구분']);
+    } else {
+      trashHeaders = HEADERS.concat(['삭제일시', '삭제구분']);
+    }
+    sheet.appendRow(trashHeaders);
+    sheet.getRange(1, 1, 1, trashHeaders.length)
+         .setBackground('#c62828').setFontColor('#ffffff')
+         .setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setFrozenRows(1);
+    SpreadsheetApp.flush();
+  }
+  return sheet;
+}
+
+/* ─── 신청 추가 (관리자 직접 추가) ──────────────────────── */
+function addApplication(data, pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('시트 없음');
+
+  var numCols      = sheet.getLastColumn();
+  var sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                          .map(function(h) { return String(h || '').trim(); });
+
+  // 신청ID · 등록구분 컬럼 확보
+  if (sheetHeaders.indexOf('신청ID') === -1 || sheetHeaders.indexOf('등록구분') === -1) {
+    ensureColumns_();
+    numCols      = sheet.getLastColumn();
+    sheetHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                        .map(function(h) { return String(h || '').trim(); });
+  }
+
+  var newId = 'APP' + Date.now() + Math.floor(Math.random() * 9000 + 1000);
+
+  var rowData = sheetHeaders.map(function(key) {
+    if (!key) return '';
+    if (key === '신청ID')   return newId;
+    if (key === '등록구분') return '관리자 추가';
+    var val = data[key];
+    if (val === undefined || val === null) {
+      if (key === '긴급출동가능여부') return '미정';
+      return '';
+    }
+    return sanitizeSheet(String(val));
+  });
+
+  sheet.insertRowBefore(2);
+  sheet.getRange(2, 1, 1, rowData.length).setValues([rowData]);
+  appendLog_(ss, { appId: newId, name: data['이름'] || '', field: '신청 추가', before: '', after: data['이름'] + ' (' + (data['연락처'] || '') + ')' });
+  SpreadsheetApp.flush();
+  return true;
+}
+
+/* ─── 컬럼 자동 보완 (신청ID·등록구분·수정일시·수정구분) ── */
+function ensureColumns_() {
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) return;
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 1) return;
+
+  var numCols = sheet.getLastColumn();
+  if (numCols < 1) return;
+
+  var headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                     .map(function(h) { return String(h || '').trim(); });
+
+  // 긴급출동가능여부 컬럼이 없으면 처리상태 다음에 추가
+  if (headers.indexOf('긴급출동가능여부') === -1) {
+    var statusIdx = headers.indexOf('처리상태');
+    var insertAt  = statusIdx !== -1 ? statusIdx + 2 : numCols + 1;
+    sheet.insertColumnBefore(insertAt);
+    sheet.getRange(1, insertAt).setValue('긴급출동가능여부')
+         .setBackground('#E65100').setFontColor('#FFFFFF')
+         .setFontWeight('bold').setHorizontalAlignment('center');
+    // 기존 데이터 행에 기본값 '미정' 채우기
+    if (lastRow >= 2) {
+      var fillData = [];
+      for (var fi = 0; fi < lastRow - 1; fi++) { fillData.push(['미정']); }
+      sheet.getRange(2, insertAt, lastRow - 1, 1).setValues(fillData);
+    }
+    numCols = sheet.getLastColumn();
+    headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                   .map(function(h) { return String(h || '').trim(); });
+    SpreadsheetApp.flush();
+  }
+
+  // 필요 컬럼이 없으면 오른쪽에 추가
+  ['신청ID', '등록구분', '수정일시', '수정구분'].forEach(function(col) {
+    if (headers.indexOf(col) === -1) {
+      numCols++;
+      sheet.getRange(1, numCols)
+           .setValue(col)
+           .setBackground('#455A64')
+           .setFontColor('#FFFFFF')
+           .setFontWeight('bold')
+           .setHorizontalAlignment('center');
+      headers.push(col);
+    }
+  });
+
+  if (lastRow < 2) { SpreadsheetApp.flush(); return; }
+
+  var idColNum     = headers.indexOf('신청ID')  + 1;
+  var regColNum    = headers.indexOf('등록구분') + 1;
+  var sourceColNum = headers.indexOf('유입경로') + 1;
+  var dataRows     = lastRow - 1;
+
+  // 신청ID가 없는 행에 자동 부여
+  if (idColNum > 0) {
+    var idVals = sheet.getRange(2, idColNum, dataRows, 1).getValues();
+    var idChanged = false;
+    idVals.forEach(function(row, i) {
+      if (!row[0]) {
+        row[0] = 'APP' + (Date.now() + i) + Math.floor(Math.random() * 9000 + 1000);
+        idChanged = true;
+      }
+    });
+    if (idChanged) sheet.getRange(2, idColNum, dataRows, 1).setValues(idVals);
+  }
+
+  // 등록구분이 없는 행: 유입경로 "관리자 직접 추가"이면 "관리자 추가"로 채움
+  if (regColNum > 0 && sourceColNum > 0) {
+    var regVals    = sheet.getRange(2, regColNum, dataRows, 1).getValues();
+    var sourceVals = sheet.getRange(2, sourceColNum, dataRows, 1).getValues();
+    var regChanged = false;
+    regVals.forEach(function(row, i) {
+      if (!row[0]) {
+        var src = String(sourceVals[i][0] || '').trim();
+        if (src === '관리자 직접 추가') {
+          row[0] = '관리자 추가';
+          regChanged = true;
+        }
+      }
+    });
+    if (regChanged) sheet.getRange(2, regColNum, dataRows, 1).setValues(regVals);
+  }
+
+  SpreadsheetApp.flush();
+}
+
+/* ─── 신청 수정 (관리자 추가건만 허용) ──────────────────── */
+function updateApplication(applicationId, data, pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  if (!applicationId) throw new Error('신청ID가 없습니다.');
+  checkMaintenanceBlock_(ownerToken);
+
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('시트 없음');
+
+  var numCols = sheet.getLastColumn();
+  var headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                     .map(function(h) { return String(h || '').trim(); });
+
+  var idColIdx = headers.indexOf('신청ID');
+  if (idColIdx === -1) throw new Error('신청ID 컬럼 없음. 데이터를 새로고침 후 다시 시도하세요.');
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) throw new Error('데이터 없음');
+
+  // 신청ID로 대상 행 탐색
+  var idVals = sheet.getRange(2, idColIdx + 1, lastRow - 1, 1).getValues();
+  var targetRow = -1;
+  for (var i = 0; i < idVals.length; i++) {
+    if (String(idVals[i][0]).trim() === String(applicationId).trim()) {
+      targetRow = i + 2;
+      break;
+    }
+  }
+  if (targetRow === -1) throw new Error('신청ID를 찾을 수 없습니다: ' + applicationId);
+
+  // 기존 행 값 읽기
+  var rowValues = sheet.getRange(targetRow, 1, 1, numCols).getValues()[0];
+
+  // 관리자 추가건인지 서버 측 검증
+  var regTypeIdx = headers.indexOf('등록구분');
+  var sourceIdx  = headers.indexOf('유입경로');
+  var regType = regTypeIdx >= 0 ? String(rowValues[regTypeIdx] || '').trim() : '';
+  var source  = sourceIdx  >= 0 ? String(rowValues[sourceIdx]  || '').trim() : '';
+  if (regType !== '관리자 추가' && source !== '관리자 직접 추가') {
+    throw new Error('EDIT_FORBIDDEN: 랜딩페이지 신청건은 수정할 수 없습니다.');
+  }
+
+  // 수정 허용 필드
+  var updatable = [
+    '신청일시', '이름', '연락처', '이메일', '활동지역',
+    '사업자구분', '업체명·상호명', '서비스분야', '보유자격증', '경력연수',
+    '자기소개', '추가문의', '유입경로', '처리상태', '긴급출동가능여부', '담당자', '관리자 메모'
+  ];
+
+  var now    = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
+  var newRow = rowValues.slice();
+
+  headers.forEach(function(h, i) {
+    if (!h) return;
+    if (h === '수정일시') { newRow[i] = now; return; }
+    if (h === '수정구분') { newRow[i] = '관리자 수정'; return; }
+    if (updatable.indexOf(h) !== -1 && data.hasOwnProperty(h)) {
+      newRow[i] = sanitizeSheet(String(data[h] != null ? data[h] : ''));
+    }
+  });
+
+  sheet.getRange(targetRow, 1, 1, numCols).setValues([newRow]);
+
+  // 변경된 필드 로그
+  var nameIdx3 = headers.indexOf('이름');
+  var rName3 = data['이름'] || (nameIdx3 >= 0 ? String(rowValues[nameIdx3] || '') : '');
+  headers.forEach(function(h, i) {
+    if (!h || updatable.indexOf(h) === -1) return;
+    if (!data.hasOwnProperty(h)) return;
+    var prev = String(rowValues[i] || '');
+    var next = sanitizeSheet(String(data[h] != null ? data[h] : ''));
+    if (prev !== next) {
+      appendLog_(ss, { appId: applicationId, name: data['이름'] || '', field: '신청서 수정 - ' + h, before: prev, after: next });
+    }
+  });
+
+  SpreadsheetApp.flush();
+  return true;
+}
+
+/* ─── 선택 신청 → 삭제된 신청서 시트로 이동 ──────────────── */
+function moveApplicationsToTrash(rowNums, pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  if (!rowNums || rowNums.length === 0) return true;
+  checkMaintenanceBlock_(ownerToken);
+
+  var ss         = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet      = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('시트 없음');
+  var trashSheet = ensureTrashSheet_(ss);
+
+  var numCols    = sheet.getLastColumn();
+  var srcHeaders = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                        .map(function(h) { return String(h || '').trim(); });
+
+  var trashNumCols = trashSheet.getLastColumn();
+  var trashHeaders = trashSheet.getRange(1, 1, 1, trashNumCols).getValues()[0]
+                               .map(function(h) { return String(h || '').trim(); });
+
+  var now = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
+
+  // 큰 행 번호부터 처리해야 삭제 후 행 번호 밀림 방지
+  var sorted = rowNums.slice().sort(function(a, b) { return b - a; });
+
+  sorted.forEach(function(rowNum) {
+    var rowValues = sheet.getRange(rowNum, 1, 1, numCols).getValues()[0];
+
+    var dataObj = {};
+    srcHeaders.forEach(function(key, i) {
+      if (!key) return;
+      var v = rowValues[i];
+      dataObj[key] = (v instanceof Date)
+        ? Utilities.formatDate(v, 'Asia/Seoul', 'yyyy-MM-dd HH:mm')
+        : (v === null || v === undefined ? '' : String(v));
+    });
+
+    var trashRow = trashHeaders.map(function(key) {
+      if (key === '삭제일시')  return now;
+      if (key === '삭제구분') return '관리자 삭제';
+      return dataObj.hasOwnProperty(key) ? dataObj[key] : '';
+    });
+
+    trashSheet.appendRow(trashRow);
+    appendLog_(ss, { appId: dataObj['신청ID'] || '', name: dataObj['이름'] || '', field: '신청 삭제', before: dataObj['처리상태'] || '', after: '삭제됨' });
+    sheet.deleteRow(rowNum);
+  });
+
+  SpreadsheetApp.flush();
+  return true;
+}
+
+/* ─── 삭제된 신청서 목록 조회 ────────────────────────────── */
+function getDeletedApplications(pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
+
+  var ss         = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var trashSheet = ss.getSheetByName(TRASH_SHEET_NAME);
+  if (!trashSheet || trashSheet.getLastRow() < 2) return [];
+
+  var numRows = trashSheet.getLastRow() - 1;
+  var numCols = trashSheet.getLastColumn();
+  var headers = trashSheet.getRange(1, 1, 1, numCols).getValues()[0];
+  var data    = trashSheet.getRange(2, 1, numRows, numCols).getValues();
+
+  return data.map(function(row, i) {
+    var obj = { _trashRow: i + 2 };
+    for (var j = 0; j < headers.length; j++) {
+      var key = String(headers[j] || '').trim();
+      if (!key) continue;
+      var val = row[j];
+      obj[key] = (val instanceof Date)
+        ? Utilities.formatDate(val, 'Asia/Seoul', 'yyyy-MM-dd HH:mm')
+        : (val === null || val === undefined ? '' : String(val));
+    }
+    return obj;
+  });
+}
+
+/* ─── 긴급출동가능여부 업데이트 ──────────────────────────── */
+function updateEmergencyAvailability(applicationId, value, pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
+
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('시트 없음');
+
+  var numCols = sheet.getLastColumn();
+  var headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                     .map(function(h) { return String(h || '').trim(); });
+
+  // 긴급출동가능여부 컬럼 확보
+  if (headers.indexOf('긴급출동가능여부') === -1) {
+    ensureColumns_();
+    numCols = sheet.getLastColumn();
+    headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                   .map(function(h) { return String(h || '').trim(); });
+  }
+
+  var emergencyCol = headers.indexOf('긴급출동가능여부') + 1;
+  if (emergencyCol === 0) throw new Error('긴급출동가능여부 컬럼 없음');
+
+  // applicationId로 행 탐색
+  var idColIdx = headers.indexOf('신청ID');
+  if (idColIdx === -1) throw new Error('신청ID 컬럼 없음');
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) throw new Error('데이터 없음');
+
+  var idVals = sheet.getRange(2, idColIdx + 1, lastRow - 1, 1).getValues();
+  var targetRow = -1;
+  for (var i = 0; i < idVals.length; i++) {
+    if (String(idVals[i][0]).trim() === String(applicationId).trim()) {
+      targetRow = i + 2;
+      break;
+    }
+  }
+  if (targetRow === -1) throw new Error('신청ID를 찾을 수 없습니다: ' + applicationId);
+
+  var prevEmerg = String(sheet.getRange(targetRow, emergencyCol).getValue() || '');
+  sheet.getRange(targetRow, emergencyCol).setValue(value);
+  if (prevEmerg !== value) {
+    var nameColIdx2 = headers.indexOf('이름');
+    var rName2 = nameColIdx2 >= 0 ? String(sheet.getRange(targetRow, nameColIdx2 + 1).getValue() || '') : '';
+    appendLog_(ss, { appId: applicationId, name: rName2, field: '긴급출동가능여부', before: prevEmerg, after: value });
+  }
+  SpreadsheetApp.flush();
+  return true;
+}
+
+/* ─── 활동 로그 시트 자동 생성 ─────────────────────────── */
+function ensureLogSheet_(ss) {
+  var sheet = ss.getSheetByName(LOG_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(LOG_SHEET_NAME);
+    var headers = ['로그일시', '관리자', '신청ID', '이름', '변경항목', '변경전', '변경후'];
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length)
+         .setBackground('#455A64').setFontColor('#FFFFFF')
+         .setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidths(1, 7, 140);
+    sheet.setColumnWidth(6, 200);
+    sheet.setColumnWidth(7, 200);
+    SpreadsheetApp.flush();
+  }
+  return sheet;
+}
+
+/* ─── 활동 로그 기록 (내부 헬퍼) ───────────────────────── */
+function appendLog_(ss, logData) {
+  try {
+    ensureLogSheet_(ss);
+    var sheet = ss.getSheetByName(LOG_SHEET_NAME);
+    var now = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss');
+    sheet.appendRow([
+      now,
+      logData.admin  || '관리자',
+      logData.appId  || '',
+      logData.name   || '',
+      logData.field  || '',
+      logData.before || '',
+      logData.after  || ''
+    ]);
+  } catch (e) {
+    Logger.log('로그 기록 실패: ' + e.message);
+  }
+}
+
+/* ─── 활동 로그 조회 ────────────────────────────────────── */
+function getActivityLogs(pw, ownerToken) {
+  if (!checkAdminAuth_(pw)) throw new Error('AUTH_FAIL');
+  checkMaintenanceBlock_(ownerToken);
+
+  var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(LOG_SHEET_NAME);
+  if (!sheet || sheet.getLastRow() < 2) return [];
+
+  var numRows = sheet.getLastRow() - 1;
+  var numCols = sheet.getLastColumn();
+  var headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                     .map(function(h) { return String(h || '').trim(); });
+  var data = sheet.getRange(2, 1, numRows, numCols).getValues();
+
+  return data.reverse().map(function(row) {
+    var obj = {};
+    for (var j = 0; j < headers.length; j++) {
+      var val = row[j];
+      obj[headers[j]] = (val instanceof Date)
+        ? Utilities.formatDate(val, 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss')
+        : (val === null || val === undefined ? '' : String(val));
+    }
+    return obj;
+  });
 }
 
 /* ─── 테스트용 더미 요청 (수동 실행용) ──────────────────── */
@@ -464,7 +1053,7 @@ function testPost() {
     '이메일':     'test@example.com',
     '활동지역':   '서울',
     '사업자구분': '개인사업자',
-    '업체명':     '테스트 설비',
+    '업체명·상호명': '테스트 설비',
     '서비스분야': '배관·수도, 보일러',
     '보유자격증': '배관기능사',
     '경력연수':   '5~10년',

@@ -713,6 +713,23 @@ textarea.inp{resize:vertical;min-height:60px}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.float-card{animation:none}}
 
 /* =========================================================
+   HEADER RESPONSIVE — 헤더 전용 반응형
+   ========================================================= */
+/* 769px–1100px: 헤더 아이템 간격·크기 압축, 한 줄 유지 */
+@media (max-width:1100px) and (min-width:769px){
+  .header .wrap{gap:6px;padding:0 14px}
+  .nav a{padding:7px 8px;font-size:13px}
+  .header-tel{font-size:13px;padding:7px 8px;gap:5px}
+  .header .btn{padding:9px 14px;font-size:13px}
+  .header .cta{margin-left:4px}
+}
+/* 768px 이하: 햄버거 메뉴로 전환 */
+@media (max-width:768px){
+  .nav,.header .cta{display:none}
+  .menu-toggle{display:flex}
+}
+
+/* =========================================================
    RESPONSIVE — mobile-first reflow (not a shrink)
    ========================================================= */
 @media (max-width:1024px){
@@ -726,8 +743,6 @@ textarea.inp{resize:vertical;min-height:60px}
   .app-card .meta{padding:18px 20px 22px}
 }
 @media (max-width:880px){
-  .nav,.header .cta{display:none}
-  .menu-toggle{display:flex}
   .hero-grid{grid-template-columns:1fr;gap:28px;padding:40px 0 60px;grid-template-areas:"copy" "visual"}
   .hero-copy{align-self:auto}
   .hero-copy-bottom{margin-top:28px;padding-top:0}
@@ -807,7 +822,7 @@ textarea.inp{resize:vertical;min-height:60px}
 }
 .header-tel svg{flex:none;color:var(--brand)}
 .header-tel:hover{color:var(--brand)}
-@media (max-width:880px){.header-tel{display:none}}
+@media (max-width:768px){.header-tel{display:none}}
 
 /* --- 파트너 카드 컨테이너 --- */
 .partner-card{
@@ -2010,6 +2025,225 @@ textarea.inp{resize:vertical;min-height:60px}
 @media (max-width: 1100px) and (min-width: 881px) {
   .hero-copy-bottom {
     padding-bottom: 30px;
+  }
+}
+
+/* =========================================================
+   MOBILE SIDE MENU
+   ========================================================= */
+
+/* PC에서 햄버거 버튼 완전 숨김 */
+@media (min-width: 769px) {
+  .menu-toggle { display: none !important; }
+}
+
+/* 모바일 오버레이 */
+.mob-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  z-index: 1100;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.mob-overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+/* 사이드 패널 */
+.mob-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 88vw;
+  background: #fff;
+  z-index: 1200;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.14);
+  overflow-y: auto;
+}
+.mob-menu.open {
+  transform: translateX(0);
+}
+
+/* 메뉴 헤더 */
+.mob-menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+/* 닫기 버튼 */
+.mob-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.mob-close svg { width: 22px; height: 22px; }
+.mob-close:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+/* 메뉴 링크 목록 */
+.mob-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 8px;
+  flex-shrink: 0;
+}
+.mob-link {
+  display: block;
+  padding: 14px 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  transition: background 0.15s, color 0.15s;
+}
+.mob-link:hover {
+  background: var(--blue-50);
+  color: var(--brand);
+}
+
+/* 구분선 */
+.mob-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 4px 20px 12px;
+  flex-shrink: 0;
+}
+
+/* 전화번호 */
+.mob-tel {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 26px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.mob-tel:hover { color: var(--brand); }
+.mob-tel svg { flex-shrink: 0; color: var(--brand); }
+
+/* CTA 버튼 */
+.mob-cta {
+  margin: 12px 20px 24px;
+  width: auto;
+  font-size: 15px;
+  padding: 14px 20px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   READABILITY — PC/모바일 줄바꿈·가독성 개선 (2026-06-10)
+   ========================================================= */
+
+/* ---------- 한국어 단어 단위 줄바꿈 — 전역 (body에 keep-all 이미 적용) ---------- */
+.lede, .sec-head p, .benefit-card p, .svc-card b,
+.flow-step p, .app-card p, .faq-a-inner,
+.trust-card span, .mini b, .note-bar div {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ---------- 섹션 헤더 본문 — PC에서 너무 길게 늘어나지 않도록 ---------- */
+.sec-head p {
+  max-width: 620px;
+}
+.sec-head--center p {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- split 섹션 텍스트 블록 max-width ---------- */
+.split .lede {
+  max-width: 480px;
+}
+
+/* ---------- 히어로 서브 텍스트 — 모바일 줄바꿈 개선 ---------- */
+.hero-sub {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+/* PC에서는 수동 br 숨김 — 모바일(680px↓)에서만 표시 */
+.br-mobile { display: none; }
+@media (max-width: 680px) {
+  .br-mobile { display: block; }
+}
+
+/* ---------- benefit 카드 p — 긴 한 줄 방지 ---------- */
+.benefit-card p {
+  line-height: 1.72;
+}
+
+/* ---------- flow-step — 좁은 화면에서 단어 잘림 방지 ---------- */
+.flow-step h3, .flow-step p {
+  word-break: keep-all;
+}
+
+/* ---------- 모바일: lede 폰트 크기 확보 ---------- */
+@media (max-width: 680px) {
+  .lede {
+    font-size: 15.5px;
+    line-height: 1.78;
+  }
+  .sec-head p {
+    font-size: 15px;
+    line-height: 1.72;
+  }
+  .benefit-card p {
+    font-size: 14.5px;
+  }
+  .mini b {
+    font-size: 14px;
+  }
+  .svc-card b {
+    font-size: 15px;
+  }
+  .app-card p {
+    font-size: 14px;
+  }
+}
+
+/* ---------- 태블릿: 중간 줄바꿈 개선 ---------- */
+@media (max-width: 1024px) and (min-width: 681px) {
+  .split .lede {
+    max-width: 100%;
+  }
+  .sec-head p {
+    max-width: 100%;
+  }
+}
+
+/* ---------- PC: 지나치게 긴 단일 줄 방지 ---------- */
+@media (min-width: 1025px) {
+  .hero-sub {
+    max-width: 500px;
+  }
+  .lede {
+    max-width: 480px;
   }
 }
 
