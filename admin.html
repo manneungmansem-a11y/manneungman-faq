@@ -478,6 +478,26 @@
   }
   .modal-maint-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
+  /* ── 점검모드 비밀번호 확인 모달 ── */
+  #modal-maint-pw .modal-box { max-width: 420px; }
+  .maint-pw-body { padding: 20px 26px 22px; }
+  .maint-pw-desc {
+    font-size: .84rem; color: #4a5568; line-height: 1.7;
+    background: #fffbeb; border: 1.5px solid #fde68a;
+    border-radius: 8px; padding: 12px 15px; margin-bottom: 18px; color: #78350f;
+  }
+  .maint-pw-field { position: relative; margin-bottom: 6px; }
+  .maint-pw-field .form-input { width: 100%; box-sizing: border-box; padding-right: 40px; }
+  .maint-pw-toggle {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    font-size: 1rem; color: #718096; padding: 2px 4px; line-height: 1;
+  }
+  .maint-pw-toggle:hover { color: #2d3748; }
+  .maint-pw-error {
+    display: none; color: #dc2626; font-size: .8rem; margin-bottom: 14px;
+  }
+
   /* ── 신청서 상세보기 모달 ── */
   #modal-detail .modal-box {
     max-width: 780px; display: flex; flex-direction: column; max-height: 90vh;
@@ -953,6 +973,36 @@
 </div>
 
 <!-- ======================================================
+     점검모드 비밀번호 확인 모달
+     ====================================================== -->
+<div class="modal-overlay" id="modal-maint-pw">
+  <div class="modal-box">
+    <div class="modal-maint-header">
+      <div class="modal-warn-icon">🔒</div>
+      <div>
+        <div class="modal-maint-title">점검모드 비밀번호 확인</div>
+      </div>
+    </div>
+    <div class="maint-pw-body">
+      <p class="maint-pw-desc">
+        점검모드는 관리자페이지 접근을 제한하는 기능입니다.<br>
+        비밀번호 확인 후 사용할 수 있습니다.
+      </p>
+      <label class="form-label" style="display:block;margin-bottom:6px;font-size:.82rem;font-weight:700;color:#4a5568">비밀번호 입력</label>
+      <div class="maint-pw-field">
+        <input type="password" class="form-input" id="maint-pw-input" placeholder="비밀번호 입력" autocomplete="off">
+        <button type="button" class="maint-pw-toggle" id="maint-pw-toggle" onclick="toggleMaintPwVisibility()" title="비밀번호 표시/숨기기">👁</button>
+      </div>
+      <div class="maint-pw-error" id="maint-pw-error">비밀번호가 올바르지 않습니다.</div>
+      <div class="modal-maint-actions">
+        <button class="btn btn-outline" onclick="closeMaintPwModal()">취소</button>
+        <button class="btn btn-maintenance" onclick="confirmMaintPw()">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
      점검모드 활성화 확인 모달
      ====================================================== -->
 <div class="modal-overlay" id="modal-maint-activate">
@@ -1341,6 +1391,9 @@ var EMERGENCY_STYLE = {
    ============================================================ */
 document.getElementById('pw-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doLogin();
+});
+document.getElementById('maint-pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') confirmMaintPw();
 });
 
 function doLogin() {
@@ -2817,6 +2870,7 @@ document.addEventListener('click', function(e) {
   if (e.target.id === 'modal-add')              closeAddModal();
   if (e.target.id === 'modal-edit')             closeEditModal();
   if (e.target.id === 'modal-detail')           closeDetailModal();
+  if (e.target.id === 'modal-maint-pw')         closeMaintPwModal();
   if (e.target.id === 'modal-maint-activate')   closeMaintenanceActivateModal();
   if (e.target.id === 'modal-maint-deactivate') closeMaintenanceDeactivateModal();
   if (e.target.id === 'modal-activity')         closeActivityLog();
@@ -2951,9 +3005,41 @@ function onMaintDurationChange(val) {
   }
 }
 
+// 점검모드 비밀번호 확인 모달
+function openMaintPwModal() {
+  document.getElementById('maint-pw-input').value = '';
+  document.getElementById('maint-pw-error').style.display = 'none';
+  var inp = document.getElementById('maint-pw-input');
+  inp.type = 'password';
+  document.getElementById('maint-pw-toggle').textContent = '👁';
+  document.getElementById('modal-maint-pw').classList.add('open');
+  setTimeout(function() { inp.focus(); }, 80);
+}
+function closeMaintPwModal() {
+  document.getElementById('modal-maint-pw').classList.remove('open');
+  document.getElementById('maint-pw-input').value = '';
+  document.getElementById('maint-pw-error').style.display = 'none';
+}
+function toggleMaintPwVisibility() {
+  var inp = document.getElementById('maint-pw-input');
+  var btn = document.getElementById('maint-pw-toggle');
+  if (inp.type === 'password') { inp.type = 'text';     btn.textContent = '🙈'; }
+  else                         { inp.type = 'password'; btn.textContent = '👁'; }
+}
+function confirmMaintPw() {
+  var val = document.getElementById('maint-pw-input').value;
+  if (val !== '9923') {
+    document.getElementById('maint-pw-error').style.display = '';
+    document.getElementById('maint-pw-input').focus();
+    return;
+  }
+  closeMaintPwModal();
+  document.getElementById('modal-maint-activate').classList.add('open');
+}
+
 // 활성화 모달
 function openMaintenanceActivateModal() {
-  document.getElementById('modal-maint-activate').classList.add('open');
+  openMaintPwModal();
 }
 function closeMaintenanceActivateModal() {
   document.getElementById('modal-maint-activate').classList.remove('open');
