@@ -648,9 +648,9 @@ h2{font-size:clamp(29px,3.6vw,44px)}
 
 /* ---------- modal / form ---------- */
 .overlay{position:fixed;inset:0;z-index:100;background:oklch(0.22 0.045 258 /.55);backdrop-filter:blur(4px);
-  display:none;align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto}
+  display:none;flex-direction:column;align-items:center;padding:20px 16px;overflow-y:auto}
 .overlay.show{display:flex}
-.modal{width:100%;max-width:560px;background:#fff;border-radius:24px;box-shadow:var(--shadow-l);overflow:hidden;animation:pop .28s cubic-bezier(.2,.8,.3,1);display:flex;flex-direction:column;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px)}
+.modal{width:100%;max-width:560px;background:#fff;border-radius:24px;box-shadow:var(--shadow-l);overflow:hidden;animation:pop .28s cubic-bezier(.2,.8,.3,1);display:flex;flex-direction:column;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);margin:auto 0}
 @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
 .modal-head{display:flex;align-items:center;gap:12px;padding:16px 24px 0;flex-shrink:0}
 .modal-head .mh-t{font-size:12px;font-weight:800;color:var(--brand);letter-spacing:.1em;text-transform:uppercase}
@@ -777,7 +777,7 @@ textarea.inp{resize:vertical;min-height:60px}
   .hero-phone{width:100%;justify-content:flex-start}
   .dash-cta{flex-direction:column;align-items:flex-start;gap:4px}
   .modal{border-radius:20px;max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px)}
-  .overlay{padding:8px 12px;align-items:flex-start}
+  .overlay{padding:16px 10px}
   .modal-head{padding:12px 18px 0}
   .modal-head h3{font-size:16px}
   .modal-head .mh-t{font-size:11px}
@@ -1700,8 +1700,8 @@ textarea.inp{resize:vertical;min-height:60px}
   max-height: calc(100dvh - 24px);
 }
 
-/* 2. 오버레이 패딩 축소 */
-.overlay { padding: 12px 16px; }
+/* 2. 오버레이 패딩 — margin:auto로 중앙 정렬하므로 상하 여백만 확보 */
+.overlay { padding: 16px 16px; }
 
 /* 3. 모달 헤더·단계 표시 압축 */
 .modal-head { padding: 10px 24px 0; }
@@ -1739,8 +1739,8 @@ textarea.inp{resize:vertical;min-height:60px}
     max-height: calc(100dvh - 12px);
     width: calc(100% - 20px);
   }
-  /* 오버레이 */
-  .overlay { padding: 6px 10px; }
+  /* 오버레이 — 중앙 정렬 유지, 상하 여백 확보 */
+  .overlay { padding: 16px 10px; }
 
   /* 헤더·단계 */
   .modal-head { padding: 9px 16px 0; }
@@ -1767,6 +1767,19 @@ textarea.inp{resize:vertical;min-height:60px}
   /* 하단 버튼 */
   .form-nav { margin-top: 6px; padding: 5px 0 1px; }
 }
+
+/* =========================================================
+   긴급출동가능여부 — 라디오 카드 버튼 (dispatch-seg)
+   ========================================================= */
+.dispatch-seg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dispatch-seg label{border:1px solid var(--line);border-radius:11px;padding:8px 4px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;color:var(--ink-2);user-select:none}
+.dispatch-seg input{display:none}
+.dispatch-seg label:has(input:checked){border-color:var(--brand);background:var(--blue-50);color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+@media(max-width:480px){.dispatch-seg{grid-template-columns:repeat(2,1fr)}}
+
+/* 2단계 svc-grid — PC에서 높이 절약 (스크롤 방지) */
+.fstep[data-step="2"] .svc{padding:7px 5px}
+.fstep[data-step="2"] .svc .e{font-size:16px;margin-bottom:1px}
 
 /* =========================================================
    DESIGN LAYOUT IMPROVEMENTS — 2026-06

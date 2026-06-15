@@ -738,12 +738,12 @@
               <div class="err-msg">경력 연수를 선택해 주세요.</div>
             </div>
             <div class="field-row"><label class="fl">긴급출동가능여부<span class="req">*</span></label>
-              <select class="inp" name="emergency">
-                <option value="미정">미정</option>
-                <option value="가능">가능</option>
-                <option value="일부가능">일부가능</option>
-                <option value="불가능">불가능</option>
-              </select>
+              <div class="dispatch-seg">
+                <label><input type="radio" name="emergency" value="가능"><span>가능</span></label>
+                <label><input type="radio" name="emergency" value="일부가능"><span>일부가능</span></label>
+                <label><input type="radio" name="emergency" value="불가능"><span>불가능</span></label>
+                <label><input type="radio" name="emergency" value="미정" checked><span>미정</span></label>
+              </div>
             </div>
             <div class="form-nav"><button type="button" class="btn btn--soft" data-prev>← 이전</button><button type="button" class="btn btn--primary" data-next>다음 →</button></div>
           </div>

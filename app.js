@@ -386,7 +386,7 @@
       '서비스분야': svcFinal,
       '보유자격증': form.license.value.trim(),
       '경력연수':   form.career.value,
-      '긴급출동가능여부': (form.querySelector('[name="emergency"]') || {}).value || '미정',
+      '긴급출동가능여부': (form.querySelector('input[name="emergency"]:checked') || {}).value || '미정',
       '자기소개':   form.intro.value.trim(),
       '추가문의':   form.inquiry.value.trim(),
       '유입경로':   referralVal
