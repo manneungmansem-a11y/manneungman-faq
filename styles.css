@@ -2032,9 +2032,11 @@ textarea.inp{resize:vertical;min-height:60px}
    MOBILE SIDE MENU
    ========================================================= */
 
-/* PC에서 햄버거 버튼 완전 숨김 */
+/* PC에서 햄버거·모바일 메뉴 완전 숨김 */
 @media (min-width: 769px) {
-  .menu-toggle { display: none !important; }
+  .menu-toggle,
+  .mob-menu,
+  .mob-overlay { display: none !important; }
 }
 
 /* 모바일 오버레이 */
