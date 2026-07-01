@@ -1400,8 +1400,8 @@ textarea.inp { resize: vertical; min-height: 58px; }
   .hero-inner { padding-left: 10px; padding-right: 10px; }
   .hero-slider { width: calc(100% - 0px); }
   .slider-viewport { border-radius: 18px; }
-  .slide-img-wrap { min-height: 200px; }
-  .slide-img { width: 100%; height: 100%; object-fit: cover; min-height: 200px; }
+  .slide-img-wrap { min-height: unset; }
+  .slide-img { width: 100%; height: auto; object-fit: unset; min-height: unset; }
   /* 빠른 이동 버튼 768px 이하 */
   .quick-section-buttons { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .quick-section-btn { padding: 16px 8px 14px; }
@@ -1421,8 +1421,8 @@ textarea.inp { resize: vertical; min-height: 58px; }
   .hero-banner-img { border-radius: 12px; }
   .hero-banner-btn { position: static; display: flex; width: 100%; margin-top: 12px; padding: 13px 0; border-radius: 12px; font-size: 15px; }
   /* 480px 이하 슬라이더 */
-  .slide-img-wrap { min-height: 180px; }
-  .slide-img { min-height: 180px; }
+  .slide-img-wrap { min-height: unset; }
+  .slide-img { min-height: unset; }
   .hero-inner { padding-left: 8px; padding-right: 8px; }
   /* 480px 이하 CTA 카드 */
   .quick-cta-card { padding: 22px 18px 20px; }
@@ -1646,8 +1646,8 @@ textarea.inp { resize: vertical; min-height: 58px; }
   .quick-section-btn { padding: 12px 6px 10px; }
   .quick-section-btn .qsb-label { font-size: 12px; }
   .quick-section-btn .qsb-icon svg { width: 19px; height: 19px; }
-  .slide-img-wrap { min-height: 165px; }
-  .slide-img { min-height: 165px; }
+  .slide-img-wrap { min-height: unset; }
+  .slide-img { min-height: unset; }
 }
 
 /* ===== 운영 흐름 7단계 프로세스 이미지 영역 ===== */
