@@ -2624,7 +2624,9 @@ textarea.inp { resize: vertical; min-height: 58px; }
 .quick-section-btn .qsb-label {
   display: block;
   font-size: 13px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
   line-height: 1.2;
 }
 .quick-section-btn:hover,
