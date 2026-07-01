@@ -1,0 +1,1212 @@
+[
+  {
+    "fileName": "common_cta_gift_box.png",
+    "tab": "common",
+    "section": "cta",
+    "usage": "공통 cta detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common cta gift box",
+    "path": "assets/tab-v2/common/common_cta_gift_box.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "common_header_gift.png",
+    "tab": "common",
+    "section": "detail",
+    "usage": "공통 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common header gift",
+    "path": "assets/tab-v2/common/common_header_gift.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "common_trust_growth.png",
+    "tab": "common",
+    "section": "detail",
+    "usage": "공통 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common trust growth",
+    "path": "assets/tab-v2/common/common_trust_growth.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "common_trust_partner.png",
+    "tab": "common",
+    "section": "detail",
+    "usage": "공통 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common trust partner",
+    "path": "assets/tab-v2/common/common_trust_partner.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "common_trust_safe.png",
+    "tab": "common",
+    "section": "detail",
+    "usage": "공통 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common trust safe",
+    "path": "assets/tab-v2/common/common_trust_safe.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "common_trust_transparent.png",
+    "tab": "common",
+    "section": "detail",
+    "usage": "공통 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "common trust transparent",
+    "path": "assets/tab-v2/common/common_trust_transparent.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_ad_support.png",
+    "tab": "benefits",
+    "section": "detail",
+    "usage": "혜택 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit ad support",
+    "path": "assets/tab-v2/benefits/benefit_ad_support.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_fast_settlement.png",
+    "tab": "benefits",
+    "section": "detail",
+    "usage": "혜택 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit fast settlement",
+    "path": "assets/tab-v2/benefits/benefit_fast_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_fee_free.png",
+    "tab": "benefits",
+    "section": "detail",
+    "usage": "혜택 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit fee free",
+    "path": "assets/tab-v2/benefits/benefit_fee_free.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_hero_gift_box.png",
+    "tab": "benefits",
+    "section": "hero",
+    "usage": "혜택 hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "benefit hero gift box",
+    "path": "assets/tab-v2/benefits/benefit_hero_gift_box.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_partner_gift.png",
+    "tab": "benefits",
+    "section": "detail",
+    "usage": "혜택 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit partner gift",
+    "path": "assets/tab-v2/benefits/benefit_partner_gift.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_step_growth.png",
+    "tab": "benefits",
+    "section": "step",
+    "usage": "혜택 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit step growth",
+    "path": "assets/tab-v2/benefits/benefit_step_growth.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_step_join.png",
+    "tab": "benefits",
+    "section": "step",
+    "usage": "혜택 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit step join",
+    "path": "assets/tab-v2/benefits/benefit_step_join.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_step_rocket.png",
+    "tab": "benefits",
+    "section": "step",
+    "usage": "혜택 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit step rocket",
+    "path": "assets/tab-v2/benefits/benefit_step_rocket.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_step_trophy.png",
+    "tab": "benefits",
+    "section": "step",
+    "usage": "혜택 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit step trophy",
+    "path": "assets/tab-v2/benefits/benefit_step_trophy.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "benefit_support_desk.png",
+    "tab": "benefits",
+    "section": "detail",
+    "usage": "혜택 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "benefit support desk",
+    "path": "assets/tab-v2/benefits/benefit_support_desk.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_facility.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff facility",
+    "path": "assets/tab-v2/platform/platform_diff_facility.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_feedback.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff feedback",
+    "path": "assets/tab-v2/platform/platform_diff_feedback.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_local.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff local",
+    "path": "assets/tab-v2/platform/platform_diff_local.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_settlement.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff settlement",
+    "path": "assets/tab-v2/platform/platform_diff_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_support.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff support",
+    "path": "assets/tab-v2/platform/platform_diff_support.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_diff_trust.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform diff trust",
+    "path": "assets/tab-v2/platform/platform_diff_trust.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_flow_estimate.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform flow estimate",
+    "path": "assets/tab-v2/platform/platform_flow_estimate.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_flow_matching.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform flow matching",
+    "path": "assets/tab-v2/platform/platform_flow_matching.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_flow_request.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform flow request",
+    "path": "assets/tab-v2/platform/platform_flow_request.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_flow_settlement.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform flow settlement",
+    "path": "assets/tab-v2/platform/platform_flow_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_flow_work.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform flow work",
+    "path": "assets/tab-v2/platform/platform_flow_work.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_hero_connection.png",
+    "tab": "platform",
+    "section": "hero",
+    "usage": "플랫폼 소개 hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "platform hero connection",
+    "path": "assets/tab-v2/platform/platform_hero_connection.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_problem_customer.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform problem customer",
+    "path": "assets/tab-v2/platform/platform_problem_customer.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_problem_partner.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform problem partner",
+    "path": "assets/tab-v2/platform/platform_problem_partner.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_problem_transparency.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform problem transparency",
+    "path": "assets/tab-v2/platform/platform_problem_transparency.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "platform_samyang_trust.png",
+    "tab": "platform",
+    "section": "detail",
+    "usage": "플랫폼 소개 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "platform samyang trust",
+    "path": "assets/tab-v2/platform/platform_samyang_trust.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_benefit_education.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit benefit education",
+    "path": "assets/tab-v2/recruit/recruit_benefit_education.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_benefit_marketing.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit benefit marketing",
+    "path": "assets/tab-v2/recruit/recruit_benefit_marketing.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_benefit_protection.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit benefit protection",
+    "path": "assets/tab-v2/recruit/recruit_benefit_protection.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_benefit_stable.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit benefit stable",
+    "path": "assets/tab-v2/recruit/recruit_benefit_stable.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_air.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category air",
+    "path": "assets/tab-v2/recruit/recruit_category_air.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_boiler.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category boiler",
+    "path": "assets/tab-v2/recruit/recruit_category_boiler.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_drain.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category drain",
+    "path": "assets/tab-v2/recruit/recruit_category_drain.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_electric.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category electric",
+    "path": "assets/tab-v2/recruit/recruit_category_electric.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_facility.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category facility",
+    "path": "assets/tab-v2/recruit/recruit_category_facility.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_heating.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category heating",
+    "path": "assets/tab-v2/recruit/recruit_category_heating.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_install.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category install",
+    "path": "assets/tab-v2/recruit/recruit_category_install.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_leak.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category leak",
+    "path": "assets/tab-v2/recruit/recruit_category_leak.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_paint.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category paint",
+    "path": "assets/tab-v2/recruit/recruit_category_paint.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_pipe.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category pipe",
+    "path": "assets/tab-v2/recruit/recruit_category_pipe.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_pump.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category pump",
+    "path": "assets/tab-v2/recruit/recruit_category_pump.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_sanitary.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category sanitary",
+    "path": "assets/tab-v2/recruit/recruit_category_sanitary.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_tile.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category tile",
+    "path": "assets/tab-v2/recruit/recruit_category_tile.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_water.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category water",
+    "path": "assets/tab-v2/recruit/recruit_category_water.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_waterproof.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category waterproof",
+    "path": "assets/tab-v2/recruit/recruit_category_waterproof.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_category_window.png",
+    "tab": "recruit",
+    "section": "category",
+    "usage": "파트너 모집 category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit category window",
+    "path": "assets/tab-v2/recruit/recruit_category_window.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_hero_workers.png",
+    "tab": "recruit",
+    "section": "hero",
+    "usage": "파트너 모집 hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "recruit hero workers",
+    "path": "assets/tab-v2/recruit/recruit_hero_workers.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_area.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare area",
+    "path": "assets/tab-v2/recruit/recruit_prepare_area.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_as.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare as",
+    "path": "assets/tab-v2/recruit/recruit_prepare_as.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_company.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare company",
+    "path": "assets/tab-v2/recruit/recruit_prepare_company.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_license.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare license",
+    "path": "assets/tab-v2/recruit/recruit_prepare_license.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_phone.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare phone",
+    "path": "assets/tab-v2/recruit/recruit_prepare_phone.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_portfolio.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare portfolio",
+    "path": "assets/tab-v2/recruit/recruit_prepare_portfolio.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_tools.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare tools",
+    "path": "assets/tab-v2/recruit/recruit_prepare_tools.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_prepare_work.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit prepare work",
+    "path": "assets/tab-v2/recruit/recruit_prepare_work.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_priority_check.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit priority check",
+    "path": "assets/tab-v2/recruit/recruit_priority_check.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_target_company.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit target company",
+    "path": "assets/tab-v2/recruit/recruit_target_company.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_target_freelancer.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit target freelancer",
+    "path": "assets/tab-v2/recruit/recruit_target_freelancer.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_target_individual.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit target individual",
+    "path": "assets/tab-v2/recruit/recruit_target_individual.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "recruit_target_team.png",
+    "tab": "recruit",
+    "section": "detail",
+    "usage": "파트너 모집 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "recruit target team",
+    "path": "assets/tab-v2/recruit/recruit_target_team.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_app_estimate.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow app estimate",
+    "path": "assets/tab-v2/flow/flow_app_estimate.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_app_request.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow app request",
+    "path": "assets/tab-v2/flow/flow_app_request.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_app_schedule.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow app schedule",
+    "path": "assets/tab-v2/flow/flow_app_schedule.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_app_settlement.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow app settlement",
+    "path": "assets/tab-v2/flow/flow_app_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_hero_process.png",
+    "tab": "flow",
+    "section": "hero",
+    "usage": "운영 흐름 hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "flow hero process",
+    "path": "assets/tab-v2/flow/flow_hero_process.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_as.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice as",
+    "path": "assets/tab-v2/flow/flow_notice_as.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_no_direct.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice no direct",
+    "path": "assets/tab-v2/flow/flow_notice_no_direct.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_photo.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice photo",
+    "path": "assets/tab-v2/flow/flow_notice_photo.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_privacy.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice privacy",
+    "path": "assets/tab-v2/flow/flow_notice_privacy.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_safety.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice safety",
+    "path": "assets/tab-v2/flow/flow_notice_safety.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_notice_schedule.png",
+    "tab": "flow",
+    "section": "notice",
+    "usage": "운영 흐름 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow notice schedule",
+    "path": "assets/tab-v2/flow/flow_notice_schedule.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_role_handshake.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow role handshake",
+    "path": "assets/tab-v2/flow/flow_role_handshake.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_role_manneungman.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow role manneungman",
+    "path": "assets/tab-v2/flow/flow_role_manneungman.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_role_partner.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow role partner",
+    "path": "assets/tab-v2/flow/flow_role_partner.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_settlement_complete.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow settlement complete",
+    "path": "assets/tab-v2/flow/flow_settlement_complete.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_settlement_payment.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow settlement payment",
+    "path": "assets/tab-v2/flow/flow_settlement_payment.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_settlement_report.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow settlement report",
+    "path": "assets/tab-v2/flow/flow_settlement_report.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_settlement_review.png",
+    "tab": "flow",
+    "section": "detail",
+    "usage": "운영 흐름 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow settlement review",
+    "path": "assets/tab-v2/flow/flow_settlement_review.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_apply.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step apply",
+    "path": "assets/tab-v2/flow/flow_step_apply.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_confirm.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step confirm",
+    "path": "assets/tab-v2/flow/flow_step_confirm.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_matching.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step matching",
+    "path": "assets/tab-v2/flow/flow_step_matching.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_review.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step review",
+    "path": "assets/tab-v2/flow/flow_step_review.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_schedule.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step schedule",
+    "path": "assets/tab-v2/flow/flow_step_schedule.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_settlement.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step settlement",
+    "path": "assets/tab-v2/flow/flow_step_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "flow_step_work.png",
+    "tab": "flow",
+    "section": "step",
+    "usage": "운영 흐름 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "flow step work",
+    "path": "assets/tab-v2/flow/flow_step_work.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_category_apply.png",
+    "tab": "faq",
+    "section": "category",
+    "usage": "FAQ category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq category apply",
+    "path": "assets/tab-v2/faq/faq_category_apply.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_category_as.png",
+    "tab": "faq",
+    "section": "category",
+    "usage": "FAQ category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq category as",
+    "path": "assets/tab-v2/faq/faq_category_as.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_category_etc.png",
+    "tab": "faq",
+    "section": "category",
+    "usage": "FAQ category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq category etc",
+    "path": "assets/tab-v2/faq/faq_category_etc.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_category_operation.png",
+    "tab": "faq",
+    "section": "category",
+    "usage": "FAQ category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq category operation",
+    "path": "assets/tab-v2/faq/faq_category_operation.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_category_settlement.png",
+    "tab": "faq",
+    "section": "category",
+    "usage": "FAQ category detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq category settlement",
+    "path": "assets/tab-v2/faq/faq_category_settlement.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_contact_email.png",
+    "tab": "faq",
+    "section": "contact",
+    "usage": "FAQ contact detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq contact email",
+    "path": "assets/tab-v2/faq/faq_contact_email.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_contact_illustration.png",
+    "tab": "faq",
+    "section": "contact",
+    "usage": "FAQ contact detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq contact illustration",
+    "path": "assets/tab-v2/faq/faq_contact_illustration.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_contact_phone.png",
+    "tab": "faq",
+    "section": "contact",
+    "usage": "FAQ contact detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq contact phone",
+    "path": "assets/tab-v2/faq/faq_contact_phone.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_hero_helpdesk.png",
+    "tab": "faq",
+    "section": "hero",
+    "usage": "FAQ hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "faq hero helpdesk",
+    "path": "assets/tab-v2/faq/faq_hero_helpdesk.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_more_questions.png",
+    "tab": "faq",
+    "section": "detail",
+    "usage": "FAQ detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq more questions",
+    "path": "assets/tab-v2/faq/faq_more_questions.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_question_badge.png",
+    "tab": "faq",
+    "section": "detail",
+    "usage": "FAQ detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq question badge",
+    "path": "assets/tab-v2/faq/faq_question_badge.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "faq_search_icon.png",
+    "tab": "faq",
+    "section": "detail",
+    "usage": "FAQ detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "faq search icon",
+    "path": "assets/tab-v2/faq/faq_search_icon.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_benefit_guide.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event benefit guide",
+    "path": "assets/tab-v2/event/event_benefit_guide.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_benefit_preregister.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event benefit preregister",
+    "path": "assets/tab-v2/event/event_benefit_preregister.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_benefit_priority.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event benefit priority",
+    "path": "assets/tab-v2/event/event_benefit_priority.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_benefit_zero.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event benefit zero",
+    "path": "assets/tab-v2/event/event_benefit_zero.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_final_cta_gift.png",
+    "tab": "event",
+    "section": "cta",
+    "usage": "이벤트 cta detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event final cta gift",
+    "path": "assets/tab-v2/event/event_final_cta_gift.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_hero_august_free.png",
+    "tab": "event",
+    "section": "hero",
+    "usage": "이벤트 hero detail image cropped from the supplied reference design",
+    "size": "reference crop",
+    "alt": "event hero august free",
+    "path": "assets/tab-v2/event/event_hero_august_free.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_notice_change.png",
+    "tab": "event",
+    "section": "notice",
+    "usage": "이벤트 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event notice change",
+    "path": "assets/tab-v2/event/event_notice_change.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_notice_no_guarantee.png",
+    "tab": "event",
+    "section": "notice",
+    "usage": "이벤트 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event notice no guarantee",
+    "path": "assets/tab-v2/event/event_notice_no_guarantee.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_notice_official.png",
+    "tab": "event",
+    "section": "notice",
+    "usage": "이벤트 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event notice official",
+    "path": "assets/tab-v2/event/event_notice_official.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_notice_policy.png",
+    "tab": "event",
+    "section": "notice",
+    "usage": "이벤트 notice detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event notice policy",
+    "path": "assets/tab-v2/event/event_notice_policy.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_period_free.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event period free",
+    "path": "assets/tab-v2/event/event_period_free.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_period_open.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event period open",
+    "path": "assets/tab-v2/event/event_period_open.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_period_policy.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event period policy",
+    "path": "assets/tab-v2/event/event_period_policy.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_period_target.png",
+    "tab": "event",
+    "section": "detail",
+    "usage": "이벤트 detail detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event period target",
+    "path": "assets/tab-v2/event/event_period_target.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_step_apply.png",
+    "tab": "event",
+    "section": "step",
+    "usage": "이벤트 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event step apply",
+    "path": "assets/tab-v2/event/event_step_apply.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_step_confirm.png",
+    "tab": "event",
+    "section": "step",
+    "usage": "이벤트 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event step confirm",
+    "path": "assets/tab-v2/event/event_step_confirm.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_step_notice.png",
+    "tab": "event",
+    "section": "step",
+    "usage": "이벤트 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event step notice",
+    "path": "assets/tab-v2/event/event_step_notice.png",
+    "status": "generated-crop"
+  },
+  {
+    "fileName": "event_step_review.png",
+    "tab": "event",
+    "section": "step",
+    "usage": "이벤트 step detail image cropped from the supplied reference design",
+    "size": "detail crop",
+    "alt": "event step review",
+    "path": "assets/tab-v2/event/event_step_review.png",
+    "status": "generated-crop"
+  }
+]

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
+  <rect width="800" height="480" fill="#EBF6FB"/>
+  <rect x="30" y="30" width="740" height="420" rx="20" fill="#D0EAF6" stroke="#2EA0D2" stroke-width="2" stroke-dasharray="10,6"/>
+  <text x="400" y="200" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="bold" fill="#2EA0D2">hero-slide-03</text>
+  <text x="400" y="240" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#5B8FA8">현장 의뢰를 더 쉽게 연결받는 플랫폼</text>
+  <text x="400" y="280" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#7AAABF">이 파일을 실제 이미지로 교체하세요 (800×480 권장)</text>
+</svg>
