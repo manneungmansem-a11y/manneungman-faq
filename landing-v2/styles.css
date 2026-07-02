@@ -5,6 +5,14 @@
    포인트 컬러: #2EA0D2
    ========================================================= */
 
+/* 이미지 무단 복사 방지(드래그·선택 차단) — 완전한 보안 수단이 아니라
+   단순 복사 방지 수준의 보조 장치. 텍스트 선택은 전혀 막지 않음(이미지에만 적용) */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 :root {
   /* Brand */
   --brand:      #2EA0D2;
@@ -1267,6 +1275,8 @@ textarea.inp { resize: vertical; min-height: 58px; }
 .form-nav { display: flex; gap: 11px; margin-top: 13px; position: sticky; bottom: 0; background: #fff; padding: 7px 0 3px; border-top: 1px solid var(--line); z-index: 1; }
 .form-nav .btn { flex: 1; }
 .err-msg { color: #c0392b; font-size: 12.5px; font-weight: 600; margin-top: 5px; display: none; }
+/* 폼 스팸봇 방지용 허니팟 필드 — 실제 사용자에게는 보이지 않아야 하므로 화면 밖으로 배치 (완전한 봇 차단은 아니며 단순 자동 스팸 감소용) */
+.hp-field { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .field-row.invalid .inp { border-color: #c0392b; }
 .field-row.invalid .err-msg { display: block; }
 .success { text-align: center; padding: 38px 28px; }

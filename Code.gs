@@ -102,6 +102,64 @@ function buildJson(data) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+/* ─── 스팸/봇 방어 설정 ──────────────────────────────────── */
+var MIN_SUBMIT_MS      = 2000;      // 페이지 진입 후 이만큼 안 지났으면 봇으로 간주
+var RATE_LIMIT_WINDOW_S = 60;       // rate limit 집계 창(초)
+var RATE_LIMIT_MAX      = 30;       // 창 내 허용 최대 제출 수 (정상 트래픽 대비 넉넉하게)
+var DUP_CHECK_WINDOW_MS = 60 * 1000; // 동일 연락처 중복 접수 방지 창 — 프론트 DUP_GAP_MS와 동일하게 맞춤
+var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+var PHONE_RE = /^0\d{1,2}-?\d{3,4}-?\d{4}$/;
+
+/* 프론트에서 오지 않은 직접 POST 요청 등, 봇으로 의심되는 요청은 저장을 건너뛰되
+   응답은 정상 요청과 동일한 success로 반환해 탐지 로직을 노출하지 않는다 */
+function isLikelyBot(d) {
+  if (d['_hp']) return true; // 허니팟 필드가 채워짐
+  var ts = Number(d['_ts']);
+  if (ts && (Date.now() - ts) < MIN_SUBMIT_MS) return true; // 너무 빠른 제출
+  return false;
+}
+
+/* 짧은 시간에 과도하게 몰리는 제출(스팸 폭주) 방지 — 정상 사용자 트래픽엔 영향 없는 넉넉한 한도 */
+function isRateLimited() {
+  try {
+    var cache = CacheService.getScriptCache();
+    var bucket = 'submit_' + Math.floor(Date.now() / (RATE_LIMIT_WINDOW_S * 1000));
+    var count = Number(cache.get(bucket) || '0') + 1;
+    cache.put(bucket, String(count), RATE_LIMIT_WINDOW_S + 10);
+    return count > RATE_LIMIT_MAX;
+  } catch (err) {
+    return false; // 캐시 오류로 정상 신청이 막히지 않도록 실패 시 통과
+  }
+}
+
+/* 동일 연락처의 짧은 시간 내 중복 접수 방지 — 프론트의 60초 중복 차단을 서버에서도 보강 */
+function isDuplicateSubmission(d) {
+  try {
+    var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet || sheet.getLastRow() < 2) return false;
+
+    var phone = String(d['연락처'] || '').trim();
+    var email = String(d['이메일'] || '').trim();
+    if (!phone && !email) return false;
+
+    var numRows = Math.min(sheet.getLastRow() - 1, 10); // 최신 접수는 항상 2행부터라 위쪽 몇 줄만 확인
+    var rows = sheet.getRange(2, 1, numRows, 4).getValues(); // 신청일시, 이름, 연락처, 이메일
+    var now = Date.now();
+
+    for (var i = 0; i < rows.length; i++) {
+      var rowTs = new Date(rows[i][0]).getTime();
+      if (!rowTs || (now - rowTs) > DUP_CHECK_WINDOW_MS) continue;
+      var rowPhone = String(rows[i][2] || '').trim();
+      var rowEmail = String(rows[i][3] || '').trim();
+      if ((phone && rowPhone === phone) || (email && rowEmail === email)) return true;
+    }
+  } catch (err) {
+    Logger.log('중복 접수 확인 오류: ' + err.message);
+  }
+  return false;
+}
+
 /* ─── POST 핸들러 ────────────────────────────────────────── */
 function doPost(e) {
   var result = { result: 'error', message: '알 수 없는 오류' };
@@ -115,6 +173,22 @@ function doPost(e) {
     // 필수값 확인
     if (!d['이름'] || !d['연락처'] || !d['이메일']) {
       throw new Error('필수 항목 누락');
+    }
+
+    // 형식 검증 (완화된 패턴 — 정상적인 신청은 막지 않음)
+    if (!EMAIL_RE.test(String(d['이메일']).trim())) {
+      throw new Error('이메일 형식 오류');
+    }
+    if (!PHONE_RE.test(String(d['연락처']).trim())) {
+      throw new Error('연락처 형식 오류');
+    }
+
+    // 봇 의심 요청 / 과도한 요청 폭주 / 동일 연락처 단시간 중복 접수는
+    // 조용히 건너뛰고 정상 응답만 반환 (탐지 로직 노출 방지, 정상 사용자는 영향 없음)
+    if (isLikelyBot(d) || isRateLimited() || isDuplicateSubmission(d)) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ result: 'success' }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
 
     // Sheets 저장
@@ -490,10 +564,12 @@ function setMaintenanceMode(enabled, ownerToken, durationMinutes, pw) {
 }
 
 /* ─── 관리자 인증 ────────────────────────────────────────── */
-// 초기 비밀번호: admin1234
-// Script Properties → ADMIN_PASSWORD 키로 변경 가능
-//   Apps Script 편집기 > 프로젝트 설정 > 스크립트 속성 > 속성 추가
-var ADMIN_DEFAULT_PW = '@samyang01!';
+// ⚠️ 보안 조치: 기존 하드코딩 비밀번호(@samyang01!)가 이 저장소가 GitHub에 Public으로
+//    올라가며 그대로 노출되었습니다. 아래 임시값으로 교체했으니, 지금 바로
+//    Apps Script 편집기 > 프로젝트 설정 > 스크립트 속성 에서 ADMIN_PASSWORD 키를
+//    새로 만들어 원하는 비밀번호로 반드시 교체하세요. 스크립트 속성이 설정되면
+//    아래 임시값은 더 이상 쓰이지 않습니다.
+var ADMIN_DEFAULT_PW = 'I4cvHcyK35N2sR7UDtx'; // TODO: 스크립트 속성 설정 후 이 줄은 의미 없어짐
 
 function checkAdminAuth_(pw) {
   var stored = PropertiesService.getScriptProperties()

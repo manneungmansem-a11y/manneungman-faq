@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; frame-ancestors 'none';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <title>만능맨 파트너스 — 파트너 전용 운영 가이드</title>
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -1112,6 +1113,14 @@ img {
 </footer>
 
 <script>
+  /* iframe 삽입 방지 — 완전한 방어는 아니며 GitHub Pages 정적 호스팅에서
+     실제 X-Frame-Options 헤더를 설정할 수 없어 JS로 보완하는 보조 수단 */
+  if (window.top !== window.self) {
+    try { window.top.location = window.self.location.href; } catch (e) {
+      document.documentElement.style.display = 'none';
+    }
+  }
+
   /* 인트로 */
   (function() {
     const intro = document.getElementById('intro');

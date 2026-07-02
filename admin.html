@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <title>만능맨 파트너스 — 관리자 대시보드</title>
 <style>
   /* ── 리셋 & 기본 ── */
@@ -1343,6 +1344,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
+/* iframe 삽입 방지 — 관리자 페이지가 다른 사이트의 iframe 안에서 열리는 것을 막는 보조 수단
+   (완전한 방어는 아니며, GitHub Pages 정적 호스팅 경로에서는 실제 X-Frame-Options 헤더를
+   설정할 수 없어 JS로 보완) */
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location.href; } catch (e) {
+    document.documentElement.style.display = 'none';
+  }
+}
+
 /* ============================================================
    상태
    ============================================================ */

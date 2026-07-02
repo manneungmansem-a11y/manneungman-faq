@@ -5,6 +5,18 @@
 (function () {
   'use strict';
 
+  /* =========================================================
+     iframe 삽입 방지 (frame-busting)
+     GitHub Pages는 X-Frame-Options·CSP frame-ancestors 같은 실제 HTTP 헤더를
+     커스텀 설정할 수 없어, 다른 사이트가 우리 페이지를 iframe으로 감쌀 경우
+     최상위 창을 우리 페이지로 강제 이동시켜 방어한다 (완전한 방어는 아니며,
+     JS를 끈 브라우저나 sandbox 속성 우회에는 효과가 없는 보조 수단).
+     ========================================================= */
+  if (window.top !== window.self) {
+    try { window.top.location = window.self.location.href; } catch (e) {
+      document.documentElement.style.display = 'none';
+    }
+  }
 
   /* =========================================================
      SPA 뷰 전환 시스템
@@ -153,6 +165,31 @@
     } else {
       showHome(false);
     }
+  });
+
+  /* =========================================================
+     이미지 우클릭 저장/드래그 방지 (완전한 복사 방지는 아니며,
+     단순 자동 저장·드래그를 통한 손쉬운 복사만 막는 보조 수단)
+     텍스트 영역·버튼 등에는 영향 없음 — img 요소에만 한정
+     ========================================================= */
+  document.addEventListener('contextmenu', function (e) {
+    if (e.target && e.target.tagName === 'IMG') e.preventDefault();
+  });
+  document.addEventListener('dragstart', function (e) {
+    if (e.target && e.target.tagName === 'IMG') e.preventDefault();
+  });
+
+  /* =========================================================
+     로고 이미지 로드 실패 시 대체 표시
+     (CSP script-src에서 인라인 onerror 핸들러를 없애기 위해 이벤트 리스너로 전환)
+     ========================================================= */
+  document.querySelectorAll('.js-logo-fallback').forEach(function (img) {
+    img.addEventListener('error', function () {
+      img.style.display = 'none';
+      if (img.getAttribute('data-fallback-text') && img.nextElementSibling) {
+        img.nextElementSibling.style.display = 'block';
+      }
+    });
   });
 
   /* =========================================================
@@ -348,6 +385,10 @@
   var DUP_KEY    = 'mnm_v2_last_submit';
   var DUP_GAP_MS = 60 * 1000;
 
+  /* 폼 스팸봇 방지: 페이지 진입 시각 기록 — 너무 빠른 제출(자동 스팸 의심)을 걸러내는 데 사용 */
+  var pageLoadTime  = Date.now();
+  var MIN_SUBMIT_MS = 2500; /* 사람이 3단계 폼을 채우는 데 걸리는 최소 시간보다 훨씬 짧은 값 */
+
   function openForm() {
     if (!formOverlay) return;
     formOverlay.classList.add('show');
@@ -403,13 +444,20 @@
     });
   }
 
+  /* 이메일/전화번호 형식 검증 — 완화된 패턴으로, 정상 입력은 절대 막지 않는 선에서만 확인 */
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var PHONE_RE = /^0\d{1,2}-?\d{3,4}-?\d{4}$/;
+
   function validateStep(n) {
     var panel = document.querySelector('.fstep[data-step="' + n + '"]');
     if (!panel) return true;
     var valid = true;
     panel.querySelectorAll('.inp[required], select.inp[required]').forEach(function (inp) {
       var row = inp.closest('.field-row');
-      var ok = inp.value.trim() !== '';
+      var val = inp.value.trim();
+      var ok = val !== '';
+      if (ok && inp.name === 'email') ok = EMAIL_RE.test(val);
+      if (ok && inp.name === 'phone') ok = PHONE_RE.test(val);
       if (row) row.classList.toggle('invalid', !ok);
       if (!ok) valid = false;
     });
@@ -517,6 +565,22 @@
     regForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!validateStep(3)) return;
+
+      /* 허니팟 체크 — 실사용자에게 보이지 않는 필드가 채워졌다면 봇으로 간주.
+         봇에게 굳이 실패를 알리지 않기 위해 성공한 것처럼 보여주고 실제 전송은 하지 않음 */
+      var hpField = regForm.querySelector('[name="website"]');
+      if (hpField && hpField.value.trim() !== '') {
+        showSuccess();
+        return;
+      }
+
+      /* 타이밍 체크 — 페이지 진입 직후(사람이 3단계 폼을 다 채우기엔 불가능한 시간) 제출은
+         자동 스팸으로 간주해 조용히 차단. 정상적인 사용자 흐름에는 영향 없음 */
+      if (Date.now() - pageLoadTime < MIN_SUBMIT_MS) {
+        showSuccess();
+        return;
+      }
+
       try {
         var last = localStorage.getItem(DUP_KEY);
         if (last && (Date.now() - parseInt(last, 10)) < DUP_GAP_MS) {
@@ -566,7 +630,10 @@
         '긴급출동가능여부': (regForm.querySelector('input[name="emergency"]:checked') || {}).value || '미정',
         '자기소개':         regForm.querySelector('[name="intro"]').value.trim(),
         '추가문의':         regForm.querySelector('[name="inquiry"]').value.trim(),
-        '유입경로':         referralVal
+        '유입경로':         referralVal,
+        /* 서버(Apps Script)측 스팸 검증용 — 시트 컬럼과 무관, doPost에서만 확인 후 버려짐 */
+        '_hp':              hpField ? hpField.value : '',
+        '_ts':              pageLoadTime
       };
 
       function onSuccess() {

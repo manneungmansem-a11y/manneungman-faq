@@ -4,6 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noarchive">
+
+<!-- ===== 보안 헤더 (meta 태그 — GitHub Pages는 실제 HTTP 응답 헤더를 커스텀 설정할 수 없어
+     meta로 대체 가능한 항목만 적용. X-Frame-Options·X-Content-Type-Options·HSTS는
+     HTTP 헤더 전용 지시자라 meta로 적용 불가 — app.js의 프레임버스팅 스크립트로 보완) ===== -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' https://wcs.naver.net https://*.naver.net https://*.naver.com https://*.pstatic.net;
+  style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+  font-src 'self' https://cdn.jsdelivr.net data:;
+  img-src 'self' data: https://*.naver.net https://*.pstatic.net;
+  connect-src 'self' https://script.google.com https://*.naver.net https://*.pstatic.net;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'self';
+">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -25,8 +43,7 @@
 <header class="header" id="header">
   <div class="wrap">
     <a href="index.html" class="brand brand-home-link">
-      <img class="brand-logo" src="../assets/logo.png" alt="만능맨"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <img class="brand-logo js-logo-fallback" data-fallback-text="1" src="../assets/logo.png" alt="만능맨">
       <span class="brand-fallback" style="display:none;font-weight:900;font-size:18px;color:var(--brand)">만능맨</span>
       <span class="brand-txt">파트너스</span>
     </a>
@@ -67,8 +84,7 @@
 <div class="mob-menu" id="mobMenu" role="dialog" aria-modal="true" aria-label="모바일 메뉴">
   <div class="mob-menu-head">
     <a href="index.html" class="brand brand-home-link">
-      <img class="brand-logo" src="../assets/logo.png" alt="만능맨"
-           onerror="this.style.display='none'">
+      <img class="brand-logo js-logo-fallback" src="../assets/logo.png" alt="만능맨">
       <span class="brand-txt">파트너스</span>
     </a>
     <button class="mob-close" id="mobClose" aria-label="메뉴 닫기">
@@ -1802,8 +1818,7 @@
     <div class="footer-top">
       <div>
         <div class="brand">
-          <img class="brand-logo brand-logo--ftr" src="../assets/logo.png" alt="만능맨"
-               onerror="this.style.display='none'">
+          <img class="brand-logo brand-logo--ftr js-logo-fallback" src="../assets/logo.png" alt="만능맨">
           <span class="brand-txt" style="color:var(--blue-100)">파트너스</span>
         </div>
         <div class="footer-links">
@@ -1838,6 +1853,11 @@
       </div>
       <div class="modal-body">
         <form id="regForm" novalidate>
+          <!-- 허니팟: 스팸봇 방지용 — 실사용자는 보이지 않고 채우지 않는 필드. 채워지면 스팸으로 간주해 조용히 차단 -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="hpWebsite">웹사이트 (입력하지 마세요)</label>
+            <input type="text" id="hpWebsite" name="website" tabindex="-1" autocomplete="off">
+          </div>
           <!-- step 1 -->
           <div class="fstep active" data-step="1">
             <div class="field-row two">
@@ -1991,25 +2011,6 @@
 
 <!-- ===== 네이버 광고/웹로그 분석 (wcslog.js는 1회만 로드, wa 2개 순차 실행) ===== -->
 <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
-<script type="text/javascript">
-(function () {
-  if (!window.wcs_add) window.wcs_add = {};
-  if (!window._nasa) window._nasa = {};
-
-  function runNaverWcs(wa, useInflow) {
-    if (!window.wcs) return;
-    window.wcs_add["wa"] = wa;
-    if (useInflow && typeof window.wcs.inflow === "function") {
-      window.wcs.inflow();
-    }
-    if (typeof window.wcs_do === "function") {
-      window.wcs_do();
-    }
-  }
-
-  runNaverWcs("s_a2aa16fb02b", true);
-  runNaverWcs("3a993dd337e5b0", false);
-})();
-</script>
+<script type="text/javascript" src="naver-analytics.js"></script>
 </body>
 </html>
