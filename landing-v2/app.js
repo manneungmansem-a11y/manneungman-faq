@@ -858,6 +858,7 @@
     var appFlowIndex      = 0;
     var appFlowAutoTimer  = null;
     var APP_FLOW_DELAY    = 5500;
+    var appFlowIsVisible  = false; /* IntersectionObserver가 갱신하는 가시성 상태 */
 
     function appFlowGoTo(index) {
       appFlowIndex = ((index % appFlowTotal) + appFlowTotal) % appFlowTotal;
@@ -878,33 +879,49 @@
 
     function appFlowPauseAuto() {
       clearInterval(appFlowAutoTimer);
+      appFlowAutoTimer = null;
+    }
+
+    /* "운영 흐름" 탭이 활성 상태이고, 슬라이드 영역이 화면에 충분히 보일 때만 자동재생 */
+    function appFlowMaybeAutoStart() {
+      if (currentViewName === '운영 흐름' && appFlowIsVisible) {
+        appFlowStartAuto();
+      } else {
+        appFlowPauseAuto();
+      }
+    }
+
+    /* 탭 (재)진입·이탈 시 항상 1번 카드로 초기화 + 타이머 정리 */
+    function appFlowResetToFirst() {
+      appFlowPauseAuto();
+      appFlowGoTo(0);
     }
 
     if (appFlowPrevBtn) {
       appFlowPrevBtn.addEventListener('click', function () {
         appFlowGoTo(appFlowIndex - 1);
-        appFlowStartAuto();
+        appFlowMaybeAutoStart();
       });
     }
 
     if (appFlowNextBtn) {
       appFlowNextBtn.addEventListener('click', function () {
         appFlowGoTo(appFlowIndex + 1);
-        appFlowStartAuto();
+        appFlowMaybeAutoStart();
       });
     }
 
     appFlowDots.forEach(function (dot, i) {
       dot.addEventListener('click', function () {
         appFlowGoTo(i);
-        appFlowStartAuto();
+        appFlowMaybeAutoStart();
       });
     });
 
     /* 키보드 접근성 */
     appFlowSlider.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { appFlowGoTo(appFlowIndex - 1); appFlowStartAuto(); }
-      if (e.key === 'ArrowRight') { appFlowGoTo(appFlowIndex + 1); appFlowStartAuto(); }
+      if (e.key === 'ArrowLeft') { appFlowGoTo(appFlowIndex - 1); appFlowMaybeAutoStart(); }
+      if (e.key === 'ArrowRight') { appFlowGoTo(appFlowIndex + 1); appFlowMaybeAutoStart(); }
     });
 
     /* 모바일 터치 스와이프 */
@@ -916,22 +933,34 @@
       var diff = appFlowTouchStartX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 50) {
         appFlowGoTo(diff > 0 ? appFlowIndex + 1 : appFlowIndex - 1);
-        appFlowStartAuto();
+        appFlowMaybeAutoStart();
       }
     }, { passive: true });
 
-    /* 탭 전환 시 자동재생 멈춤·재개 */
-    window.addEventListener('mnm:tabshow', function () { appFlowPauseAuto(); });
-    window.addEventListener('mnm:homeshow', function () { appFlowStartAuto(); });
+    /* 슬라이드 영역이 화면에 30% 이상 보일 때만 자동재생 시작, 벗어나면 중지 */
+    var appFlowObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        appFlowIsVisible = entry.isIntersecting;
+        appFlowMaybeAutoStart();
+      });
+    }, { threshold: 0.3 });
+    appFlowObserver.observe(appFlowSlider);
 
-    /* 페이지 숨김 시 자동재생 멈춤 */
+    /* 다른 탭으로 이동(또는 "운영 흐름" 탭 재진입) 시: 즉시 타이머 정리 + 1번 카드로 초기화.
+       자동재생은 IntersectionObserver가 슬라이드 영역의 가시성을 다시 감지할 때까지 대기한다. */
+    window.addEventListener('mnm:tabshow', appFlowResetToFirst);
+
+    /* 홈으로 복귀 시에도 동일하게 정지 + 초기화 */
+    window.addEventListener('mnm:homeshow', appFlowResetToFirst);
+
+    /* 브라우저 탭이 백그라운드로 가면 정지, 복귀 시 조건 충족하면만 재개 */
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) appFlowPauseAuto();
-      else appFlowStartAuto();
+      else appFlowMaybeAutoStart();
     });
 
+    /* 초기 상태: 항상 1번 카드에서 대기, 자동재생은 시작하지 않음 */
     appFlowGoTo(0);
-    appFlowStartAuto();
   }
 
   /* DOMContentLoaded 이후 초기화 (IIFE 내부이므로 즉시 실행) */

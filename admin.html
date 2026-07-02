@@ -212,7 +212,7 @@
 
   /* ── 테이블 래퍼 ── */
   .table-wrap {
-    background: #fff; border-radius: 12px; overflow: hidden;
+    background: #fff; border-radius: 12px; overflow-x: auto;
     box-shadow: 0 2px 8px rgba(0,0,0,.06);
   }
   table {
@@ -585,7 +585,7 @@
   .btn-manage-web:hover { background: #e2e8f0; }
   /* ── 활동 로그 모달 ── */
   #modal-activity .modal-box {
-    max-width: 940px; display: flex; flex-direction: column; max-height: 88vh;
+    max-width: 980px; display: flex; flex-direction: column; max-height: 88vh;
   }
   .activity-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
   .activity-search-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -595,15 +595,28 @@
     transition: border-color .2s;
   }
   .activity-search-input:focus { border-color: #2EA0D2; }
-  .activity-log-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  /* 가로 스크롤 래퍼 */
+  .log-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .activity-log-table { min-width: 960px; border-collapse: collapse; font-size: .82rem; table-layout: fixed; }
   .activity-log-table th {
     background: #1a3a5c; color: #fff; font-weight: 700; padding: 10px 12px;
     text-align: left; font-size: .78rem; position: sticky; top: 0;
+    white-space: nowrap; overflow: hidden;
+    border-right: 1px solid rgba(255,255,255,.08);
   }
+  .activity-log-table th:last-child { border-right: none; }
   .activity-log-table td {
-    padding: 9px 12px; border-bottom: 1px solid #eef1f6; vertical-align: middle;
-    word-break: break-all;
+    padding: 10px 12px; border-bottom: 1px solid #eef1f6; vertical-align: top;
+    word-break: keep-all; overflow-wrap: anywhere; line-height: 1.55; overflow: hidden;
   }
+  /* 컬럼별 너비 */
+  .activity-log-table th:nth-child(1), .activity-log-table td:nth-child(1) { width:150px; white-space:nowrap; }
+  .activity-log-table th:nth-child(2), .activity-log-table td:nth-child(2) { width:80px;  white-space:nowrap; }
+  .activity-log-table th:nth-child(3), .activity-log-table td:nth-child(3) { width:140px; word-break:break-all; white-space:normal; }
+  .activity-log-table th:nth-child(4), .activity-log-table td:nth-child(4) { width:90px;  white-space:nowrap; }
+  .activity-log-table th:nth-child(5), .activity-log-table td:nth-child(5) { width:120px; }
+  .activity-log-table th:nth-child(6), .activity-log-table td:nth-child(6) { width:190px; white-space:normal; }
+  .activity-log-table th:nth-child(7), .activity-log-table td:nth-child(7) { width:190px; white-space:normal; }
   .activity-log-table tr:hover td { background: #f7fafd; }
   .log-change-field {
     display: inline-block; background: #e8f4fb; color: #1d6a8c;
@@ -613,15 +626,20 @@
   .log-empty { text-align: center; padding: 40px; color: #a0aec0; }
   /* ── 중복 신청 모달 ── */
   #modal-dup .modal-box {
-    max-width: 700px; display: flex; flex-direction: column; max-height: 82vh;
+    max-width: 720px; display: flex; flex-direction: column; max-height: 82vh;
   }
   .dup-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
-  .dup-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  /* 중복 모달 테이블 가로 스크롤 */
+  .dup-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .dup-table { min-width: 620px; border-collapse: collapse; font-size: .85rem; table-layout: auto; }
   .dup-table th {
     background: #7f1d1d; color: #fff; font-weight: 700;
-    padding: 10px 12px; text-align: left; font-size: .78rem;
+    padding: 10px 12px; text-align: left; font-size: .78rem; white-space: nowrap;
   }
-  .dup-table td { padding: 9px 12px; border-bottom: 1px solid #fee2e2; vertical-align: middle; }
+  .dup-table td {
+    padding: 9px 12px; border-bottom: 1px solid #fee2e2; vertical-align: top;
+    word-break: keep-all; overflow-wrap: anywhere; line-height: 1.5;
+  }
   .dup-table tr:last-child td { border-bottom: none; }
   .dup-table tr:hover td { background: #fff5f5; }
 
@@ -2251,10 +2269,12 @@ function openDupModal(appId, event) {
       + '현재 신청: <strong>' + escH(currentR['이름'] || '—') + '</strong>'
       + (currentR['업체명·상호명'] ? ' · ' + escH(currentR['업체명·상호명']) : '')
       + ' · ' + escH(currentR['연락처'] || '—') + '</div>' : '')
+    + '<div class="dup-table-wrap">'
     + '<table class="dup-table">'
     + '<thead><tr><th>신청일시</th><th>이름</th><th>업체명·상호명</th><th>연락처</th><th>처리상태</th><th>중복 사유</th></tr></thead>'
     + '<tbody>' + (rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#a0aec0">중복 내역 없음</td></tr>') + '</tbody>'
-    + '</table>';
+    + '</table>'
+    + '</div>';
 
   document.getElementById('modal-dup').classList.add('open');
 }
@@ -2310,20 +2330,22 @@ function renderActivityLog(logs) {
   }
   var rows = logs.map(function(log) {
     return '<tr>'
-      + '<td style="white-space:nowrap;color:#6a7a90;font-size:.78rem">' + escH(log['로그일시']   || '') + '</td>'
-      + '<td style="font-weight:700">'                                    + escH(log['관리자']     || '') + '</td>'
-      + '<td style="font-size:.78rem;color:#a0aec0">'                    + escH(log['신청ID']     || '') + '</td>'
-      + '<td>'                                                             + escH(log['이름']       || '') + '</td>'
-      + '<td><span class="log-change-field">'                            + escH(log['변경항목']   || '') + '</span></td>'
-      + '<td style="color:#dc2626;font-size:.8rem">'                     + escH(log['변경전']     || '') + '</td>'
-      + '<td style="color:#16a34a;font-size:.8rem">'                     + escH(log['변경후']     || '') + '</td>'
+      + '<td style="color:#6a7a90;font-size:.78rem">'  + escH(fmtDateVal(log['로그일시'] || '')) + '</td>'
+      + '<td style="font-weight:700">'                  + escH(log['관리자']   || '') + '</td>'
+      + '<td style="font-size:.78rem;color:#a0aec0">'  + escH(log['신청ID']   || '') + '</td>'
+      + '<td>'                                           + escH(log['이름']     || '') + '</td>'
+      + '<td><span class="log-change-field">'          + escH(log['변경항목'] || '') + '</span></td>'
+      + '<td style="color:#dc2626;font-size:.8rem">'   + escH(fmtDateVal(log['변경전'] || '')) + '</td>'
+      + '<td style="color:#16a34a;font-size:.8rem">'   + escH(fmtDateVal(log['변경후'] || '')) + '</td>'
       + '</tr>';
   }).join('');
   document.getElementById('activity-log-content').innerHTML =
-    '<table class="activity-log-table">'
+    '<div class="log-table-wrap">'
+    + '<table class="activity-log-table">'
     + '<thead><tr><th>로그일시</th><th>관리자</th><th>신청ID</th><th>이름</th><th>변경항목</th><th>변경전</th><th>변경후</th></tr></thead>'
     + '<tbody>' + rows + '</tbody>'
-    + '</table>';
+    + '</table>'
+    + '</div>';
 }
 
 /* ============================================================
@@ -2333,6 +2355,17 @@ function escH(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* 날짜 문자열을 YYYY-MM-DD HH:mm 형식으로 변환 (변환 불가 시 원문 반환) */
+function fmtDateVal(str) {
+  if (!str) return '';
+  var s = String(str).trim();
+  var d = new Date(s);
+  if (isNaN(d.getTime())) return s;
+  var p = function(n) { return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+       + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 
 /* ============================================================
