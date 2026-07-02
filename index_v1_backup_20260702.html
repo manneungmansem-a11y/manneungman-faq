@@ -4,28 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noarchive">
-
-<!-- ===== 보안 헤더 (meta 태그 — GitHub Pages는 실제 HTTP 응답 헤더를 커스텀 설정할 수 없어
-     meta로 대체 가능한 항목만 적용. X-Frame-Options·X-Content-Type-Options·HSTS는
-     HTTP 헤더 전용 지시자라 meta로 적용 불가 — app.js의 프레임버스팅 스크립트로 보완) ===== -->
-<meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' https://wcs.naver.net https://*.naver.net https://*.naver.com https://*.pstatic.net;
-  style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-  font-src 'self' https://cdn.jsdelivr.net data:;
-  img-src 'self' data: https://*.naver.net https://*.pstatic.net;
-  connect-src 'self' https://script.google.com https://*.naver.net https://*.pstatic.net;
-  object-src 'none';
-  base-uri 'self';
-  form-action 'self';
-  frame-ancestors 'self';
-">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
 <title>만능맨 파트너스 — 건축 설비 장인의 기술을 잇는 플랫폼</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="icon" type="image/png" href="landing-v2/favicon.png">
-<link rel="stylesheet" href="landing-v2/styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -43,7 +24,8 @@
 <header class="header" id="header">
   <div class="wrap">
     <a href="index.html" class="brand brand-home-link">
-      <img class="brand-logo js-logo-fallback" data-fallback-text="1" src="assets/logo.png" alt="만능맨">
+      <img class="brand-logo" src="assets/logo.png" alt="만능맨"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
       <span class="brand-fallback" style="display:none;font-weight:900;font-size:18px;color:var(--brand)">만능맨</span>
       <span class="brand-txt">파트너스</span>
     </a>
@@ -84,7 +66,8 @@
 <div class="mob-menu" id="mobMenu" role="dialog" aria-modal="true" aria-label="모바일 메뉴">
   <div class="mob-menu-head">
     <a href="index.html" class="brand brand-home-link">
-      <img class="brand-logo js-logo-fallback" src="assets/logo.png" alt="만능맨">
+      <img class="brand-logo" src="assets/logo.png" alt="만능맨"
+           onerror="this.style.display='none'">
       <span class="brand-txt">파트너스</span>
     </a>
     <button class="mob-close" id="mobClose" aria-label="메뉴 닫기">
@@ -141,31 +124,31 @@
 
             <div class="slide" data-slide="0" role="tabpanel" aria-label="슬라이드 1">
               <div class="slide-img-wrap">
-                <img src="landing-v2/assets/card-slide-01.png" alt="만능맨 파트너스 슬라이드 1" class="slide-img">
+                <img src="assets/card-slide-01.png" alt="만능맨 파트너스 슬라이드 1" class="slide-img">
               </div>
             </div>
 
             <div class="slide" data-slide="1" role="tabpanel" aria-label="슬라이드 2">
               <div class="slide-img-wrap">
-                <img src="landing-v2/assets/card-slide-02.png" alt="만능맨 파트너스 슬라이드 2" class="slide-img">
+                <img src="assets/card-slide-02.png" alt="만능맨 파트너스 슬라이드 2" class="slide-img">
               </div>
             </div>
 
             <div class="slide" data-slide="2" role="tabpanel" aria-label="슬라이드 3">
               <div class="slide-img-wrap">
-                <img src="landing-v2/assets/card-slide-03.png" alt="만능맨 파트너스 슬라이드 3" class="slide-img">
+                <img src="assets/card-slide-03.png" alt="만능맨 파트너스 슬라이드 3" class="slide-img">
               </div>
             </div>
 
             <div class="slide" data-slide="3" role="tabpanel" aria-label="슬라이드 4">
               <div class="slide-img-wrap">
-                <img src="landing-v2/assets/card-slide-04.png" alt="만능맨 파트너스 슬라이드 4" class="slide-img">
+                <img src="assets/card-slide-04.png" alt="만능맨 파트너스 슬라이드 4" class="slide-img">
               </div>
             </div>
 
             <div class="slide" data-slide="4" role="tabpanel" aria-label="슬라이드 5">
               <div class="slide-img-wrap">
-                <img src="landing-v2/assets/card-slide-05.png" alt="만능맨 파트너스 슬라이드 5" class="slide-img">
+                <img src="assets/card-slide-05.png" alt="만능맨 파트너스 슬라이드 5" class="slide-img">
               </div>
             </div>
 
@@ -355,7 +338,7 @@
           <small>본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</small>
         </div>
         <div class="event-cta-visual">
-          <img src="landing-v2/이벤트박스/이벤트%20박스_크롭.png" alt="초기 파트너 혜택 이벤트 이미지" loading="lazy">
+          <img src="landing-v2/이벤트박스/이벤트%20박스.png" alt="초기 파트너 혜택 이벤트 이미지" loading="lazy">
         </div>
       </div>
     </div>
@@ -420,8 +403,8 @@
         <div class="contact-mini-card reveal d2">
           <div class="contact-mini-icon" aria-hidden="true">💬</div>
           <h3>카카오톡 상담</h3>
-          <p>카카오톡 상담 채널을 준비하고 있습니다.</p>
-          <button class="contact-mini-btn disabled" disabled aria-disabled="true">준비중입니다</button>
+          <p>카카오톡으로 간편하게 상담받으세요.</p>
+          <button class="contact-mini-btn disabled" disabled aria-disabled="true">카카오톡 상담하기 →</button>
         </div>
       </div>
     </div>
@@ -475,25 +458,25 @@
         </div>
         <div class="tab-v2-grid tab-v2-grid--cards">
           <div class="tab-v2-card reveal">
-            <div class="tab-v2-card-art"><img src="landing-v2/img/혜택/OPEN EVENT.png" alt="OPEN EVENT"></div>
+            <div class="tab-v2-card-art"><img src="img/혜택/OPEN EVENT.png" alt="OPEN EVENT"></div>
             <span class="tab-v2-kicker">OPEN EVENT</span>
             <h3>8월 한 달 수수료 0%</h3>
             <p>2026년 8월 한 달간 플랫폼 수수료를 받지 않습니다. 작업 대금 전액이 파트너에게 귀속됩니다.</p>
           </div>
           <div class="tab-v2-card reveal d1">
-            <div class="tab-v2-card-art"><img src="landing-v2/img/혜택/NO COST.png" alt="NO COST"></div>
+            <div class="tab-v2-card-art"><img src="img/혜택/NO COST.png" alt="NO COST"></div>
             <span class="tab-v2-kicker">NO COST</span>
             <h3>가맹비·입점비·광고비 없음</h3>
             <p>합류부터 운영까지 별도 비용이 없습니다. 순수 작업 수익만 남습니다.</p>
           </div>
           <div class="tab-v2-card reveal d2">
-            <div class="tab-v2-card-art"><img src="landing-v2/img/혜택/FAST SETTLEMENT.png" alt="FAST SETTLEMENT"></div>
+            <div class="tab-v2-card-art"><img src="img/혜택/FAST SETTLEMENT.png" alt="FAST SETTLEMENT"></div>
             <span class="tab-v2-kicker">FAST SETTLEMENT</span>
             <h3>작업 완료 후 3일 내 정산</h3>
             <p>완료 확인 후 영업일 기준 3일 이내 정산을 목표로 운영합니다.</p>
           </div>
           <div class="tab-v2-card reveal d3">
-            <div class="tab-v2-card-art"><img src="landing-v2/img/혜택/PRIORITY.png" alt="PRIORITY"></div>
+            <div class="tab-v2-card-art"><img src="img/혜택/PRIORITY.png" alt="PRIORITY"></div>
             <span class="tab-v2-kicker">PRIORITY</span>
             <h3>초기 파트너 우선 검토</h3>
             <p>사전등록 파트너를 우선 검토합니다. 지역·분야 배정에서 먼저 연결됩니다.</p>
@@ -522,7 +505,7 @@
             </div>
           </div>
           <div class="tab-v2-art">
-            <img src="landing-v2/img/혜택/Who Can Apply.png" alt="파트너 신청 자격">
+            <img src="img/혜택/Who Can Apply.png" alt="파트너 신청 자격">
           </div>
         </div>
       </div>
@@ -539,7 +522,7 @@
           <div class="tab-v2-step reveal">
             <span class="tab-v2-step-no">STEP 01</span>
             <div class="step-img-wrap">
-              <img src="landing-v2/img/혜택/STEP 01.png" alt="STEP 01: 간단 신청">
+              <img src="img/혜택/STEP 01.png" alt="STEP 01: 간단 신청">
             </div>
             <h3>간단 신청</h3>
             <p>업체명, 연락처, 활동 지역, 주요 분야만 입력하면 됩니다.</p>
@@ -547,7 +530,7 @@
           <div class="tab-v2-step reveal d1">
             <span class="tab-v2-step-no">STEP 02</span>
             <div class="step-img-wrap">
-              <img src="landing-v2/img/혜택/STEP 02.png" alt="STEP 02: 담당자 확인·안내">
+              <img src="img/혜택/STEP 02.png" alt="STEP 02: 담당자 확인·안내">
             </div>
             <h3>담당자 확인·안내</h3>
             <p>운영팀이 신청 내용을 확인하고 전화·문자로 순차 안내드립니다.</p>
@@ -555,7 +538,7 @@
           <div class="tab-v2-step reveal d2">
             <span class="tab-v2-step-no">STEP 03</span>
             <div class="step-img-wrap">
-              <img src="landing-v2/img/혜택/STEP 03.png" alt="STEP 03: 파트너 합류">
+              <img src="img/혜택/STEP 03.png" alt="STEP 03: 파트너 합류">
             </div>
             <h3>파트너 합류</h3>
             <p>기준 확인 후 지역·분야 기반으로 고객 연결을 검토합니다.</p>
@@ -574,7 +557,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view 혜택 -->
@@ -719,7 +702,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view 플랫폼 소개 -->
@@ -834,7 +817,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view 파트너 모집 -->
@@ -1084,7 +1067,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view 운영 흐름 -->
@@ -1215,19 +1198,19 @@
             <p style="color:var(--ink-2);font-size:14px">FAQ에서 답을 찾지 못하셨다면 직접 문의해주세요.</p>
           </div>
           <div class="tab-v2-contact-card">
-            <div class="contact-icon-circle">📞</div>
+            <div class="tab-img-ph" style="width:54px;height:54px;font-size:22px">📞</div>
             <strong>전화 문의</strong>
             <span>1899-8827<br>평일 09:00–18:00</span>
           </div>
           <div class="tab-v2-contact-card">
-            <div class="contact-icon-circle">✉️</div>
+            <div class="tab-img-ph" style="width:54px;height:54px;font-size:22px">✉️</div>
             <strong>이메일 문의</strong>
             <span>manneungmansem<br>@gmail.com</span>
           </div>
-          <div class="tab-v2-contact-card is-disabled">
-            <div class="contact-icon-circle">💬</div>
+          <div class="tab-v2-contact-card">
+            <div class="tab-img-ph" style="width:54px;height:54px;font-size:22px">💬</div>
             <strong>카카오 채널</strong>
-            <span>준비 중입니다</span>
+            <span>@만능맨파트너스<br>채팅 문의</span>
           </div>
         </div>
       </div>
@@ -1243,7 +1226,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view FAQ -->
@@ -1368,32 +1351,6 @@
       </div>
     </section>
 
-    <!-- 오픈 예정 / 이벤트 CTA 배너 (메인페이지와 동일 컴포넌트) -->
-    <section class="tab-v2-section">
-      <div class="wrap">
-        <div class="event-cta-card reveal">
-          <div class="event-cta-content">
-            <span class="event-cta-badge">📅 7월 26일 오픈 예정</span>
-            <h2>
-              지금 사전등록하고<br>
-              <strong>초기 파트너 혜택</strong>을 받아보세요
-            </h2>
-            <p>
-              가입비·입점비·광고비 없이 시작할 수 있으며,<br>
-              8월 한 달 플랫폼 수수료 무료 이벤트를 준비 중입니다.
-            </p>
-            <button type="button" class="event-cta-button" data-open-form>
-              파트너스 신청하기 →
-            </button>
-            <small>본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</small>
-          </div>
-          <div class="event-cta-visual">
-            <img src="landing-v2/이벤트박스/이벤트%20박스_크롭.png" alt="초기 파트너 혜택 이벤트 이미지" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 유의사항 -->
     <section class="tab-v2-section tab-v2-section--soft">
       <div class="wrap">
@@ -1419,7 +1376,7 @@
           </div>
           <button class="btn btn--lg" style="background:#fff;color:var(--brand);min-width:210px" data-open-form>파트너스 신청하기 <span class="arr">→</span></button>
         </div>
-        <p style="text-align:center;font-size:13px;color:#8393a7;margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
+        <p style="text-align:center;font-size:13px;color:rgba(255,255,255,.6);margin-top:14px">본 신청은 계약 체결이 아닌 사전 검토 등록입니다.</p>
       </div>
     </section>
   </div><!-- /tab-view 이벤트 -->
@@ -1818,7 +1775,8 @@
     <div class="footer-top">
       <div>
         <div class="brand">
-          <img class="brand-logo brand-logo--ftr js-logo-fallback" src="assets/logo.png" alt="만능맨">
+          <img class="brand-logo brand-logo--ftr" src="assets/logo.png" alt="만능맨"
+               onerror="this.style.display='none'">
           <span class="brand-txt" style="color:var(--blue-100)">파트너스</span>
         </div>
         <div class="footer-links">
@@ -1853,11 +1811,6 @@
       </div>
       <div class="modal-body">
         <form id="regForm" novalidate>
-          <!-- 허니팟: 스팸봇 방지용 — 실사용자는 보이지 않고 채우지 않는 필드. 채워지면 스팸으로 간주해 조용히 차단 -->
-          <div class="hp-field" aria-hidden="true">
-            <label for="hpWebsite">웹사이트 (입력하지 마세요)</label>
-            <input type="text" id="hpWebsite" name="website" tabindex="-1" autocomplete="off">
-          </div>
           <!-- step 1 -->
           <div class="fstep active" data-step="1">
             <div class="field-row two">
@@ -2006,11 +1959,7 @@
   </div>
 </div>
 
-<script src="landing-v2/app.js"></script>
-<script src="landing-v2/partner-toast.js"></script>
-
-<!-- ===== 네이버 광고/웹로그 분석 (wcslog.js는 1회만 로드, wa 2개 순차 실행) ===== -->
-<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
-<script type="text/javascript" src="landing-v2/naver-analytics.js"></script>
+<script src="app.js"></script>
+<script src="partner-toast.js"></script>
 </body>
 </html>
