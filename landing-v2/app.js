@@ -561,6 +561,95 @@
     });
   }
 
+  /* 이메일 도메인 자동완성 — 값은 사용자가 직접 선택했을 때만 완성되며, email input value만 갱신함 */
+  var EMAIL_DOMAINS = ['gmail.com', 'naver.com', 'daum.net', 'kakao.com', 'hanmail.net', 'nate.com', 'outlook.com', 'hotmail.com'];
+  var emailInput = regForm ? regForm.querySelector('[name="email"]') : null;
+  var emailSuggestEl = document.getElementById('emailSuggest');
+  if (emailInput && emailSuggestEl) {
+    var emailMatches = [];
+    var emailActiveIdx = -1;
+
+    var closeEmailSuggest = function () {
+      emailSuggestEl.hidden = true;
+      emailSuggestEl.innerHTML = '';
+      emailMatches = [];
+      emailActiveIdx = -1;
+      emailInput.setAttribute('aria-expanded', 'false');
+      emailInput.removeAttribute('aria-activedescendant');
+    };
+
+    var updateEmailActive = function () {
+      var items = emailSuggestEl.querySelectorAll('li');
+      items.forEach(function (li, i) { li.classList.toggle('active', i === emailActiveIdx); });
+      if (emailActiveIdx > -1) {
+        emailInput.setAttribute('aria-activedescendant', 'emailOpt' + emailActiveIdx);
+        if (items[emailActiveIdx]) items[emailActiveIdx].scrollIntoView({ block: 'nearest' });
+      } else {
+        emailInput.removeAttribute('aria-activedescendant');
+      }
+    };
+
+    var applyEmailSuggest = function (domain) {
+      var at = emailInput.value.indexOf('@');
+      var local = at === -1 ? emailInput.value : emailInput.value.slice(0, at);
+      emailInput.value = local + '@' + domain;
+      closeEmailSuggest();
+      var row = emailInput.closest('.field-row');
+      if (row && EMAIL_RE.test(emailInput.value.trim())) row.classList.remove('invalid');
+      emailInput.focus();
+    };
+
+    emailInput.addEventListener('input', function () {
+      var val = emailInput.value;
+      var at = val.indexOf('@');
+      var local = at === -1 ? '' : val.slice(0, at);
+      var typedDomain = at === -1 ? '' : val.slice(at + 1);
+      if (at === -1 || !local || typedDomain.indexOf('@') !== -1) { closeEmailSuggest(); return; }
+      var lowerTyped = typedDomain.toLowerCase();
+      emailMatches = EMAIL_DOMAINS.filter(function (d) { return d.indexOf(lowerTyped) === 0 && d !== lowerTyped; });
+      if (!emailMatches.length) { closeEmailSuggest(); return; }
+      emailActiveIdx = -1;
+      emailSuggestEl.innerHTML = emailMatches.map(function (d, i) {
+        return '<li role="option" id="emailOpt' + i + '" data-domain="' + d + '">' + local + '@<mark>' +
+          d.slice(0, typedDomain.length) + '</mark>' + d.slice(typedDomain.length) + '</li>';
+      }).join('');
+      emailSuggestEl.hidden = false;
+      emailInput.setAttribute('aria-expanded', 'true');
+    });
+
+    emailInput.addEventListener('keydown', function (e) {
+      if (emailSuggestEl.hidden || !emailMatches.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        emailActiveIdx = (emailActiveIdx + 1) % emailMatches.length;
+        updateEmailActive();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        emailActiveIdx = (emailActiveIdx - 1 + emailMatches.length) % emailMatches.length;
+        updateEmailActive();
+      } else if (e.key === 'Enter') {
+        if (emailActiveIdx > -1) { e.preventDefault(); applyEmailSuggest(emailMatches[emailActiveIdx]); }
+        else { closeEmailSuggest(); }
+      } else if (e.key === 'Tab') {
+        if (emailActiveIdx > -1) applyEmailSuggest(emailMatches[emailActiveIdx]);
+        else closeEmailSuggest();
+      } else if (e.key === 'Escape') {
+        closeEmailSuggest();
+      }
+    });
+
+    emailSuggestEl.addEventListener('mousedown', function (e) {
+      var li = e.target.closest('li[data-domain]');
+      if (!li) return;
+      e.preventDefault();
+      applyEmailSuggest(li.getAttribute('data-domain'));
+    });
+
+    emailInput.addEventListener('blur', function () {
+      setTimeout(closeEmailSuggest, 120);
+    });
+  }
+
   if (regForm) {
     regForm.addEventListener('submit', function (e) {
       e.preventDefault();

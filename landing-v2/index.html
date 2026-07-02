@@ -1863,7 +1863,13 @@
               <div><label class="fl">이름<span class="req">*</span></label><input class="inp" name="name" placeholder="이름" required><div class="err-msg">이름을 입력해 주세요.</div></div>
               <div><label class="fl">휴대폰 번호<span class="req">*</span></label><input class="inp" name="phone" inputmode="tel" placeholder="010-0000-0000" required><div class="err-msg">휴대폰 번호를 입력해 주세요.</div></div>
             </div>
-            <div class="field-row"><label class="fl">이메일<span class="req">*</span></label><input class="inp" name="email" type="email" placeholder="email@example.com" required><div class="err-msg">이메일을 입력해 주세요.</div></div>
+            <div class="field-row"><label class="fl">이메일<span class="req">*</span></label>
+              <div class="email-wrap">
+                <input class="inp" name="email" type="email" placeholder="email@example.com" required autocomplete="email" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="emailSuggest">
+                <ul class="email-suggest" id="emailSuggest" role="listbox" hidden></ul>
+              </div>
+              <div class="err-msg">이메일을 입력해 주세요.</div>
+            </div>
             <div class="field-row"><label class="fl">주요 활동 지역<span class="req">*</span></label>
               <select class="inp" name="region" required>
                 <option value="">지역을 선택해 주세요</option>
