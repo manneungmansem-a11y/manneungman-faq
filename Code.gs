@@ -64,6 +64,11 @@ function doGet(e) {
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
   }
 
+  // 중복 신청 의심 확인 (프론트 제출 전 사전 확인용)
+  if (e && e.parameter && e.parameter.action === 'checkDuplicate') {
+    return handleCheckDuplicate_(e.parameter);
+  }
+
   // 기존: 팝업용 최근 신청자 JSON 반환
   var items = [];
   try {
@@ -160,6 +165,104 @@ function isDuplicateSubmission(d) {
   return false;
 }
 
+/* ─── 중복 신청 "이력" 확인 (전체 시트 대상, 60초 창과 무관) ──
+   프론트 [신청서 제출하기] 클릭 시 실제 저장 전에 먼저 호출됨.
+   개인정보를 그대로 응답에 담지 않고 duplicate 여부/사유만 반환한다. */
+var DUPLICATE_CHECK_MAX_ROWS = 5000; // 대형 시트에서도 응답이 느려지지 않도록 상한
+
+function normalizePhoneDigits_(v) {
+  return String(v || '').replace(/\D/g, '');
+}
+function normalizeEmail_(v) {
+  return String(v || '').trim().toLowerCase();
+}
+function normalizeCompany_(v) {
+  return String(v || '').replace(/[\s\-_.,()·]/g, '').toLowerCase();
+}
+
+/* 반환값: { duplicate: bool, reason?: 'phone'|'email'|'company_phone4', error?: true }
+   error가 true면 시트 조회 자체가 실패한 것으로, 호출부에서 각자 안전한 방향으로 처리한다. */
+function checkDuplicateHistory(phone, email, company) {
+  var phoneNorm   = normalizePhoneDigits_(phone);
+  var emailNorm   = normalizeEmail_(email);
+  var companyNorm = normalizeCompany_(company);
+  var phoneLast4  = phoneNorm.slice(-4);
+
+  if (!phoneNorm && !emailNorm) return { duplicate: false };
+
+  try {
+    var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet || sheet.getLastRow() < 2) return { duplicate: false };
+
+    var numCols = sheet.getLastColumn();
+    var headers = sheet.getRange(1, 1, 1, numCols).getValues()[0]
+                       .map(function (h) { return String(h || '').trim(); });
+    var phoneIdx   = headers.indexOf('연락처');
+    var emailIdx   = headers.indexOf('이메일');
+    var companyIdx = headers.indexOf('업체명·상호명');
+    if (phoneIdx === -1 && emailIdx === -1) return { duplicate: false };
+
+    var lastRow  = sheet.getLastRow();
+    var numRows  = Math.min(lastRow - 1, DUPLICATE_CHECK_MAX_ROWS);
+    var readCols = Math.max(phoneIdx, emailIdx, companyIdx) + 1;
+    var rows     = sheet.getRange(2, 1, numRows, readCols).getValues();
+
+    var companyMatch = false;
+    for (var i = 0; i < rows.length; i++) {
+      var rowPhone   = phoneIdx   !== -1 ? normalizePhoneDigits_(rows[i][phoneIdx]) : '';
+      var rowEmail   = emailIdx   !== -1 ? normalizeEmail_(rows[i][emailIdx])       : '';
+      var rowCompany = companyIdx !== -1 ? normalizeCompany_(rows[i][companyIdx])   : '';
+
+      if (phoneNorm && rowPhone && rowPhone === phoneNorm) return { duplicate: true, reason: 'phone' };
+      if (emailNorm && rowEmail && rowEmail === emailNorm) return { duplicate: true, reason: 'email' };
+      if (!companyMatch && companyNorm && rowCompany && rowCompany === companyNorm &&
+          phoneLast4 && rowPhone && rowPhone.slice(-4) === phoneLast4) {
+        companyMatch = true;
+      }
+    }
+    if (companyMatch) return { duplicate: true, reason: 'company_phone4' };
+    return { duplicate: false };
+  } catch (err) {
+    Logger.log('중복 이력 확인 오류: ' + err.message);
+    return { duplicate: false, error: true };
+  }
+}
+
+/* 중복확인 조회용 별도 rate limit — 제출(doPost)용 카운터와 분리해
+   중복확인 호출이 실제 제출 한도를 갉아먹지 않게 한다 */
+function isDupCheckRateLimited_() {
+  try {
+    var cache = CacheService.getScriptCache();
+    var bucket = 'dupcheck_' + Math.floor(Date.now() / (RATE_LIMIT_WINDOW_S * 1000));
+    var count = Number(cache.get(bucket) || '0') + 1;
+    cache.put(bucket, String(count), RATE_LIMIT_WINDOW_S + 10);
+    return count > RATE_LIMIT_MAX;
+  } catch (err) {
+    return false;
+  }
+}
+
+/* doGet의 action=checkDuplicate 라우팅 핸들러 */
+function handleCheckDuplicate_(params) {
+  // 과도한 조회 요청은 "중복 아님"으로 안전하게 응답 — 정상 사용자의 제출을 막지 않기 위함
+  if (isDupCheckRateLimited_()) {
+    return buildJson({ success: true, duplicate: false });
+  }
+
+  var res = checkDuplicateHistory(params.phone || '', params.email || '', params.company || '');
+  if (res.error) {
+    return buildJson({ success: false, duplicate: false });
+  }
+  return buildJson({
+    success: true,
+    duplicate: !!res.duplicate,
+    reason: res.reason || '',
+    // 기존 신청자의 개인정보(연락처/이메일/이름 등)는 절대 노출하지 않는다
+    message: res.duplicate ? '동일한 휴대폰 번호 또는 이메일로 신청한 이력이 있습니다.' : ''
+  });
+}
+
 /* ─── POST 핸들러 ────────────────────────────────────────── */
 function doPost(e) {
   var result = { result: 'error', message: '알 수 없는 오류' };
@@ -189,6 +292,19 @@ function doPost(e) {
       return ContentService
         .createTextOutput(JSON.stringify({ result: 'success' }))
         .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 프론트는 저장 전 GET action=checkDuplicate로 먼저 중복 이력을 확인하고,
+    // 사용자가 "현재 정보로 다시 신청"을 선택한 경우에만 duplicateConfirmed:true를 실어 보낸다.
+    // 이 흐름을 거치지 않고 바로 doPost가 호출된 경우(사전 확인 누락/우회)를 대비한 서버측 보강 확인.
+    // 응답은 no-cors로 전송되어 프론트가 결과를 읽지 못하므로, 봇 방지와 동일하게 조용히 저장만 건너뛴다.
+    if (!d['duplicateConfirmed']) {
+      var dupHistory = checkDuplicateHistory(d['연락처'], d['이메일'], d['업체명·상호명']);
+      if (dupHistory.duplicate) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ result: 'success' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
     }
 
     // Sheets 저장
@@ -258,7 +374,9 @@ function saveToSheet(d) {
   var adminDefaults = {
     '신청ID': newAppId,
     '처리상태': '신규 접수', '담당자': '', '연락일': '',
-    '관리자 메모': '', '최종결과': ''
+    // 중복 이력 확인 후 사용자가 "현재 정보로 다시 신청"을 선택한 건만 표시 (신규 행의 빈 값을 채우는 것이라 기존 데이터에는 영향 없음)
+    '관리자 메모': d['duplicateConfirmed'] ? '중복 이력 확인 후 사용자가 현재 정보로 재신청' : '',
+    '최종결과': ''
   };
   var rowData = sheetHeaders.map(function(key) {
     if (!key) return '';

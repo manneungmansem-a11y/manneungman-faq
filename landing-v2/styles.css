@@ -1300,6 +1300,9 @@ textarea.inp { resize: vertical; min-height: 58px; }
 .success p { font-size: 15px; color: var(--ink-2); line-height: 1.7; }
 .success p strong { color: var(--brand); }
 .dup .dc { width: 60px; height: 60px; border-radius: 50%; background: var(--amber-bg); display: grid; place-items: center; margin: 0 auto 16px; font-size: 28px; }
+.dupcheck-actions { display: flex; gap: 11px; margin-top: 22px; }
+.dupcheck-actions .btn { flex: 1; }
+@media (max-width: 480px) { .dupcheck-actions { flex-direction: column; } }
 
 /* ===== STICKY CTA ===== */
 .sticky-cta {

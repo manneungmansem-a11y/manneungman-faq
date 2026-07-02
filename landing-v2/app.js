@@ -382,6 +382,12 @@
   var dupClose     = document.getElementById('dupClose');
   var dupTimer     = document.getElementById('dupTimer');
 
+  /* 중복 신청 "이력" 확인 모달 — 기존 dupOverlay(같은 브라우저 60초 재제출 방지)와는 별개 기능 */
+  var dupCheckOverlay = document.getElementById('dupCheckOverlay');
+  var dupCheckReview  = document.getElementById('dupCheckReview');
+  var dupCheckProceed = document.getElementById('dupCheckProceed');
+  var dupCheckErrMsg  = document.getElementById('dupCheckErrMsg');
+
   var DUP_KEY    = 'mnm_v2_last_submit';
   var DUP_GAP_MS = 60 * 1000;
 
@@ -650,6 +656,110 @@
     });
   }
 
+  /* 서버(Apps Script)에 GET action=checkDuplicate로 사전 중복 이력 확인
+     — 최종 접수 fetch는 기존처럼 no-cors라 응답을 읽을 수 없으므로, 이 확인만
+     별도의(cors 가능한) GET 요청으로 먼저 수행한다. 8초 내 응답이 없으면 실패로 처리 */
+  function fetchDupCheck(phone, email, company) {
+    var url = SCRIPT_URL
+      + '?action=checkDuplicate'
+      + '&phone='   + encodeURIComponent(phone)
+      + '&email='   + encodeURIComponent(email)
+      + '&company=' + encodeURIComponent(company);
+
+    var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 8000);
+    var opts = { method: 'GET' };
+    if (controller) opts.signal = controller.signal;
+
+    return fetch(url, opts).then(function (res) {
+      clearTimeout(timer);
+      return res.json();
+    }, function (err) {
+      clearTimeout(timer);
+      throw err;
+    });
+  }
+
+  /* 실제 접수 로직 — 기존 제출 흐름 그대로이며, 중복 의심 확인창에서
+     "현재 정보로 다시 신청"을 선택했을 때만 duplicateConfirmed:true를 추가로 실어 보낸다 */
+  function doActualSubmit(duplicateConfirmed) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = '제출 중...';
+    if (submitErrMsg) submitErrMsg.style.display = 'none';
+
+    var hpField = regForm.querySelector('[name="website"]');
+
+    /* 선택된 서비스 분야 수집 */
+    var svcs = [];
+    document.querySelectorAll('.svc.on').forEach(function (s) { svcs.push(s.getAttribute('data-v')); });
+
+    var now = new Date();
+    var submitTime = now.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+
+    /* 유입경로 — 기타 직접입력 통합 */
+    var referralEl = regForm.querySelector('input[name="referral"]:checked');
+    var referralVal = referralEl ? referralEl.value : '';
+    var refEtcInputEl = document.getElementById('refEtcInput');
+    if (referralVal === '기타' && refEtcInputEl && refEtcInputEl.value.trim()) {
+      referralVal = '기타 - ' + refEtcInputEl.value.trim();
+    }
+
+    /* 서비스분야 — 기타 직접입력 통합 */
+    var etcInputEl = document.getElementById('etcInput');
+    var svcFinal = svcs.join(', ');
+    if (svcs.indexOf('기타') !== -1 && etcInputEl && etcInputEl.value.trim()) {
+      svcFinal = svcFinal.replace('기타', '기타(' + etcInputEl.value.trim() + ')');
+    }
+
+    /* v1과 동일한 payload key 구조 — Google Sheet·관리자페이지 변경 금지 */
+    var payload = {
+      '신청일시':         submitTime,
+      '이름':             regForm.querySelector('[name="name"]').value.trim(),
+      '연락처':           regForm.querySelector('[name="phone"]').value.trim(),
+      '이메일':           regForm.querySelector('[name="email"]').value.trim(),
+      '활동지역':         regForm.querySelector('[name="region"]').value,
+      '사업자구분':       (regForm.querySelector('input[name="bizType"]:checked') || {}).value || '',
+      '업체명·상호명':    regForm.querySelector('[name="company"]').value.trim(),
+      '서비스분야':       svcFinal,
+      '보유자격증':       regForm.querySelector('[name="license"]').value.trim(),
+      '경력연수':         regForm.querySelector('[name="career"]').value,
+      '긴급출동가능여부': (regForm.querySelector('input[name="emergency"]:checked') || {}).value || '미정',
+      '자기소개':         regForm.querySelector('[name="intro"]').value.trim(),
+      '추가문의':         regForm.querySelector('[name="inquiry"]').value.trim(),
+      '유입경로':         referralVal,
+      /* 서버(Apps Script)측 스팸 검증용 — 시트 컬럼과 무관, doPost에서만 확인 후 버려짐 */
+      '_hp':              hpField ? hpField.value : '',
+      '_ts':              pageLoadTime
+    };
+    if (duplicateConfirmed) payload['duplicateConfirmed'] = true;
+
+    function onSuccess() {
+      try { localStorage.setItem(DUP_KEY, String(Date.now())); } catch (ex) {}
+      showSuccess();
+      submitBtn.disabled = false;
+      submitBtn.textContent = '신청서 제출하기';
+      /* 실제 신청 완료 토스트 */
+      if (typeof window.mnmToastOnRealSignup === 'function') {
+        var fakeFormData = { get: function(k) { return k === 'name' ? payload['이름'] : null; } };
+        window.mnmToastOnRealSignup(fakeFormData, svcs);
+      }
+    }
+
+    function onError() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '신청서 제출하기';
+      if (submitErrMsg) submitErrMsg.style.display = 'block';
+    }
+
+    /* no-cors: 응답 내용은 읽을 수 없으나 Apps Script에 정상 전달됨 */
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(onSuccess).catch(onError);
+  }
+
   if (regForm) {
     regForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -678,78 +788,59 @@
         }
       } catch (ex) {}
 
+      /* 제출 버튼 중복 클릭 방지 — 중복 확인 중에도 계속 비활성 상태 유지 */
+      if (submitBtn.disabled) return;
       submitBtn.disabled = true;
-      submitBtn.textContent = '제출 중...';
+      submitBtn.textContent = '확인 중...';
       if (submitErrMsg) submitErrMsg.style.display = 'none';
+      if (dupCheckErrMsg) dupCheckErrMsg.style.display = 'none';
 
-      /* 선택된 서비스 분야 수집 */
-      var svcs = [];
-      document.querySelectorAll('.svc.on').forEach(function (s) { svcs.push(s.getAttribute('data-v')); });
+      var phoneVal   = regForm.querySelector('[name="phone"]').value.trim();
+      var emailVal   = regForm.querySelector('[name="email"]').value.trim();
+      var companyVal = regForm.querySelector('[name="company"]').value.trim();
 
-      var now = new Date();
-      var submitTime = now.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-
-      /* 유입경로 — 기타 직접입력 통합 */
-      var referralEl = regForm.querySelector('input[name="referral"]:checked');
-      var referralVal = referralEl ? referralEl.value : '';
-      var refEtcInputEl = document.getElementById('refEtcInput');
-      if (referralVal === '기타' && refEtcInputEl && refEtcInputEl.value.trim()) {
-        referralVal = '기타 - ' + refEtcInputEl.value.trim();
-      }
-
-      /* 서비스분야 — 기타 직접입력 통합 */
-      var etcInputEl = document.getElementById('etcInput');
-      var svcFinal = svcs.join(', ');
-      if (svcs.indexOf('기타') !== -1 && etcInputEl && etcInputEl.value.trim()) {
-        svcFinal = svcFinal.replace('기타', '기타(' + etcInputEl.value.trim() + ')');
-      }
-
-      /* v1과 동일한 payload key 구조 — Google Sheet·관리자페이지 변경 금지 */
-      var payload = {
-        '신청일시':         submitTime,
-        '이름':             regForm.querySelector('[name="name"]').value.trim(),
-        '연락처':           regForm.querySelector('[name="phone"]').value.trim(),
-        '이메일':           regForm.querySelector('[name="email"]').value.trim(),
-        '활동지역':         regForm.querySelector('[name="region"]').value,
-        '사업자구분':       (regForm.querySelector('input[name="bizType"]:checked') || {}).value || '',
-        '업체명·상호명':    regForm.querySelector('[name="company"]').value.trim(),
-        '서비스분야':       svcFinal,
-        '보유자격증':       regForm.querySelector('[name="license"]').value.trim(),
-        '경력연수':         regForm.querySelector('[name="career"]').value,
-        '긴급출동가능여부': (regForm.querySelector('input[name="emergency"]:checked') || {}).value || '미정',
-        '자기소개':         regForm.querySelector('[name="intro"]').value.trim(),
-        '추가문의':         regForm.querySelector('[name="inquiry"]').value.trim(),
-        '유입경로':         referralVal,
-        /* 서버(Apps Script)측 스팸 검증용 — 시트 컬럼과 무관, doPost에서만 확인 후 버려짐 */
-        '_hp':              hpField ? hpField.value : '',
-        '_ts':              pageLoadTime
-      };
-
-      function onSuccess() {
-        try { localStorage.setItem(DUP_KEY, String(Date.now())); } catch (ex) {}
-        showSuccess();
-        submitBtn.disabled = false;
-        submitBtn.textContent = '신청서 제출하기';
-        /* 실제 신청 완료 토스트 */
-        if (typeof window.mnmToastOnRealSignup === 'function') {
-          var fakeFormData = { get: function(k) { return k === 'name' ? payload['이름'] : null; } };
-          window.mnmToastOnRealSignup(fakeFormData, svcs);
+      /* .then(성공, 실패)의 실패 콜백은 성공 콜백 내부에서 던진 오류를 잡지 못하므로(형제 콜백이라
+         서로 체이닝되지 않음), success:false 케이스도 반드시 .catch()로 이어지도록 구성한다.
+         그렇지 않으면 확인 실패 시 버튼이 "확인 중..." 상태로 멈춰 무한 대기하게 된다. */
+      fetchDupCheck(phoneVal, emailVal, companyVal).then(function (res) {
+        /* Apps Script가 아직 새 코드로 재배포되지 않아 구버전 응답(배열 등)이 오는 경우 —
+           중복확인 기능이 아직 없는 것으로 보고 기존처럼 바로 접수 진행 (fail-open).
+           기존 제출 기능이 이 기능 때문에 막히는 일이 없도록 하기 위함 */
+        if (!res || typeof res !== 'object' || Array.isArray(res) || typeof res.success === 'undefined') {
+          doActualSubmit(false);
+          return;
         }
-      }
-
-      function onError() {
+        if (res.success !== true) throw new Error('dup-check-failed');
+        if (res.duplicate) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '신청서 제출하기';
+          if (dupCheckOverlay) dupCheckOverlay.classList.add('show');
+          return;
+        }
+        doActualSubmit(false);
+      }).catch(function () {
+        /* 중복 확인 자체가 실패한 경우 — 무한 대기시키지 않고, 안전하게 저장을 진행하지 않은 채 재시도를 안내 */
         submitBtn.disabled = false;
         submitBtn.textContent = '신청서 제출하기';
-        if (submitErrMsg) submitErrMsg.style.display = 'block';
-      }
+        if (dupCheckErrMsg) dupCheckErrMsg.style.display = 'block';
+      });
+    });
+  }
 
-      /* no-cors: 응답 내용은 읽을 수 없으나 Apps Script에 정상 전달됨 */
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      }).then(onSuccess).catch(onError);
+  /* 중복 신청 의심 확인창 버튼 동작 */
+  var dupCheckBusy = false;
+  if (dupCheckReview) {
+    dupCheckReview.addEventListener('click', function () {
+      if (dupCheckOverlay) dupCheckOverlay.classList.remove('show');
+    });
+  }
+  if (dupCheckProceed) {
+    dupCheckProceed.addEventListener('click', function () {
+      if (dupCheckBusy) return;
+      dupCheckBusy = true;
+      if (dupCheckOverlay) dupCheckOverlay.classList.remove('show');
+      doActualSubmit(true);
+      setTimeout(function () { dupCheckBusy = false; }, 1000);
     });
   }
 
