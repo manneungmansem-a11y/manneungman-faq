@@ -36,6 +36,20 @@
   var PARAM_VIEW = {};
   Object.keys(VIEW_PARAM).forEach(function (k) { PARAM_VIEW[VIEW_PARAM[k]] = k; });
 
+  /* URL의 view 파라미터만 갱신하고 나머지 쿼리스트링(네이버 광고 파라미터 NaPm 등)은
+     그대로 보존한다 — 과거에는 location.pathname으로만 교체해 다른 파라미터가 유실되었음 */
+  function buildUrlWithView(tabName) {
+    var params;
+    try { params = new URLSearchParams(location.search); } catch (e) { return location.pathname + location.search; }
+    if (tabName) {
+      params.set('view', VIEW_PARAM[tabName] || encodeURIComponent(tabName));
+    } else {
+      params.delete('view');
+    }
+    var qs = params.toString();
+    return location.pathname + (qs ? '?' + qs : '');
+  }
+
   var homeView         = document.getElementById('homeView');
   var tabViewContainer = document.getElementById('tabViewContainer');
   var policyView       = document.getElementById('policyView');
@@ -66,7 +80,7 @@
     setNavActive(null);
     currentViewName = null;
     if (pushHistory !== false) {
-      try { history.pushState({ view: null }, '', location.pathname); } catch (e) {}
+      try { history.pushState({ view: null }, '', buildUrlWithView(null)); } catch (e) {}
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     /* 슬라이더에게 홈 복귀를 알림 — display:none 중 isTransitioning이 묶이는 문제 해소 */
@@ -103,8 +117,7 @@
 
     if (pushHistory !== false) {
       try {
-        var param = VIEW_PARAM[tabName] || encodeURIComponent(tabName);
-        history.pushState({ view: tabName }, '', '?view=' + param);
+        history.pushState({ view: tabName }, '', buildUrlWithView(tabName));
       } catch (e) {}
     }
 
@@ -539,6 +552,26 @@
   /* v1과 동일한 Google Apps Script URL — Google Sheet·관리자페이지 key 구조 유지 */
   var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyD1yELbOat2_mdO_EzelUtNGtLGSTWvFIBeTI_LTq25lp-nspsLfS6Uo1Jsi25h68s/exec';
 
+  /* =========================================================
+     네이버 전환추적(CTS) 훅 — accountId: s_a2aa16fb02b
+     신청서가 서버(Apps Script)에 정상 저장된 직후(onSuccess)에만, 같은 신청 건당
+     1회만 호출된다. 네이버 CTS가 발급한 공식 스크립트 원문(landing-v2/naver-analytics.js의
+     PV 로그 호출과 동일한 wcs_add/wcs.inflow/wcs_do 구조)을 그대로 재사용한다 —
+     임의로 추정한 별도 전환 파라미터(예: _nasa["cnv"])는 추가하지 않는다.
+     ========================================================= */
+  var naverConversionFired = false;
+  function fireNaverConversion() {
+    if (naverConversionFired) return;
+    naverConversionFired = true;
+    if (!window.wcs_add) window.wcs_add = {};
+    window.wcs_add['wa'] = 's_a2aa16fb02b';
+    if (!window._nasa) window._nasa = {};
+    if (window.wcs) {
+      window.wcs.inflow();
+      window.wcs_do();
+    }
+  }
+
   /* 전화번호 자동 하이픈 포맷 */
   var phoneInput = regForm ? regForm.querySelector('[name="phone"]') : null;
   if (phoneInput) {
@@ -736,6 +769,7 @@
     function onSuccess() {
       try { localStorage.setItem(DUP_KEY, String(Date.now())); } catch (ex) {}
       showSuccess();
+      fireNaverConversion();
       submitBtn.disabled = false;
       submitBtn.textContent = '신청서 제출하기';
       /* 실제 신청 완료 토스트 */
@@ -951,8 +985,8 @@
         }
       }
     } catch (e) {}
-    /* 기본: 홈 */
-    history.replaceState({ view: null }, '', location.pathname);
+    /* 기본: 홈 — view 파라미터만 정리하고 나머지 쿼리스트링(NaPm 등)은 유지 */
+    history.replaceState({ view: null }, '', buildUrlWithView(null));
   }());
 
   /* =========================================================
