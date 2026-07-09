@@ -572,6 +572,25 @@
     }
   }
 
+  /* =========================================================
+     네이버 전환추적 "신청완료(lead)" 이벤트 — wcslog.js는 index.html에서 이미
+     로드되어 있으므로 여기서는 wcs.trans({type:'lead'}) 호출 함수만 정의한다.
+     신청서가 서버(Apps Script)에 정상 저장되고 완료 안내가 뜬 직후(onSuccess)에만,
+     같은 신청 건당 1회만 호출된다.
+     accountId('wa'): s_a2aa16fb02b — 위 fireNaverConversion과 동일한 값, 실제 값 확인 완료.
+     ========================================================= */
+  var naverLeadConversionFired = false;
+  function sendNaverLeadConversion() {
+    if (naverLeadConversionFired) return;
+    naverLeadConversionFired = true;
+    if (!window.wcs) return;
+    window.wcs_add = window.wcs_add || {};
+    window.wcs_add['wa'] = 's_a2aa16fb02b';
+    var _conv = {};
+    _conv.type = 'lead';
+    window.wcs.trans(_conv);
+  }
+
   /* 전화번호 자동 하이픈 포맷 */
   var phoneInput = regForm ? regForm.querySelector('[name="phone"]') : null;
   if (phoneInput) {
@@ -770,6 +789,7 @@
       try { localStorage.setItem(DUP_KEY, String(Date.now())); } catch (ex) {}
       showSuccess();
       fireNaverConversion();
+      sendNaverLeadConversion();
       submitBtn.disabled = false;
       submitBtn.textContent = '신청서 제출하기';
       /* 실제 신청 완료 토스트 */
