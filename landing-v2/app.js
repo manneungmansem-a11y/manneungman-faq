@@ -6,6 +6,22 @@
   'use strict';
 
   /* =========================================================
+     [운영 스위치] 파트너스 신청 CTA 동작 모드
+     ---------------------------------------------------------
+     USE_PRE_REGISTER_MODAL
+       false : 정식 오픈 운영 모드 — 신청 버튼 클릭 시 만능맨 정식 플랫폼으로 이동 (현재 설정)
+       true  : 사전등록 모드 — 신청 버튼 클릭 시 기존 '파트너스 사전등록 신청' 모달 오픈
+
+     · 사전등록 모달 UI / 3단계 입력폼 / 유효성 검사 / 중복신청 확인 /
+       Google Sheets(Apps Script) 저장 API 로직은 모두 아래에 그대로 보존되어 있습니다.
+       이 값을 true 로만 되돌리면 기존 사전등록 방식으로 즉시 복구됩니다.
+     · 페이지의 모든 신청 버튼은 [data-open-form] 속성으로 공통 처리되므로,
+       이 값 하나만 바꾸면 PC/모바일 전체 버튼 동작이 동시에 전환됩니다.
+     ========================================================= */
+  var USE_PRE_REGISTER_MODAL = false;
+  var PLATFORM_URL = 'https://app.10000man.co.kr/';
+
+  /* =========================================================
      iframe 삽입 방지 (frame-busting)
      GitHub Pages는 X-Frame-Options·CSP frame-ancestors 같은 실제 HTTP 헤더를
      커스텀 설정할 수 없어, 다른 사이트가 우리 페이지를 iframe으로 감쌀 경우
@@ -419,8 +435,20 @@
     document.body.style.overflow = '';
   }
 
+  /* 신청 CTA 공통 핸들러 — 파일 상단 USE_PRE_REGISTER_MODAL 값에 따라 동작이 갈린다.
+     사전등록 모드면 기존 모달을 열고, 정식 오픈 모드면 정식 플랫폼으로 이동한다. */
+  function handleApplyClick(e) {
+    if (USE_PRE_REGISTER_MODAL) {
+      openForm();
+      return;
+    }
+    if (e) e.preventDefault();
+    /* 새 탭이 아닌 현재 탭에서 이동 */
+    window.location.href = PLATFORM_URL;
+  }
+
   document.querySelectorAll('[data-open-form]').forEach(function (el) {
-    el.addEventListener('click', openForm);
+    el.addEventListener('click', handleApplyClick);
   });
   document.querySelectorAll('[data-close-form]').forEach(function (el) {
     el.addEventListener('click', function () {

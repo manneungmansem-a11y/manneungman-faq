@@ -5,6 +5,21 @@
 (function () {
   'use strict';
 
+  /* =========================================================
+     [운영 스위치] 파트너 신청 알림 토스트 노출 여부
+     ---------------------------------------------------------
+     ENABLE_PARTNER_TOAST
+       false : 토스트 미노출 (현재 설정) — 정식 오픈에 맞춰 노출 중단
+       true  : 기존처럼 화면 우측 하단에 신청 알림 토스트 노출
+
+     · 토스트 UI·문구 데이터·표시 로직은 아래에 그대로 보존되어 있습니다.
+       이 값을 true 로만 되돌리면 즉시 복구됩니다.
+     · app.js 의 실제 신청 완료 훅(window.mnmToastOnRealSignup) 호출부는
+       함수 존재 여부를 확인한 뒤 호출하므로, 미노출 상태에서도 오류가 발생하지 않습니다.
+     ========================================================= */
+  var ENABLE_PARTNER_TOAST = false;
+  if (!ENABLE_PARTNER_TOAST) return;
+
   /* ===== 성씨 데이터 ===== */
   var SURNAMES = [
     '김', '이', '박', '최', '정', '강', '조', '윤', '장', '임',
@@ -203,7 +218,7 @@
     if (elInitial) elInitial.textContent = data.name.charAt(0);
     if (elName)    elName.textContent    = data.name;
     if (elField)   elField.textContent   = '(' + data.service + ')';
-    if (elTime)    elTime.textContent    = data.timeText + ' 사전등록 완료';
+    if (elTime)    elTime.textContent    = data.timeText + ' 파트너 가입 완료';
 
     syncPosition();
     toast.classList.remove('is-visible');
